@@ -12,19 +12,46 @@ class UserRepository{
 
     checkExists=async(userData)=>{
 
-        const exists=await User.findOne({
+        try {
+            const exists=await User.findOne({
 
-           $or:[
+                $or:[
+     
+                 {email:userData.email},
+                 {mobile:userData.mobile},
+                 {isVerified:true}
+                ]
+                    
+             })
+     
+            return exists
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
 
-            {email:userData.email},
-            {mobile:userData.mobile}
-           ]
-               
-        })
-
-       return exists
+        
         
 
+    }
+
+
+    saveUser=async(userData)=>{
+
+        try {
+
+            const user= await User.create(userData)
+            console.log("user saved without verification :",user)
+            return user.save()
+
+        
+            
+        } catch (error) {
+
+            console.log(error)
+            
+        }
     }
 
 

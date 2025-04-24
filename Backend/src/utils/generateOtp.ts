@@ -2,7 +2,7 @@
 
  const createOtp=()=>{
 
-        let otp=Math.floor(Math.random()*10000)
+        let otp=Math.floor(Math.random()*10000).toString()
         return otp
     }
 

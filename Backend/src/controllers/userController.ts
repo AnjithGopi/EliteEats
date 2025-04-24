@@ -21,6 +21,10 @@ class userController{
         try {
 
             let data=await this.userService.register(req.body)
+
+            if(data){
+                console.log("data recieved in controller :",data)
+            }
            
             
            
