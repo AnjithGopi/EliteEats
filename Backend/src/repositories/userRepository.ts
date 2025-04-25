@@ -31,15 +31,30 @@ class UserRepository {
 
   verify = async (data) => {
     try {
-        
-         return  await User.findOneAndUpdate(
+      return await User.findOneAndUpdate(
         { email: data.email },
         { $set: { isVerified: true } }
       );
-
-     
     } catch (error) {
       console.log(error.message);
+    }
+  };
+
+  verifyLogin = async (loginData) => {
+    try {
+    //   return await User.findOne(
+    //     { email: loginData.email },
+    //     { password: loginData.password }
+    //   );
+
+       return await User.findOne({
+        $and:[
+            {email:loginData.email},
+            {password:loginData.password}
+        ]
+       })
+    } catch (error) {
+      console.log(error);
     }
   };
 }

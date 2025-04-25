@@ -2,6 +2,7 @@ import UserRepository from "../repositories/userRepository.ts";
 import generateOtp from "../utils/generateOtp.ts";
 import sendOtp from "../utils/sendIOtp.ts";
 import OtpRepository from "../repositories/otpRepository.ts";
+import hashPassword from "../utils/hashPassword.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -18,7 +19,15 @@ class UserService {
 
       if (existingUser) {
         throw new Error("User already exists");
+        
       }
+
+
+     const password= await  hashPassword(userData.password)
+
+     console.log("password:",password)
+
+     
 
       let savedUser = await this.userRepository.saveUser(userData);
       const otp = generateOtp();
@@ -58,6 +67,25 @@ class UserService {
       console.log(error);
     }
   };
+
+  verifyLogin =async(loginData)=>{
+
+    try {
+
+
+        const verified= this.userRepository.verifyLogin(loginData);
+        if(!verified){
+            throw new Error(" Incorrect email or password")
+        }
+
+        return verified
+        
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+  }
 }
 
 export default UserService;
