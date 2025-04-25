@@ -4,6 +4,7 @@ import sendOtp from "../utils/sendIOtp.ts";
 import OtpRepository from "../repositories/otpRepository.ts";
 import hashPassword from "../utils/hashPassword.ts";
 import comparePassword from "../utils/comparePasswords.ts";
+import { generateToken } from "../utils/jwt.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -88,7 +89,9 @@ class UserService {
       const passwordVerified= await this.userRepository.verifyLogin(loginData)
 
       if(emailVerified && passwordVerified){
-        return passwordVerified
+
+        generateToken(passwordVerified)
+        //return passwordVerified
       }
 
       return false
