@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-export const generateToken=(userData)=>{
+export const generateAccessToken=(userData)=>{
 
     try {
 

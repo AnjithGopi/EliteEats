@@ -4,7 +4,7 @@ import sendOtp from "../utils/sendIOtp.ts";
 import OtpRepository from "../repositories/otpRepository.ts";
 import hashPassword from "../utils/hashPassword.ts";
 import comparePassword from "../utils/comparePasswords.ts";
-import { generateToken } from "../utils/jwt.ts";
+import { generateAccessToken } from "../utils/jwt.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -27,7 +27,7 @@ class UserService {
 
       console.log("password:", password);
 
-      const userToSave = { ...userData, password: password }; // creating new user object with hashed password 
+      const userToSave = { ...userData, password: password }; // creating new user object with hashed password
 
       console.log("userToSave:.....", userToSave);
 
@@ -71,33 +71,35 @@ class UserService {
 
   verifyLogin = async (loginData) => {
     try {
-
-
-      const emailVerified =await this.userRepository.verifyLogin(loginData);
+      const emailVerified = await this.userRepository.verifyLogin(loginData);
 
       if (!emailVerified) {
         throw new Error(" Incorrect Email");
       }
 
-      const password = await comparePassword(loginData.password,emailVerified.password)
-      
-      if(!password){
-        throw new Error("Incorrect Password")
+      const password = await comparePassword(
+        loginData.password,
+        emailVerified.password
+      );
+
+      if (!password) {
+        throw new Error("Incorrect Password");
       }
 
+      const passwordVerified = await this.userRepository.verifyLogin(loginData);
 
-      const passwordVerified= await this.userRepository.verifyLogin(loginData)
-
-      if(emailVerified && passwordVerified){
-
-        generateToken(passwordVerified)
-        //return passwordVerified
+      if (!passwordVerified) {
+        throw new Error("Incorrect password");
       }
 
-      return false
-     
+      if (emailVerified && passwordVerified) {
+        const token = generateAccessToken(passwordVerified);
+        const userData = { ...passwordVerified.toObject(),token }; // toObject is used to opt out the metadata from mongodb
 
-      //return emailVerified;
+        return userData;
+      }
+
+      return false;
     } catch (error) {
       console.log(error);
     }
