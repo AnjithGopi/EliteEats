@@ -5,8 +5,7 @@ class UserRepository {
 
   checkExists = async (userData) => {
     try {
-
-        console.log("userData:",userData)
+      console.log("userData:", userData);
       const exists = await User.findOne({
         $or: [
           { email: userData.email },
@@ -14,8 +13,6 @@ class UserRepository {
           //{ isVerified: true },
         ],
       });
-
-  
 
       return exists;
     } catch (error) {
@@ -47,16 +44,17 @@ class UserRepository {
   verifyLogin = async (loginData) => {
     try {
     //   return await User.findOne(
-    //     { email: loginData.email },
-    //     { password: loginData.password }
-    //   );
+    //     { email: loginData.email });
 
-       return await User.findOne({
-        $and:[
+    return await User.findOne({
+
+        $or:[
+
             {email:loginData.email},
             {password:loginData.password}
         ]
-       })
+
+    })
     } catch (error) {
       console.log(error);
     }

@@ -30,18 +30,19 @@ class userController {
     }
   };
 
-  userLogin=async(req:Request,res:Response)=>{
-
+  userLogin = async (req: Request, res: Response) => {
     try {
+      const user = await this.userService.verifyLogin(req.body);
 
-        const user= await this.userService.verifyLogin(req.body)
-        res.status(200).json({message:"Login successfull",user})
-        
+      if (user) {
+        res.status(200).json({ message: "Login successfull", user });
+      }
+
+      res.status(500).json({ message: "Internal server error" });
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 }
 
 export default new userController();

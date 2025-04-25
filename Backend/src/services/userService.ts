@@ -3,6 +3,7 @@ import generateOtp from "../utils/generateOtp.ts";
 import sendOtp from "../utils/sendIOtp.ts";
 import OtpRepository from "../repositories/otpRepository.ts";
 import hashPassword from "../utils/hashPassword.ts";
+import comparePassword from "../utils/comparePasswords.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -19,23 +20,15 @@ class UserService {
 
       if (existingUser) {
         throw new Error("User already exists");
-
       }
 
+      const password = await hashPassword(userData.password);
 
-      const password= await  hashPassword(userData.password)
+      console.log("password:", password);
 
-      console.log("password:",password)
+      const userToSave = { ...userData, password: password }; // creating new user object with hashed password 
 
-      const userToSave={  // creating a new user object with hashed password
-
-        ...userData,
-        password:password
-      }
-
-      console.log("userToSave:.....",userToSave)
-
-     
+      console.log("userToSave:.....", userToSave);
 
       let savedUser = await this.userRepository.saveUser(userToSave);
       const otp = generateOtp();
@@ -46,7 +39,6 @@ class UserService {
       saveOtp ? await sendOtp(saveOtp.email, saveOtp.otp) : undefined;
 
       return { message: "OTP send successfully" };
-
     } catch (error) {
       console.log(error);
     }
@@ -76,24 +68,37 @@ class UserService {
     }
   };
 
-  verifyLogin =async(loginData)=>{
-
+  verifyLogin = async (loginData) => {
     try {
 
 
-        const verified= this.userRepository.verifyLogin(loginData);
-        if(!verified){
-            throw new Error(" Incorrect email or password")
-        }
+      const emailVerified =await this.userRepository.verifyLogin(loginData);
 
-        return verified
-        
-        
+      if (!emailVerified) {
+        throw new Error(" Incorrect Email");
+      }
+
+      const password = await comparePassword(loginData.password,emailVerified.password)
+      
+      if(!password){
+        throw new Error("Incorrect Password")
+      }
+
+
+      const passwordVerified= await this.userRepository.verifyLogin(loginData)
+
+      if(emailVerified && passwordVerified){
+        return passwordVerified
+      }
+
+      return false
+     
+
+      //return emailVerified;
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 }
 
 export default UserService;
