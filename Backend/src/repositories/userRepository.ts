@@ -5,13 +5,17 @@ class UserRepository {
 
   checkExists = async (userData) => {
     try {
+
+        console.log("userData:",userData)
       const exists = await User.findOne({
         $or: [
           { email: userData.email },
           { mobile: userData.mobile },
-          { isVerified: true },
+          //{ isVerified: true },
         ],
       });
+
+  
 
       return exists;
     } catch (error) {

@@ -19,17 +19,25 @@ class UserService {
 
       if (existingUser) {
         throw new Error("User already exists");
-        
+
       }
 
 
-     const password= await  hashPassword(userData.password)
+      const password= await  hashPassword(userData.password)
 
-     console.log("password:",password)
+      console.log("password:",password)
+
+      const userToSave={  // creating a new user object with hashed password
+
+        ...userData,
+        password:password
+      }
+
+      console.log("userToSave:.....",userToSave)
 
      
 
-      let savedUser = await this.userRepository.saveUser(userData);
+      let savedUser = await this.userRepository.saveUser(userToSave);
       const otp = generateOtp();
 
       const saveOtp = savedUser
