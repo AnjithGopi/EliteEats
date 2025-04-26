@@ -4,7 +4,7 @@ import sendOtp from "../utils/sendIOtp.ts";
 import OtpRepository from "../repositories/otpRepository.ts";
 import hashPassword from "../utils/hashPassword.ts";
 import comparePassword from "../utils/comparePasswords.ts";
-import { generateAccessToken } from "../utils/jwt.ts";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -88,9 +88,11 @@ class UserService {
 
       if (user && passwordMatch) {
         const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
         console.log(accessToken);
+        console.log(refreshToken)
 
-        return { ...user.toObject(), accessToken }; // toObject is used to opt out the metadata from mongodb
+        return { ...user.toObject(),accessToken,refreshToken }; // toObject is used to opt out the metadata from mongodb
       }
 
       return false;

@@ -1,31 +1,34 @@
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
-dotenv.config()
+export const generateAccessToken = (userData) => {
+  try {
+    console.log("token generation with user:", userData);
 
+    const payLoad = {
+      id: userData._id,
+      username: userData.name,
+    };
 
-export const generateAccessToken=(userData)=>{
+    return jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: "1h",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    try {
+export const generateRefreshToken = (userData) => {
+  try {
+    console.log("refresh token generation with userData:", userData);
 
-        console.log("token generation started with user:",userData)
-
-        const payLoad={ // creating payload with user information 
-            id:userData._id,
-            username:userData.name
-        }
-        // sign the token with payload , secret key and expiration time 
-
-        console.log("Acces token generated:",jwt.sign(payLoad,process.env.JWT_SECRET,{expiresIn:"1h"}))
-
-        return jwt.sign(payLoad,process.env.JWT_SECRET,{expiresIn:"1h"})
-
-        
-        
-    } catch (error) {
-
-        console.log(error)
-        
-    }
-
-}
+    const payLoad = {
+      id: userData._id,
+      username: userData.name,
+    };
+    return jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: "7d",
+    });
+  } catch (error) {}
+};

@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import UserService from "../services/userService.ts";
+import dotenv from "dotenv";
+dotenv.config();
 
 class userController {
   private userService: UserService;
@@ -34,9 +36,26 @@ class userController {
     try {
       const user = await this.userService.verifyLogin(req.body);
 
-      user
-        ? res.status(200).json({ message: "Login successfull", user })
-        : res.status(500).json({ message: "Internal server error" });
+      if (user) {
+        console.log(user);
+        res.cookie("AccessToken", user.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 60 * 60 * 1000,
+        });
+
+        res.cookie("RefreshToken", user.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 60 * 60 * 1000,
+        });
+
+        res.status(200).json({ message: "Login Successfull", user });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
     } catch (error) {
       console.log(error);
     }
