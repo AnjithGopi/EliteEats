@@ -2,6 +2,7 @@ import express from "express";
 import connectDb from "./src/config/db.ts";
 import dotenv from "dotenv";
 import userRoute from "./src/routes/userRoutes.ts";
+import riderRoute from "./src/routes/riderRoutes.ts";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoute);
-//app.use("/admin",adminRoute)
+app.use("/rider",riderRoute);
 
 connectDb().then(() => {
   app.listen(port, () => {

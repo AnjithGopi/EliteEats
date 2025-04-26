@@ -24,7 +24,7 @@ class UserRepository {
     try {
       const user = await User.create(userData);
       console.log("user saved without verification :", user);
-      return user.save();
+      return user;
     } catch (error) {
       console.log(error);
     }

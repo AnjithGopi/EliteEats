@@ -25,6 +25,9 @@ class OtpRepository {
       console.log(error);
     }
   };
+
+
+  
 }
 
 export default OtpRepository;
