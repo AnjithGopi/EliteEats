@@ -93,8 +93,8 @@ class UserService {
       }
 
       if (emailVerified && passwordVerified) {
-        const token = generateAccessToken(passwordVerified);
-        const userData = { ...passwordVerified.toObject(),token }; // toObject is used to opt out the metadata from mongodb
+        const accessToken = generateAccessToken(passwordVerified);
+        const userData = { ...passwordVerified.toObject(),accessToken }; // toObject is used to opt out the metadata from mongodb
 
         return userData;
       }
