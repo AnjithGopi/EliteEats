@@ -25,11 +25,7 @@ class UserService {
 
       const password = await hashPassword(userData.password);
 
-      console.log("password:", password);
-
       const userToSave = { ...userData, password: password }; // creating new user object with hashed password
-
-      console.log("userToSave:.....", userToSave);
 
       let savedUser = await this.userRepository.saveUser(userToSave);
       const otp = generateOtp();
@@ -46,13 +42,17 @@ class UserService {
   };
 
   findUser = async (otpData) => {
-    let data = await this.otpRepository.findbyOtp(otpData);
+    try {
+      let data = await this.otpRepository.findbyOtp(otpData);
 
-    if (!data) {
-      throw new Error("incorrect otp");
+      if (!data) {
+        throw new Error("incorrect otp");
+      }
+
+      return data;
+    } catch (error) {
+      console.log(error);
     }
-
-    return data;
   };
 
   verifyUser = async (data) => {
@@ -71,32 +71,26 @@ class UserService {
 
   verifyLogin = async (loginData) => {
     try {
-      const emailVerified = await this.userRepository.verifyLogin(loginData);
+      const user = await this.userRepository.loginVerification(loginData);
 
-      if (!emailVerified) {
-        throw new Error(" Incorrect Email");
+      if (!user) {
+        throw new Error("Incorrect email");
       }
 
-      const password = await comparePassword(
+      const passwordMatch = await comparePassword(
         loginData.password,
-        emailVerified.password
+        user.password
       );
 
-      if (!password) {
+      if (!passwordMatch) {
         throw new Error("Incorrect Password");
       }
 
-      const passwordVerified = await this.userRepository.verifyLogin(loginData);
+      if (user && passwordMatch) {
+        const accessToken = generateAccessToken(user);
+        console.log(accessToken);
 
-      if (!passwordVerified) {
-        throw new Error("Incorrect password");
-      }
-
-      if (emailVerified && passwordVerified) {
-        const accessToken = generateAccessToken(passwordVerified);
-        const userData = { ...passwordVerified.toObject(),accessToken }; // toObject is used to opt out the metadata from mongodb
-
-        return userData;
+        return { ...user.toObject(), accessToken }; // toObject is used to opt out the metadata from mongodb
       }
 
       return false;

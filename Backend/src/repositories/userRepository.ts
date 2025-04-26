@@ -41,24 +41,20 @@ class UserRepository {
     }
   };
 
-  verifyLogin = async (loginData) => {
+
+  loginVerification=async(loginData)=>{
+
     try {
-    //   return await User.findOne(
-    //     { email: loginData.email });
 
-    return await User.findOne({
-
-        $or:[
-
-            {email:loginData.email},
-            {password:loginData.password}
-        ]
-
-    })
+        return await User.findOne({email:loginData.email})
+        
     } catch (error) {
-      console.log(error);
+        console.log(error)
+        
     }
-  };
+  }
+
+  
 }
 
 export default UserRepository;

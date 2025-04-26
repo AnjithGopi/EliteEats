@@ -7,7 +7,8 @@ const userSchema= new mongoose.Schema({
     mobile:{type:Number,unique:true,required:true},
     password:{type:String,required:true},
     isActive:{type:Boolean,default:true},
-    isVerified:{type:Boolean,default:false}
+    isVerified:{type:Boolean,default:false},
+    isAdmin:{type:Boolean,default:false}
 })
 
 

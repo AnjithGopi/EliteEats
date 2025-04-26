@@ -34,11 +34,9 @@ class userController {
     try {
       const user = await this.userService.verifyLogin(req.body);
 
-      if (user) {
-        res.status(200).json({ message: "Login successfull", user });
-      }
-
-      res.status(500).json({ message: "Internal server error" });
+      user
+        ? res.status(200).json({ message: "Login successfull", user })
+        : res.status(500).json({ message: "Internal server error" });
     } catch (error) {
       console.log(error);
     }
