@@ -1,7 +1,9 @@
 import OtpRepository from "../repositories/otpRepository.ts";
 import RiderRepository from "../repositories/riderRepository.ts";
+import comparePassword from "../utils/comparePasswords.ts";
 import generateOtp from "../utils/generateOtp.ts";
 import hashPassword from "../utils/hashPassword.ts";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
 import sendOtp from "../utils/sendIOtp.ts";
 
 class RiderService {
@@ -45,29 +47,55 @@ class RiderService {
     }
   };
 
-  verifyOtp=async(otp)=>{
+  verifyOtp = async (otp) => {
     try {
+      const user = await this.otpRepository.findbyOtp(otp);
 
-        const user=await  this.otpRepository.findbyOtp(otp)
+      if (!user) {
+        throw new Error("Incorrect otp");
+      }
 
-        if(!user){
-            throw new Error("Incorrect otp")
-        }
+      const data = await this.riderRepository.verifyRider(user);
 
-        const data= await this.riderRepository.verifyRider(user)
-
-        if(data){
-            return data
-        }else{
-
-            throw new Error("Failed to verify otp")
-        }
-        
+      if (data) {
+        return data;
+      } else {
+        throw new Error("Failed to verify otp");
+      }
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
+
+  verifyLogin = async (loginData) => {
+    try {
+      const riderFound = await this.riderRepository.verifyLogin(loginData);
+
+      if (!riderFound) {
+        throw new Error("Incorrect email");
+      }
+
+      const passwordMatch = await comparePassword(
+        loginData.password,
+        riderFound.password
+      );
+
+      if (!passwordMatch) {
+        throw new Error("Incorrect Password");
+      }
+
+      if (riderFound && passwordMatch) {
+        const accessToken = await generateAccessToken(riderFound);
+        const refreshToken = await generateRefreshToken(riderFound);
+
+        return { ...riderFound, accessToken, refreshToken };
+      }
+
+      return false;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default RiderService;

@@ -32,6 +32,14 @@ class RiderRepository {
       console.log(error);
     }
   };
+
+  verifyLogin = async (loginData) => {
+    try {
+      return await Rider.findOne({ email: loginData.email });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default RiderRepository;
