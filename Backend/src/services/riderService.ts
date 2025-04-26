@@ -88,7 +88,7 @@ class RiderService {
         const accessToken = await generateAccessToken(riderFound);
         const refreshToken = await generateRefreshToken(riderFound);
 
-        return { ...riderFound, accessToken, refreshToken };
+        return { ...riderFound.toObject(), accessToken, refreshToken };
       }
 
       return false;
