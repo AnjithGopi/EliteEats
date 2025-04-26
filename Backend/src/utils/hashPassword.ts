@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
-const hashPassword = async (password) => {
+const hashPassword = async (password:String) => {
   try {
     const salt = await bcrypt.genSalt(saltRounds);
 
