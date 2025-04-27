@@ -54,6 +54,19 @@ class UserRepository {
     }
   }
 
+  findAdmin=async(loginData)=>{
+
+    try {
+
+        const admin= await User.findOne({email:loginData.email,isAdmin:true})
+        return admin
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+  }
+
   
 }
 
