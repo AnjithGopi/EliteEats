@@ -67,6 +67,53 @@ class UserRepository {
     }
   }
 
+  findUsers=async()=>{
+
+    try {
+
+       
+
+      return await User.find({otpVerified:true,isAdmin:false})
+
+      
+        
+    } catch (error) {
+
+        console.log(error)
+        
+    }
+  }
+
+  getDetails=async(id)=>{
+
+    try {
+
+        return  await User.findById(id)
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+  }
+
+  block=async(id)=>{
+
+    try {
+
+      return await User.findByIdAndUpdate(id,{isActive:false},{new:true})
+
+    
+    
+        
+    } catch (error) {
+
+        console.log(error)
+    }
+
+  }
+
+
+
   
 }
 

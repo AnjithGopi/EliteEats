@@ -25,8 +25,6 @@ class AdminService {
         throw new Error("Incorrect Password");
       }
 
-      
-
       if (admin && passwordMatch) {
         const accessToken = generateAccessToken(admin);
         const refreshToken = generateRefreshToken(admin);
@@ -37,6 +35,59 @@ class AdminService {
       console.log(error);
     }
   };
+
+  findUsers = async () => {
+    try {
+      const users = await this.userRepository.findUsers();
+      console.log(users)
+
+      if (!users) {
+        throw new Error("Something went wrong");
+      }
+
+      console.log("users found:",users)
+
+      return users;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findUser=async(id)=>{
+
+    try {
+
+      const user=await this.userRepository.getDetails(id)
+      
+
+      return user
+      
+    } catch (error) {
+
+      console.log(error)
+    }
+  }
+
+  blockUser=async(id)=>{
+
+    try {
+
+     
+
+      const blocked= await this.userRepository.block(id)
+     console.log("BLocked:",blocked)
+      if(!blocked){
+        throw new Error("Something went wrong")
+      }
+
+     return blocked
+      
+    } catch (error) {
+
+      console.log(error)
+      
+    }
+  }
 }
 
 export default AdminService;
