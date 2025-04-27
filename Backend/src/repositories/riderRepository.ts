@@ -26,7 +26,7 @@ class RiderRepository {
     try {
       return await Rider.findOneAndUpdate(
         { email: user.email },
-        { $set: { isVerified: true } }
+        { $set: { otpVerified: true } }
       );
     } catch (error) {
       console.log(error);

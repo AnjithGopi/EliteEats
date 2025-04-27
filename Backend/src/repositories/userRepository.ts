@@ -34,7 +34,7 @@ class UserRepository {
     try {
       return await User.findOneAndUpdate(
         { email: data.email },
-        { $set: { isVerified: true } }
+        { $set: { otpVerified: true } }
       );
     } catch (error) {
       console.log(error.message);

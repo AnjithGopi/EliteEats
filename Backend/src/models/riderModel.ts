@@ -7,7 +7,7 @@ const riderSchema= new mongoose.Schema({
     email:{type:String,unique:true,required:true},
     mobile:{type:Number,unique:true,required:true},
     password:{type:String,required:true},
-    isVerified:{type:Boolean,default:false},
+    otpVerified:{type:Boolean,default:false},
     isActive:{type:Boolean,default:true},
     isOnline:{type:Boolean,default:true},
     
