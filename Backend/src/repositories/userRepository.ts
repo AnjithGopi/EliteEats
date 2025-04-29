@@ -41,80 +41,64 @@ class UserRepository {
     }
   };
 
-
-  loginVerification=async(loginData)=>{
-
+  loginVerification = async (loginData) => {
     try {
-
-        return await User.findOne({email:loginData.email})
-        
+      return await User.findOne({ email: loginData.email });
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 
-  findAdmin=async(loginData)=>{
-
+  findAdmin = async (loginData) => {
     try {
-
-        const admin= await User.findOne({email:loginData.email,isAdmin:true})
-        return admin
-        
+      const admin = await User.findOne({
+        email: loginData.email,
+        isAdmin: true,
+      });
+      return admin;
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 
-  findUsers=async()=>{
+  findUsers = async () => {
+    try {
+      return await User.find({ otpVerified: true, isAdmin: false });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  getDetails = async (id) => {
+    try {
+      return await User.findById(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  block = async (id) => {
+    try {
+      return await User.findByIdAndUpdate(
+        id,
+        { isActive: false },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  unblock=async(id)=>{
     try {
 
-       
-
-      return await User.find({otpVerified:true,isAdmin:false})
-
+      return await User.findByIdAndUpdate(id,{isActive:true},{new :true})
       
-        
     } catch (error) {
-
-        console.log(error)
-        
+      console.log(error)
+      
     }
   }
-
-  getDetails=async(id)=>{
-
-    try {
-
-        return  await User.findById(id)
-        
-    } catch (error) {
-        console.log(error)
-        
-    }
-  }
-
-  block=async(id)=>{
-
-    try {
-
-      return await User.findByIdAndUpdate(id,{isActive:false},{new:true})
-
-    
-    
-        
-    } catch (error) {
-
-        console.log(error)
-    }
-
-  }
-
-
-
-  
 }
 
 export default UserRepository;

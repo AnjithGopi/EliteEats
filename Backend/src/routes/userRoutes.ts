@@ -7,6 +7,6 @@ router.route("/signup").post(userController.userSignup);
 
 router.route("/verify_otp").post(userController.verifyOtp);
 
-router.route("/login").post(userController.userLogin)
+router.route("/login").post(userController.userLogin);
 
 export default router;

@@ -88,6 +88,24 @@ class AdminService {
       
     }
   }
+
+  unBlockUser=async(id)=>{
+    try {
+
+      const unBlocked= await this.userRepository.unblock(id)
+
+      if(!unBlocked){
+        throw new Error("Something went wrong")
+      }
+
+      return unBlocked
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+  
 }
 
 export default AdminService;

@@ -47,52 +47,58 @@ class AdminController {
       } else {
         res.status(200).json(users);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  userDetails=async(req:Request,res:Response)=>{
-
+  userDetails = async (req: Request, res: Response) => {
     try {
+      const { id } = req.params;
 
-      const {id}=req.params
+      const user = await this.adminService.findUser(id);
 
-      const user= await this.adminService.findUser(id)
-
-      if(!user){
-        res.status(404).json("user not found")
-      }else{
-
-        res.status(200).json(user)
+      if (!user) {
+        res.status(404).json("user not found");
+      } else {
+        res.status(200).json(user);
       }
-      
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 
-  blockUser= async(req:Request,res:Response)=>{
+  blockUser = async (req: Request, res: Response) => {
     try {
+      const { id } = req.params;
 
-       const{id}=req.params
+      const blocked = await this.adminService.blockUser(id);
 
-       const blocked =await this.adminService.blockUser(id)
-
-       console.log("blocked:",blocked)
-       if(blocked){
-
-        res.status(200).json({Message:"userblocked successfully",blocked})
-
-       }else{
-        res.status(500).json("Internal server  error")
-       }
-       
-      
+      console.log("blocked:", blocked);
+      if (blocked) {
+        res.status(200).json({ Message: "userblocked successfully", blocked });
+      } else {
+        res.status(500).json("Internal server  error");
+      }
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  unblockUser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const unBlock = await this.adminService.unBlockUser(id);
+
+      if (unBlock) {
+        res.status(200).json({ message: "Unblocked ", unBlock });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default new AdminController();
