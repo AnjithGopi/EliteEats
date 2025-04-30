@@ -39,13 +39,13 @@ class AdminService {
   findUsers = async () => {
     try {
       const users = await this.userRepository.findUsers();
-      console.log(users)
+      console.log(users);
 
       if (!users) {
         throw new Error("Something went wrong");
       }
 
-      console.log("users found:",users)
+      console.log("users found:", users);
 
       return users;
     } catch (error) {
@@ -53,59 +53,43 @@ class AdminService {
     }
   };
 
-  findUser=async(id)=>{
-
+  findUser = async (id) => {
     try {
+      const user = await this.userRepository.getDetails(id);
 
-      const user=await this.userRepository.getDetails(id)
-      
-
-      return user
-      
+      return user;
     } catch (error) {
-
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  blockUser=async(id)=>{
-
+  blockUser = async (id) => {
     try {
-
-     
-
-      const blocked= await this.userRepository.block(id)
-     console.log("BLocked:",blocked)
-      if(!blocked){
-        throw new Error("Something went wrong")
+      const blocked = await this.userRepository.block(id);
+      console.log("BLocked:", blocked);
+      if (!blocked) {
+        throw new Error("Something went wrong");
       }
 
-     return blocked
-      
+      return blocked;
     } catch (error) {
-
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 
-  unBlockUser=async(id)=>{
+  unBlockUser = async (id) => {
     try {
+      const unBlocked = await this.userRepository.unblock(id);
 
-      const unBlocked= await this.userRepository.unblock(id)
-
-      if(!unBlocked){
-        throw new Error("Something went wrong")
+      if (!unBlocked) {
+        throw new Error("Something went wrong");
       }
 
-      return unBlocked
-      
+      return unBlocked;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
-  
+  };
 }
 
 export default AdminService;
