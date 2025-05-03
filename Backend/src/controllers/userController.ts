@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import UserService from "../services/userService.ts";
+import { HttpStatusCode } from "../utils/statusCodes.ts";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -15,7 +16,7 @@ class userController {
       let data = await this.userService.register(req.body);
 
       if (data) {
-        res.status(200).json(data);
+        res.status(HttpStatusCode.OK).json(data);
       }
     } catch (error) {
       console.log(error);
@@ -26,7 +27,9 @@ class userController {
     try {
       const data = await this.userService.findUser(req.body);
       const user = await this.userService.verifyUser(data);
-      res.status(201).json({ messsage: "User Registered Successfully", user });
+      res
+        .status(HttpStatusCode.CREATED)
+        .json({ messsage: "User Registered Successfully", user });
     } catch (error) {
       console.log(error);
     }
@@ -49,12 +52,16 @@ class userController {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
-          maxAge:  7 * 24 * 60 * 60 * 1000,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).json({ message: "Login Successfull", user });
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Login Successfull", user });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
       }
     } catch (error) {
       console.log(error);

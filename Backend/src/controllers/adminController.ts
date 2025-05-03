@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import AdminService from "../services/adminServices.ts";
+import { HttpStatusCode } from "../utils/statusCodes.ts";
 
 class AdminController {
   private adminService: AdminService;
@@ -15,7 +16,9 @@ class AdminController {
 
       console.log("admin found:", data);
       if (!data) {
-        res.status(500).json({ message: "Internal server Error" });
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server Error" });
       } else {
         res.cookie("AccessToken", data.accessToken, {
           httpOnly: true,
@@ -31,7 +34,9 @@ class AdminController {
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).json({ message: "Admin login successfull", data });
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Admin login successfull", data });
       }
     } catch (error) {
       console.log(error);
@@ -43,9 +48,9 @@ class AdminController {
       const users = await this.adminService.findUsers();
 
       if (!users) {
-        res.status(404).json("No users found");
+        res.status(HttpStatusCode.NOT_FOUND).json("No users found");
       } else {
-        res.status(200).json(users);
+        res.status(HttpStatusCode.OK).json(users);
       }
     } catch (error) {
       console.log(error);
@@ -59,9 +64,9 @@ class AdminController {
       const user = await this.adminService.findUser(id);
 
       if (!user) {
-        res.status(404).json("user not found");
+        res.status(HttpStatusCode.NOT_FOUND).json("user not found");
       } else {
-        res.status(200).json(user);
+        res.status(HttpStatusCode.OK).json(user);
       }
     } catch (error) {
       console.log(error);
@@ -76,9 +81,13 @@ class AdminController {
 
       console.log("blocked:", blocked);
       if (blocked) {
-        res.status(200).json({ Message: "userblocked successfully", blocked });
+        res
+          .status(HttpStatusCode.OK)
+          .json({ Message: "userblocked successfully", blocked });
       } else {
-        res.status(500).json("Internal server  error");
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json("Internal server  error");
       }
     } catch (error) {
       console.log(error);
@@ -91,9 +100,11 @@ class AdminController {
       const unBlock = await this.adminService.unBlockUser(id);
 
       if (unBlock) {
-        res.status(200).json({ message: "Unblocked ", unBlock });
+        res.status(HttpStatusCode.OK).json({ message: "Unblocked ", unBlock });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
       }
     } catch (error) {
       console.log(error);

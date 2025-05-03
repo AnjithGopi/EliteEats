@@ -25,6 +25,7 @@ function Signup() {
           name: userName,
           mobile: mobile,
           password: password,
+          
         })
         .then((response) => {
           console.log(response);

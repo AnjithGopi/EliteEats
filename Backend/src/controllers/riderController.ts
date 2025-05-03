@@ -1,5 +1,6 @@
 import { json, type Request, type Response } from "express";
 import RiderService from "../services/riderService.ts";
+import { HttpStatusCode } from "../utils/statusCodes.ts";
 
 class RiderController {
   private RiderService: RiderService;
@@ -13,8 +14,8 @@ class RiderController {
       const data = await this.RiderService.register(req.body);
 
       data
-        ? res.status(200).json(data)
-        : res.status(500).json("Internal server error");
+        ? res.status(HttpStatusCode.OK).json(data)
+        : res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json("Internal server error");
     } catch (error) {
       console.log(error);
     }
@@ -26,10 +27,10 @@ class RiderController {
 
       if (data) {
         res
-          .status(201)
+          .status(HttpStatusCode.CREATED)
           .json({ message: "Delivery Partner Registered succesfully", data });
       } else {
-        res.status(500).json("Internal server error");
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json("Internal server error");
       }
     } catch (error) {
       console.log(error);
@@ -56,11 +57,13 @@ class RiderController {
           maxAge:  7 * 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).json({ message: "Login Successfull", user });
+        res.status(HttpStatusCode.OK).json({ message: "Login Successfull", user });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 }
 
