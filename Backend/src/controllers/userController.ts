@@ -7,11 +7,11 @@ import { IUserService } from "../domain/interface/User/IUserService";
 
 @injectable()
 export class userController {
-  constructor(@inject("IUserService") private userService: IUserService) {}
+  constructor(@inject("IUserService") private _userService: IUserService) {}
 
   userSignup = async (req: Request, res: Response) => {
     try {
-      let data = await this.userService.register(req.body);
+      let data = await this._userService.register(req.body);
 
       if (data) {
         res.status(HttpStatusCode.OK).json(data);
@@ -23,8 +23,8 @@ export class userController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const data = await this.userService.findUser(req.body);
-      const user = await this.userService.verifyUser(data);
+      const data = await this._userService.findUser(req.body);
+      const user = await this._userService.verifyUser(data);
       res
         .status(HttpStatusCode.CREATED)
         .json({ messsage: "User Registered Successfully", user });
@@ -35,7 +35,7 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
-      const user = await this.userService.verifyLogin(req.body);
+      const user = await this._userService.verifyLogin(req.body);
 
       if (user) {
         console.log(user);
