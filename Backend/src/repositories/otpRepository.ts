@@ -1,9 +1,9 @@
-import Otp from "../models/otpModel.ts";
+import Otp from "../models/otpModel";
 
 class OtpRepository {
   constructor() {}
 
-  createOtp = async (email, otp) => {
+  createOtp = async (email:string, otp:string) => {
     try {
       console.log("email in otp repository:", email);
       console.log("otp in otp repository:", otp);
@@ -14,11 +14,11 @@ class OtpRepository {
       });
       
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
-  findbyOtp = async (otpData) => {
+  findbyOtp = async (otpData:any) => {
     try {
       return await Otp.findOne({ otp: otpData.otp });
     } catch (error) {

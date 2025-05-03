@@ -1,6 +1,6 @@
 import { json, type Request, type Response } from "express";
-import RiderService from "../services/riderService.ts";
-import { HttpStatusCode } from "../utils/statusCodes.ts";
+import RiderService from "../services/riderService";
+import { HttpStatusCode } from "../utils/statusCodes";
 
 class RiderController {
   private RiderService: RiderService;

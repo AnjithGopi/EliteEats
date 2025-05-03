@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+    //"allowImportingTsExtensions":true,
+      "target": "ES6",               // Modern JS features
+      "module": "commonjs",          // Node.js-compatible modules
+      "experimentalDecorators": true, // Required for @injectable/@inject
+      "emitDecoratorMetadata": true,  // Required for dependency injection
+      "strict": true,                // Better type safety
+      "esModuleInterop": true,       // Easier module imports
+      "skipLibCheck": true,          // Faster compilation
+      "outDir": "./dist"             // Output folder for compiled JS
+    },
+    "include": ["src/**/*"],         // Files to compile
+    "exclude": ["node_modules"]      // Ignore these
+  }

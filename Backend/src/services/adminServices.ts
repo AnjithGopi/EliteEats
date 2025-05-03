@@ -1,16 +1,16 @@
-import UserRepository from "../repositories/userRepository.ts";
-import comparePassword from "../utils/comparePasswords.ts";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
+import UserRepository from "../repositories/userRepository";
+import comparePassword from "../utils/comparePasswords";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 class AdminService {
-  private userRepository: UserRepository;
+  private _userRepository: UserRepository;
   constructor() {
-    this.userRepository = new UserRepository();
+    this._userRepository = new UserRepository();
   }
 
-  findAdmin = async (loginData) => {
+  findAdmin = async (loginData:any) => {
     try {
-      const admin = await this.userRepository.findAdmin(loginData);
+      const admin = await this._userRepository.findAdmin(loginData);
 
       if (!admin) {
         throw new Error("Incorrect email");
@@ -38,7 +38,7 @@ class AdminService {
 
   findUsers = async () => {
     try {
-      const users = await this.userRepository.findUsers();
+      const users = await this._userRepository.findUsers();
       console.log(users);
 
       if (!users) {
@@ -53,9 +53,9 @@ class AdminService {
     }
   };
 
-  findUser = async (id) => {
+  findUser = async (id:string) => {
     try {
-      const user = await this.userRepository.getDetails(id);
+      const user = await this._userRepository.getDetails(id);
 
       return user;
     } catch (error) {
@@ -63,9 +63,9 @@ class AdminService {
     }
   };
 
-  blockUser = async (id) => {
+  blockUser = async (id:string) => {
     try {
-      const blocked = await this.userRepository.block(id);
+      const blocked = await this._userRepository.block(id);
       console.log("BLocked:", blocked);
       if (!blocked) {
         throw new Error("Something went wrong");
@@ -77,9 +77,9 @@ class AdminService {
     }
   };
 
-  unBlockUser = async (id) => {
+  unBlockUser = async (id:string) => {
     try {
-      const unBlocked = await this.userRepository.unblock(id);
+      const unBlocked = await this._userRepository.unblock(id);
 
       if (!unBlocked) {
         throw new Error("Something went wrong");

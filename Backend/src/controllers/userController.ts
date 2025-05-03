@@ -1,15 +1,13 @@
 import type { Request, Response } from "express";
-import UserService from "../services/userService.ts";
-import { HttpStatusCode } from "../utils/statusCodes.ts";
+import { HttpStatusCode } from "../utils/statusCodes";
 import dotenv from "dotenv";
 dotenv.config();
+import { injectable, inject } from "inversify";
+import { IUserService } from "../domain/interface/User/IUserService";
 
-class userController {
-  private userService: UserService;
-
-  constructor() {
-    this.userService = new UserService();
-  }
+@injectable()
+export class userController {
+  constructor(@inject("IUserService") private userService: IUserService) {}
 
   userSignup = async (req: Request, res: Response) => {
     try {
@@ -68,5 +66,3 @@ class userController {
     }
   };
 }
-
-export default new userController();

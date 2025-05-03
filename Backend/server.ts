@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import express from "express";
 import connectDb from "./src/config/db.ts";
 import dotenv from "dotenv";

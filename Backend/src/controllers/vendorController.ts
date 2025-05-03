@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import VendorServices from "../services/vendorService.ts";
-import { HttpStatusCode } from "../utils/statusCodes.ts";
+import VendorServices from "../services/vendorService";
+import { HttpStatusCode } from "../utils/statusCodes";
 
 class VendorController {
   private vendorService: VendorServices;

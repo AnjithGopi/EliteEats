@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
-import AdminService from "../services/adminServices.ts";
-import { HttpStatusCode } from "../utils/statusCodes.ts";
+import AdminService from "../services/adminServices";
+import { HttpStatusCode } from "../utils/statusCodes";
 
 class AdminController {
   private adminService: AdminService;

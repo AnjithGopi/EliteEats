@@ -1,9 +1,9 @@
-import User from "../models/userModel.ts";
+import User from "../models/userModel";
 
 class UserRepository {
   constructor() {}
 
-  checkExists = async (userData) => {
+  checkExists = async (userData:any) => {
     try {
       console.log("userData:", userData);
       const exists = await User.findOne({
@@ -20,7 +20,7 @@ class UserRepository {
     }
   };
 
-  saveUser = async (userData) => {
+  saveUser = async (userData:any) => {
     try {
       const user = await User.create(userData);
       console.log("user saved without verification :", user);
@@ -30,18 +30,18 @@ class UserRepository {
     }
   };
 
-  verify = async (data) => {
+  verify = async (data:any) => {
     try {
       return await User.findOneAndUpdate(
         { email: data.email },
         { $set: { otpVerified: true } }
       );
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
-  loginVerification = async (loginData) => {
+  loginVerification = async (loginData:any) => {
     try {
       return await User.findOne({ email: loginData.email });
     } catch (error) {
@@ -49,7 +49,7 @@ class UserRepository {
     }
   };
 
-  findAdmin = async (loginData) => {
+  findAdmin = async (loginData:any) => {
     try {
       const admin = await User.findOne({
         email: loginData.email,
@@ -69,7 +69,7 @@ class UserRepository {
     }
   };
 
-  getDetails = async (id) => {
+  getDetails = async (id:string) => {
     try {
       return await User.findById(id);
     } catch (error) {
@@ -77,7 +77,7 @@ class UserRepository {
     }
   };
 
-  block = async (id) => {
+  block = async (id:string) => {
     try {
       return await User.findByIdAndUpdate(
         id,
@@ -89,7 +89,7 @@ class UserRepository {
     }
   };
 
-  unblock=async(id)=>{
+  unblock=async(id:string)=>{
     try {
 
       return await User.findByIdAndUpdate(id,{isActive:true},{new :true})

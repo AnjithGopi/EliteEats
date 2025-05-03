@@ -1,12 +1,15 @@
-import UserRepository from "../repositories/userRepository.ts";
-import generateOtp from "../utils/generateOtp.ts";
-import sendOtp from "../utils/sendIOtp.ts";
-import OtpRepository from "../repositories/otpRepository.ts";
-import hashPassword from "../utils/hashPassword.ts";
-import comparePassword from "../utils/comparePasswords.ts";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
+import UserRepository from "../repositories/userRepository";
+import generateOtp from "../utils/generateOtp";
+import sendOtp from "../utils/sendIOtp";
+import OtpRepository from "../repositories/otpRepository";
+import hashPassword from "../utils/hashPassword";
+import comparePassword from "../utils/comparePasswords";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import { IUserService } from "../domain/interface/User/IUserService";
+//import { inject,injectable } from "inversify";
 
-class UserService {
+
+class UserService implements IUserService {
   private userRepository: UserRepository;
   private otpRepository: OtpRepository;
 
@@ -15,7 +18,7 @@ class UserService {
     this.otpRepository = new OtpRepository();
   }
 
-  register = async (userData) => {
+  register = async (userData:any) => {
     try {
       const existingUser = await this.userRepository.checkExists(userData);
 
@@ -31,7 +34,7 @@ class UserService {
       const otp = generateOtp();
 
       const saveOtp = savedUser
-        ? await this.otpRepository.createOtp(savedUser.email, otp)
+        ? await this.otpRepository.createOtp(savedUser.email, otp.toString())
         : undefined;
       saveOtp ? await sendOtp(saveOtp.email, saveOtp.otp) : undefined;
 
@@ -41,7 +44,7 @@ class UserService {
     }
   };
 
-  findUser = async (otpData) => {
+  findUser = async (otpData:any) => {
     try {
       let data = await this.otpRepository.findbyOtp(otpData);
 
@@ -55,7 +58,7 @@ class UserService {
     }
   };
 
-  verifyUser = async (data) => {
+  verifyUser = async (data:any) => {
     try {
       console.log("data in verifyUser:", data);
       const isVerified = await this.userRepository.verify(data);
@@ -69,7 +72,7 @@ class UserService {
     }
   };
 
-  verifyLogin = async (loginData) => {
+  verifyLogin = async (loginData:any) => {
     try {
       const user = await this.userRepository.loginVerification(loginData);
 
@@ -90,9 +93,9 @@ class UserService {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
         console.log(accessToken);
-        console.log(refreshToken)
+        console.log(refreshToken);
 
-        return { ...user.toObject(),accessToken,refreshToken }; // toObject is used to opt out the metadata from mongodb
+        return { accessToken, refreshToken }; // toObject is used to opt out the metadata from mongodb
       }
 
       return false;
