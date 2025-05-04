@@ -1,7 +1,7 @@
 import { Container } from "inversify";
-import { IAdminService } from "../domain/interface/Admin/IAdminService";
-import AdminService from "../services/adminServices";
-import { AdminController } from "../controllers/adminController";
+import { IAdminService } from "../../domain/interface/Admin/IAdminService";
+import AdminService from "../../services/adminServices";
+import { AdminController } from "../../controllers/adminController";
 
 const adminContainer = new Container();
 

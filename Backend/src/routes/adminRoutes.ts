@@ -1,5 +1,5 @@
 import express from "express";
-import adminContainer from "../config/inversifyAdmin";
+import adminContainer from "../config/inversifyConfig/inversifyAdmin";
 
 import { AdminController } from "../controllers/adminController";
 

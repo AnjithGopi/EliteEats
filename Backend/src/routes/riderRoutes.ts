@@ -1,5 +1,5 @@
 import express from "express";
-import riderContainer from "../config/inversifyRider";
+import riderContainer from "../config/inversifyConfig/inversifyRider";
 import { RiderController } from "../controllers/riderController";
 
 

@@ -1,9 +1,9 @@
 import express from "express";
 import { userController } from "../controllers/userController";
-import container from "../config/inversifyConfig";
+import userContainer from "../config/inversifyConfig/inversifyUser";
 const router = express.Router();
 
-const controller = container.get<userController>(userController);
+const controller = userContainer.get<userController>(userController);
 
 router.route("/signup").post(controller.userSignup);
 router.route("/verify_otp").post(controller.verifyOtp);
