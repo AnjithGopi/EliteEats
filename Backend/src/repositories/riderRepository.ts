@@ -1,10 +1,13 @@
+
+import { LoginData } from "../domain/interface/Admin/IAdminService";
+import { IRider, IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
 import Rider from "../models/riderModel";
 
 
-class RiderRepository {
+class RiderRepository implements IRiderRepository {
   constructor() {}
 
-  checkExists = async (riderData:any) => {
+  checkExists = async (riderData:IRider) => {
     try {
       return await Rider.findOne({
         $or: [{ email: riderData.email }, { mobile: riderData.mobile }],
@@ -14,7 +17,7 @@ class RiderRepository {
     }
   };
 
-  saveRider = async (riderData:any) => {
+  saveRider = async (riderData:IRider) => {
     try {
       return await Rider.create(riderData);
     } catch (error) {
@@ -33,7 +36,7 @@ class RiderRepository {
     }
   };
 
-  verifyLogin = async (loginData:any) => {
+  verifyLogin = async (loginData:LoginData) => {
     try {
       return await Rider.findOne({ email: loginData.email });
     } catch (error) {

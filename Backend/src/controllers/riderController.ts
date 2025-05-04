@@ -1,21 +1,21 @@
 import { json, type Request, type Response } from "express";
-import RiderService from "../services/riderService";
 import { HttpStatusCode } from "../utils/statusCodes";
+import { inject, injectable } from "inversify";
+import { IRiderService } from "../domain/interface/Rider/IRiderService";
 
-class RiderController {
-  private RiderService: RiderService;
-
-  constructor() {
-    this.RiderService = new RiderService();
-  }
+@injectable()
+export class RiderController {
+  constructor(@inject("IRiderService") private _riderService: IRiderService) {}
 
   signup = async (req: Request, res: Response) => {
     try {
-      const data = await this.RiderService.register(req.body);
+      const data = await this._riderService.register(req.body);
 
       data
         ? res.status(HttpStatusCode.OK).json(data)
-        : res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json("Internal server error");
+        : res
+            .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+            .json("Internal server error");
     } catch (error) {
       console.log(error);
     }
@@ -23,14 +23,16 @@ class RiderController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const data = await this.RiderService.verifyOtp(req.body);
+      const data = await this._riderService.verifyOtp(req.body);
 
       if (data) {
         res
           .status(HttpStatusCode.CREATED)
           .json({ message: "Delivery Partner Registered succesfully", data });
       } else {
-        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json("Internal server error");
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json("Internal server error");
       }
     } catch (error) {
       console.log(error);
@@ -39,33 +41,35 @@ class RiderController {
 
   login = async (req: Request, res: Response) => {
     try {
-      const user = await this.RiderService.verifyLogin(req.body);
+      const user = await this._riderService.verifyLogin(req.body);
 
-      // if (user) {
-      //   console.log(user);
-      //   res.cookie("AccessToken", user.accessToken, {
-      //     httpOnly: true,
-      //     secure: process.env.NODE_ENV === "production",
-      //     sameSite: "strict",
-      //     maxAge: 60 * 60 * 1000,
-      //   });
+      if (user) {
+        console.log(user);
+        res.cookie("AccessToken", user.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 60 * 60 * 1000,
+        });
 
-      //   res.cookie("RefreshToken", user.refreshToken, {
-      //     httpOnly: true,
-      //     secure: process.env.NODE_ENV === "production",
-      //     sameSite: "strict",
-      //     maxAge:  7 * 24 * 60 * 60 * 1000,
-      //   });
+        res.cookie("RefreshToken", user.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
-      //   res.status(HttpStatusCode.OK).json({ message: "Login Successfull", user });
-      // } else {
-      //   res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
-      console.log("should handle tokens in cookies")
-      // }
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Login Successfull", user });
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
+        console.log("should handle tokens in cookies");
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 }
-
-export default new RiderController();

@@ -1,18 +1,21 @@
+import { inject, injectable } from "inversify";
 import { LoginData } from "../domain/interface/Admin/IAdminService";
 import OtpRepository from "../repositories/otpRepository";
-import RiderRepository from "../repositories/riderRepository";
+import { IRider, IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
 import comparePassword from "../utils/comparePasswords";
 import generateOtp from "../utils/generateOtp";
 import hashPassword from "../utils/hashPassword";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import sendOtp from "../utils/sendIOtp";
+import { IRiderService } from "../domain/interface/Rider/IRiderService";
 
-class RiderService {
-  private riderRepository: RiderRepository;
+@injectable()
+export class RiderService implements IRiderService {
   private otpRepository: OtpRepository;
 
-  constructor() {
-    this.riderRepository = new RiderRepository();
+  constructor(
+    @inject("IRiderRepository") private _riderRepository: IRiderRepository
+  ) {
     this.otpRepository = new OtpRepository();
   }
 
@@ -20,7 +23,7 @@ class RiderService {
     try {
       console.log("riderData:", riderData);
 
-      const existingRider = await this.riderRepository.checkExists(riderData);
+      const existingRider = await this._riderRepository.checkExists(riderData);
 
       if (existingRider) {
         throw new Error("User already exists");
@@ -33,7 +36,7 @@ class RiderService {
         password: hashedPassword,
       };
 
-      const savedRider = await this.riderRepository.saveRider(riderToSave);
+      const savedRider = await this._riderRepository.saveRider(riderToSave);
 
       const otp = generateOtp();
 
@@ -48,7 +51,7 @@ class RiderService {
     }
   };
 
-  verifyOtp = async (otp:string) => {
+  verifyOtp = async (otp: string) => {
     try {
       const user = await this.otpRepository.findbyOtp(otp);
 
@@ -56,7 +59,7 @@ class RiderService {
         throw new Error("Incorrect otp");
       }
 
-      const data = await this.riderRepository.verifyRider(user);
+      const data = await this._riderRepository.verifyRider(user);
 
       if (data) {
         return data;
@@ -68,9 +71,9 @@ class RiderService {
     }
   };
 
-  verifyLogin = async (loginData:LoginData) => {
+  verifyLogin = async (loginData:{email:string,password:string}) => {
     try {
-      const riderFound = await this.riderRepository.verifyLogin(loginData);
+      const riderFound = await this._riderRepository.verifyLogin(loginData);
 
       if (!riderFound) {
         throw new Error("Incorrect email");
@@ -86,11 +89,11 @@ class RiderService {
       }
 
       if (riderFound && passwordMatch) {
-        // const accessToken =  generateAccessToken(riderFound);
-        // const refreshToken =  generateRefreshToken(riderFound);
+        console.log("Rider found:", riderFound);
+        const accessToken = generateAccessToken(riderFound);
+        const refreshToken = generateRefreshToken(riderFound);
 
-        // return { ...riderFound.toObject(), accessToken, refreshToken };
-        console.log("token for restaurent should be genereated while login")
+        return { ...riderFound.toObject(), accessToken, refreshToken };
       }
 
       return false;
@@ -99,5 +102,3 @@ class RiderService {
     }
   };
 }
-
-export default RiderService;

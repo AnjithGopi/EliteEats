@@ -4,7 +4,7 @@ import {env}from "../config/env"
 import {  UserDetails } from "../domain/interface/Admin/IAdminService";
 dotenv.config();
 
-export const generateAccessToken = (userData:UserDetails) => {
+export const generateAccessToken = (userData:any) => {
   try {
     console.log("token generation with user:", userData);
 
@@ -21,7 +21,7 @@ export const generateAccessToken = (userData:UserDetails) => {
   }
 };
 
-export const generateRefreshToken = (userData:UserDetails)=> {
+export const generateRefreshToken = (userData:any)=> {
   try {
     console.log("refresh token generation with userData:", userData);
 
