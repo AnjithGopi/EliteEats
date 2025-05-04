@@ -1,10 +1,11 @@
 import express from "express";
-import container from "../config/inversifyConfig";
+import adminContainer from "../config/inversifyAdmin";
+
 import { AdminController } from "../controllers/adminController";
 
 const router = express.Router();
 
-const controller = container.get<AdminController>(AdminController);
+const controller = adminContainer.get<AdminController>(AdminController);
 
 router.route("/login").post(controller.login);
 router.route("/users").get(controller.getAllusers);
