@@ -1,12 +1,12 @@
 import express from "express";
-import riderContainer from "../config/inversifyConfig/inversifyRider";
+import container from "../config/inversifyConfig/inversifyConfig";
 import { RiderController } from "../controllers/riderController";
 
 
 
 const router = express.Router();
 
-const controller=riderContainer.get<RiderController>(RiderController)
+const controller=container.get<RiderController>(RiderController)
 
 router.route("/signup").post(controller.signup);
 router.route("/verify_otp").post(controller.verifyOtp);

@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import "reflect-metadata";
 import express from "express";
 import connectDb from "./src/config/db";
 import dotenv from "dotenv";
@@ -6,7 +6,7 @@ import cors from "cors";
 import userRoute from "./src/routes/userRoutes";
 import riderRoute from "./src/routes/riderRoutes";
 import adminRoute from "./src/routes/adminRoutes";
-
+import { connectRedis } from "./src/config/redis";
 
 dotenv.config();
 
@@ -16,15 +16,16 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
-
+app.use(cors());
 
 app.use("/user", userRoute);
 app.use("/rider", riderRoute);
 app.use("/admin", adminRoute);
 
-connectDb().then(() => {
-  app.listen(port, () => {
-    console.log(`server running in http://localhost:${port}`);
+connectDb()
+  .then(() => connectRedis())
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`server running in http://localhost:${port}`);
+    });
   });
-});

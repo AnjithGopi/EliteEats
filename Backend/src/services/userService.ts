@@ -8,6 +8,9 @@ import { IUserService } from "../domain/interface/User/IUserService";
 import { inject, injectable } from "inversify";
 import { IUserRepository } from "../domain/interface/User/IUserRepository";
 import { LoginData } from "../domain/interface/Admin/IAdminService";
+import redisVerificationToken from "../utils/redisverificaton";
+import redisClient from "../config/redis";
+import { json } from "express";
 
 @injectable()
 class UserService implements IUserService {
@@ -31,15 +34,25 @@ class UserService implements IUserService {
 
       const userToSave = { ...userData, password: password }; // creating new user object with hashed password
 
-      let savedUser = await this._userRepository.saveUser(userToSave);
       const otp = generateOtp();
 
-      const saveOtp = savedUser
-        ? await this.otpRepository.createOtp(savedUser.email, otp.toString())
-        : undefined;
-      saveOtp ? await sendOtp(saveOtp.email, saveOtp.otp) : undefined;
+      const verificationToken = redisVerificationToken();
 
-      return { message: "OTP send successfully" };
+      if (userToSave && otp && verificationToken) {
+        await redisClient.setEx(
+          `reg:${verificationToken}`,
+          300,
+          JSON.stringify({ user: userToSave, otp: otp.toString() })
+        );
+        console.log("email", userToSave.email);
+        console.log("otp:", otp.toString());
+
+        await sendOtp(userToSave.email, otp.toString());
+
+        return { message: "OTP send successfully", verificationToken };
+      } else {
+        throw new Error("Unable to send otp");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +86,9 @@ class UserService implements IUserService {
     }
   };
 
-  verifyLogin = async (loginData:LoginData):Promise<{accessToken: string, refreshToken: string}|false |any> => {
+  verifyLogin = async (
+    loginData: LoginData
+  ): Promise<{ accessToken: string; refreshToken: string } | false | any> => {
     try {
       const user = await this._userRepository.loginVerification(loginData);
 

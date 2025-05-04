@@ -13,6 +13,8 @@ export class userController {
     try {
       let data = await this._userService.register(req.body);
 
+      console.log("Data from registration:",data)
+
       if (data) {
         res.status(HttpStatusCode.OK).json(data);
       }
