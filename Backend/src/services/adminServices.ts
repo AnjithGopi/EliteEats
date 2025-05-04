@@ -1,14 +1,19 @@
-import UserRepository from "../repositories/userRepository";
+import { injectable, inject } from "inversify";
+import {
+  IAdminService,
+  LoginData,
+} from "../domain/interface/Admin/IAdminService";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import { IUserRepository } from "../domain/interface/User/IUserRepository";
 
-class AdminService {
-  private _userRepository: UserRepository;
-  constructor() {
-    this._userRepository = new UserRepository();
-  }
+@injectable()
+class AdminService implements IAdminService {
+  constructor(
+    @inject("IUserRepository") private _userRepository: IUserRepository
+  ) {}
 
-  findAdmin = async (loginData:any) => {
+  findAdmin = async (loginData: LoginData) => {
     try {
       const admin = await this._userRepository.findAdmin(loginData);
 
@@ -28,7 +33,7 @@ class AdminService {
       if (admin && passwordMatch) {
         const accessToken = generateAccessToken(admin);
         const refreshToken = generateRefreshToken(admin);
-        return { ...admin.toObject(), accessToken, refreshToken };
+        return { accessToken, refreshToken };
       }
       return false;
     } catch (error) {
@@ -47,15 +52,38 @@ class AdminService {
 
       console.log("users found:", users);
 
-      return users;
+      // Properly transform each user in the array
+      const transformedUsers = users.map((user) => {
+        const userObject = user.toObject();
+        return {
+          _id: userObject._id.toString(), // Convert ObjectId to string
+          name: userObject.name,
+          email: userObject.email,
+          mobile: userObject.mobile,
+          isActive: userObject.isActive,
+          otpVerified: userObject.otpVerified,
+          isAdmin: userObject.isAdmin,
+          createdAt: userObject.createdAt,
+        };
+      });
+      return transformedUsers;
     } catch (error) {
       console.log(error);
     }
   };
 
-  findUser = async (id:string) => {
+  findUser = async (id: string) => {
     try {
-      const user = await this._userRepository.getDetails(id);
+      const userDoc = await this._userRepository.getDetails(id);
+
+      if (!userDoc) {
+        throw new Error("No users found");
+      }
+
+      const user = {
+        ...userDoc,
+        _id: userDoc._id.toString(),
+      };
 
       return user;
     } catch (error) {
@@ -63,7 +91,7 @@ class AdminService {
     }
   };
 
-  blockUser = async (id:string) => {
+  blockUser = async (id: string) => {
     try {
       const blocked = await this._userRepository.block(id);
       console.log("BLocked:", blocked);
@@ -71,13 +99,18 @@ class AdminService {
         throw new Error("Something went wrong");
       }
 
-      return blocked;
+      const blockedUser = {
+        ...blocked,
+        _id: blocked._id.toString(),
+      };
+
+      return blockedUser;
     } catch (error) {
       console.log(error);
     }
   };
 
-  unBlockUser = async (id:string) => {
+  unBlockUser = async (id: string) => {
     try {
       const unBlocked = await this._userRepository.unblock(id);
 
@@ -85,7 +118,12 @@ class AdminService {
         throw new Error("Something went wrong");
       }
 
-      return unBlocked;
+      const unblockedUser = {
+        ...unBlocked,
+        _id: unBlocked._id.toString(),
+      };
+
+      return unblockedUser;
     } catch (error) {
       console.log(error);
     }

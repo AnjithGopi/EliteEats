@@ -1,18 +1,15 @@
 import type { Request, Response } from "express";
-
-import AdminService from "../services/adminServices";
 import { HttpStatusCode } from "../utils/statusCodes";
+import { IAdminService } from "../domain/interface/Admin/IAdminService";
+import { inject, injectable } from "inversify";
 
-class AdminController {
-  private adminService: AdminService;
-
-  constructor() {
-    this.adminService = new AdminService();
-  }
+@injectable()
+export class AdminController {
+  constructor(@inject("IAdminService") private _adminService: IAdminService) {}
 
   login = async (req: Request, res: Response) => {
     try {
-      const data = await this.adminService.findAdmin(req.body);
+      const data = await this._adminService.findAdmin(req.body);
 
       console.log("admin found:", data);
       if (!data) {
@@ -45,7 +42,7 @@ class AdminController {
 
   getAllusers = async (req: Request, res: Response) => {
     try {
-      const users = await this.adminService.findUsers();
+      const users = await this._adminService.findUsers();
 
       if (!users) {
         res.status(HttpStatusCode.NOT_FOUND).json("No users found");
@@ -61,7 +58,7 @@ class AdminController {
     try {
       const { id } = req.params;
 
-      const user = await this.adminService.findUser(id);
+      const user = await this._adminService.findUser(id);
 
       if (!user) {
         res.status(HttpStatusCode.NOT_FOUND).json("user not found");
@@ -77,7 +74,7 @@ class AdminController {
     try {
       const { id } = req.params;
 
-      const blocked = await this.adminService.blockUser(id);
+      const blocked = await this._adminService.blockUser(id);
 
       console.log("blocked:", blocked);
       if (blocked) {
@@ -97,7 +94,7 @@ class AdminController {
   unblockUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const unBlock = await this.adminService.unBlockUser(id);
+      const unBlock = await this._adminService.unBlockUser(id);
 
       if (unBlock) {
         res.status(HttpStatusCode.OK).json({ message: "Unblocked ", unBlock });
@@ -111,5 +108,3 @@ class AdminController {
     }
   };
 }
-
-export default new AdminController();

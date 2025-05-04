@@ -1,17 +1,14 @@
+import { IUserRepository } from "../domain/interface/User/IUserRepository";
 import User from "../models/userModel";
 
-class UserRepository {
+class UserRepository implements IUserRepository {
   constructor() {}
 
-  checkExists = async (userData:any) => {
+  checkExists = async (userData: any) => {
     try {
       console.log("userData:", userData);
       const exists = await User.findOne({
-        $or: [
-          { email: userData.email },
-          { mobile: userData.mobile },
-          //{ isVerified: true },
-        ],
+        $or: [{ email: userData.email }, { mobile: userData.mobile }],
       });
 
       return exists;
@@ -20,7 +17,7 @@ class UserRepository {
     }
   };
 
-  saveUser = async (userData:any) => {
+  saveUser = async (userData: any) => {
     try {
       const user = await User.create(userData);
       console.log("user saved without verification :", user);
@@ -30,7 +27,7 @@ class UserRepository {
     }
   };
 
-  verify = async (data:any) => {
+  verify = async (data: any) => {
     try {
       return await User.findOneAndUpdate(
         { email: data.email },
@@ -41,7 +38,7 @@ class UserRepository {
     }
   };
 
-  loginVerification = async (loginData:any) => {
+  loginVerification = async (loginData: any) => {
     try {
       return await User.findOne({ email: loginData.email });
     } catch (error) {
@@ -49,7 +46,7 @@ class UserRepository {
     }
   };
 
-  findAdmin = async (loginData:any) => {
+  findAdmin = async (loginData: any) => {
     try {
       const admin = await User.findOne({
         email: loginData.email,
@@ -69,7 +66,7 @@ class UserRepository {
     }
   };
 
-  getDetails = async (id:string) => {
+  getDetails = async (id: string) => {
     try {
       return await User.findById(id);
     } catch (error) {
@@ -77,7 +74,7 @@ class UserRepository {
     }
   };
 
-  block = async (id:string) => {
+  block = async (id: string) => {
     try {
       return await User.findByIdAndUpdate(
         id,
@@ -89,16 +86,17 @@ class UserRepository {
     }
   };
 
-  unblock=async(id:string)=>{
+  unblock = async (id: string) => {
     try {
-
-      return await User.findByIdAndUpdate(id,{isActive:true},{new :true})
-      
+      return await User.findByIdAndUpdate(
+        id,
+        { isActive: true },
+        { new: true }
+      );
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default UserRepository;

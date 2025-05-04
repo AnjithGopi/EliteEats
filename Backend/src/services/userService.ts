@@ -1,4 +1,3 @@
-import UserRepository from "../repositories/userRepository";
 import generateOtp from "../utils/generateOtp";
 import sendOtp from "../utils/sendIOtp";
 import OtpRepository from "../repositories/otpRepository";
@@ -6,21 +5,22 @@ import hashPassword from "../utils/hashPassword";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserService } from "../domain/interface/User/IUserService";
-//import { inject,injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { IUserRepository } from "../domain/interface/User/IUserRepository";
 
-
+@injectable()
 class UserService implements IUserService {
-  private userRepository: UserRepository;
   private otpRepository: OtpRepository;
 
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(
+    @inject("IUserRepository") private _userRepository: IUserRepository
+  ) {
     this.otpRepository = new OtpRepository();
   }
 
-  register = async (userData:any) => {
+  register = async (userData: any) => {
     try {
-      const existingUser = await this.userRepository.checkExists(userData);
+      const existingUser = await this._userRepository.checkExists(userData);
 
       if (existingUser) {
         throw new Error("User already exists");
@@ -30,7 +30,7 @@ class UserService implements IUserService {
 
       const userToSave = { ...userData, password: password }; // creating new user object with hashed password
 
-      let savedUser = await this.userRepository.saveUser(userToSave);
+      let savedUser = await this._userRepository.saveUser(userToSave);
       const otp = generateOtp();
 
       const saveOtp = savedUser
@@ -44,7 +44,7 @@ class UserService implements IUserService {
     }
   };
 
-  findUser = async (otpData:any) => {
+  findUser = async (otpData: any) => {
     try {
       let data = await this.otpRepository.findbyOtp(otpData);
 
@@ -58,10 +58,10 @@ class UserService implements IUserService {
     }
   };
 
-  verifyUser = async (data:any) => {
+  verifyUser = async (data: any) => {
     try {
       console.log("data in verifyUser:", data);
-      const isVerified = await this.userRepository.verify(data);
+      const isVerified = await this._userRepository.verify(data);
       if (!isVerified) {
         throw new Error("Invalid otp");
       }
@@ -72,9 +72,9 @@ class UserService implements IUserService {
     }
   };
 
-  verifyLogin = async (loginData:any) => {
+  verifyLogin = async (loginData: any) => {
     try {
-      const user = await this.userRepository.loginVerification(loginData);
+      const user = await this._userRepository.loginVerification(loginData);
 
       if (!user) {
         throw new Error("Incorrect email");
