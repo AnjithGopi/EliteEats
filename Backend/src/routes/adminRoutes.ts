@@ -1,17 +1,15 @@
 import express from "express";
-import adminController from "../controllers/adminController";
+import container from "../config/inversifyConfig";
+import { AdminController } from "../controllers/adminController";
 
 const router = express.Router();
 
-router.route("/login").post(adminController.login);
-router.route("/users").get(adminController.getAllusers);
-router
-  .route("/users/:id")
-  .get(adminController.userDetails)
-  .patch(adminController.blockUser)
-  router
-  .route("/users/unblock/:id")
-  .patch(adminController.unblockUser);
+const controller = container.get<AdminController>(AdminController);
 
+router.route("/login").post(controller.login);
+router.route("/users").get(controller.getAllusers);
+router.route("/users/:id").get(controller.userDetails)
+router.route("/users/block/:id").patch(controller.blockUser);
+router.route("/users/unblock/:id").patch(controller.unblockUser);
 
 export default router;

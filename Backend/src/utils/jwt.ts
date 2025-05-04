@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import {env}from "../config/env"
+import {  UserDetails } from "../domain/interface/Admin/IAdminService";
 dotenv.config();
 
-export const generateAccessToken = (userData) => {
+export const generateAccessToken = (userData:UserDetails) => {
   try {
     console.log("token generation with user:", userData);
 
@@ -11,7 +13,7 @@ export const generateAccessToken = (userData) => {
       username: userData.name,
     };
 
-    return jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
+    return jwt.sign(payLoad, env.JWT_ACCESS_SECRET, {
       expiresIn: "1h",
     });
   } catch (error) {
@@ -19,7 +21,7 @@ export const generateAccessToken = (userData) => {
   }
 };
 
-export const generateRefreshToken = (userData) => {
+export const generateRefreshToken = (userData:UserDetails)=> {
   try {
     console.log("refresh token generation with userData:", userData);
 
@@ -27,7 +29,7 @@ export const generateRefreshToken = (userData) => {
       id: userData._id,
       username: userData.name,
     };
-    return jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
+    return jwt.sign(payLoad, env.JWT_REFRESH_SECRET, {
       expiresIn: "7d",
     });
   } catch (error) {}

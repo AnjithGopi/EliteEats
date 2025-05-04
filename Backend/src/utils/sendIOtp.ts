@@ -2,7 +2,7 @@
 import nodemailer from "nodemailer"
 
 
-const sendOtp=async(email,otp)=>{
+const sendOtp=async(email:any,otp:any)=>{
 
 
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -35,7 +35,7 @@ const sendOtp=async(email,otp)=>{
         return true;
     } catch (error) {
         console.error("Error sending email:", error);
-        throw new Error(`Failed to send email: ${error.message}`);
+        throw new Error(`Failed to send email: ${error}`);
     }
 }
 

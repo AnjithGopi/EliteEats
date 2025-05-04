@@ -1,12 +1,13 @@
 import express from "express";
-import userController from "../controllers/userController.ts";
-
+import { userController } from "../controllers/userController";
+import container from "../config/inversifyConfig";
 const router = express.Router();
 
-router.route("/signup").post(userController.userSignup);
+const controller = container.get<userController>(userController);
 
-router.route("/verify_otp").post(userController.verifyOtp);
+router.route("/signup").post(controller.userSignup);
+router.route("/verify_otp").post(controller.verifyOtp);
+router.route("/login").post(controller.userLogin);
 
-router.route("/login").post(userController.userLogin);
 
 export default router;

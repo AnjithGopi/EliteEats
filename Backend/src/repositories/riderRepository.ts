@@ -1,10 +1,10 @@
-import Rider from "../models/riderModel.ts";
-import User from "../models/userModel.ts";
+import Rider from "../models/riderModel";
+
 
 class RiderRepository {
   constructor() {}
 
-  checkExists = async (riderData) => {
+  checkExists = async (riderData:any) => {
     try {
       return await Rider.findOne({
         $or: [{ email: riderData.email }, { mobile: riderData.mobile }],
@@ -14,7 +14,7 @@ class RiderRepository {
     }
   };
 
-  saveRider = async (riderData) => {
+  saveRider = async (riderData:any) => {
     try {
       return await Rider.create(riderData);
     } catch (error) {
@@ -22,7 +22,7 @@ class RiderRepository {
     }
   };
 
-  verifyRider = async (user) => {
+  verifyRider = async (user:any) => {
     try {
       return await Rider.findOneAndUpdate(
         { email: user.email },
@@ -33,7 +33,7 @@ class RiderRepository {
     }
   };
 
-  verifyLogin = async (loginData) => {
+  verifyLogin = async (loginData:any) => {
     try {
       return await Rider.findOne({ email: loginData.email });
     } catch (error) {

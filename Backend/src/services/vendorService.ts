@@ -1,7 +1,7 @@
-import VendorRepository from "../repositories/vendorRepository.ts";
-import comparePassword from "../utils/comparePasswords.ts";
-import hashPassword from "../utils/hashPassword.ts";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
+import VendorRepository from "../repositories/vendorRepository";
+import comparePassword from "../utils/comparePasswords";
+import hashPassword from "../utils/hashPassword";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 class VendorService {
   private vendorRepository: VendorRepository;
@@ -10,7 +10,7 @@ class VendorService {
     this.vendorRepository = new VendorRepository();
   }
 
-  register = async (vendorData) => {
+  register = async (vendorData:any) => {
     try {
       const existingUser = await this.vendorRepository.checkExists(vendorData);
 
@@ -34,7 +34,7 @@ class VendorService {
     }
   };
 
-  login = async (loginData) => {
+  login = async (loginData:any) => {
     try {
       const verified = await this.vendorRepository.findRestaurent(loginData);
 
@@ -52,10 +52,11 @@ class VendorService {
       }
 
       if (verified && passwordMatch) {
-        const accessToken = generateAccessToken(verified);
-        const refreshToken = generateRefreshToken(verified);
+       // const accessToken = generateAccessToken(verified);
+        //const refreshToken = generateRefreshToken(verified);
 
-        return { ...verified.toObject(), accessToken, refreshToken };
+       // return { ...verified.toObject(), accessToken, refreshToken };
+       console.log("token for restaurents need to be generated while login ")
       }
 
       return false;

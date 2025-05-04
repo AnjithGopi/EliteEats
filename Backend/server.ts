@@ -1,11 +1,11 @@
 import "reflect-metadata"
 import express from "express";
-import connectDb from "./src/config/db.ts";
+import connectDb from "./src/config/db";
 import dotenv from "dotenv";
 import cors from "cors";
-import userRoute from "./src/routes/userRoutes.ts";
-import riderRoute from "./src/routes/riderRoutes.ts";
-import adminRoute from "./src/routes/adminRoutes.ts";
+import userRoute from "./src/routes/userRoutes";
+import riderRoute from "./src/routes/riderRoutes";
+import adminRoute from "./src/routes/adminRoutes";
 
 
 dotenv.config();

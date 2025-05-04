@@ -81,10 +81,10 @@ class AdminService implements IAdminService {
       }
 
       const user = {
-        ...userDoc,
+        ...userDoc.toObject(),
         _id: userDoc._id.toString(),
       };
-
+      console.log("User details from id:",user)
       return user;
     } catch (error) {
       console.log(error);
@@ -100,7 +100,7 @@ class AdminService implements IAdminService {
       }
 
       const blockedUser = {
-        ...blocked,
+        ...blocked.toObject(),
         _id: blocked._id.toString(),
       };
 
@@ -119,7 +119,7 @@ class AdminService implements IAdminService {
       }
 
       const unblockedUser = {
-        ...unBlocked,
+        ...unBlocked.toObject(),
         _id: unBlocked._id.toString(),
       };
 

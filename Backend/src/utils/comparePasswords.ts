@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 
-const comparePassword = async (plainPassword, hashedPassword) => {
+const comparePassword = async (plainPassword:string, hashedPassword:any) => {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
 

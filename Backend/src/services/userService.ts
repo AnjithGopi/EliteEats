@@ -7,6 +7,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserService } from "../domain/interface/User/IUserService";
 import { inject, injectable } from "inversify";
 import { IUserRepository } from "../domain/interface/User/IUserRepository";
+import { LoginData } from "../domain/interface/Admin/IAdminService";
 
 @injectable()
 class UserService implements IUserService {
@@ -72,7 +73,7 @@ class UserService implements IUserService {
     }
   };
 
-  verifyLogin = async (loginData: any) => {
+  verifyLogin = async (loginData:LoginData):Promise<{accessToken: string, refreshToken: string}|false |any> => {
     try {
       const user = await this._userRepository.loginVerification(loginData);
 

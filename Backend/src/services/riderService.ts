@@ -1,10 +1,11 @@
-import OtpRepository from "../repositories/otpRepository.ts";
-import RiderRepository from "../repositories/riderRepository.ts";
-import comparePassword from "../utils/comparePasswords.ts";
-import generateOtp from "../utils/generateOtp.ts";
-import hashPassword from "../utils/hashPassword.ts";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
-import sendOtp from "../utils/sendIOtp.ts";
+import { LoginData } from "../domain/interface/Admin/IAdminService";
+import OtpRepository from "../repositories/otpRepository";
+import RiderRepository from "../repositories/riderRepository";
+import comparePassword from "../utils/comparePasswords";
+import generateOtp from "../utils/generateOtp";
+import hashPassword from "../utils/hashPassword";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import sendOtp from "../utils/sendIOtp";
 
 class RiderService {
   private riderRepository: RiderRepository;
@@ -15,7 +16,7 @@ class RiderService {
     this.otpRepository = new OtpRepository();
   }
 
-  register = async (riderData) => {
+  register = async (riderData:any) => {
     try {
       console.log("riderData:", riderData);
 
@@ -37,7 +38,7 @@ class RiderService {
       const otp = generateOtp();
 
       const saveOtp = savedRider
-        ? await this.otpRepository.createOtp(savedRider.email, otp)
+        ? await this.otpRepository.createOtp(savedRider.email, otp.toString())
         : undefined;
       saveOtp && savedRider ? await sendOtp(saveOtp.email, otp) : undefined;
 
@@ -47,7 +48,7 @@ class RiderService {
     }
   };
 
-  verifyOtp = async (otp) => {
+  verifyOtp = async (otp:string) => {
     try {
       const user = await this.otpRepository.findbyOtp(otp);
 
@@ -67,7 +68,7 @@ class RiderService {
     }
   };
 
-  verifyLogin = async (loginData) => {
+  verifyLogin = async (loginData:LoginData) => {
     try {
       const riderFound = await this.riderRepository.verifyLogin(loginData);
 
@@ -85,10 +86,11 @@ class RiderService {
       }
 
       if (riderFound && passwordMatch) {
-        const accessToken = await generateAccessToken(riderFound);
-        const refreshToken = await generateRefreshToken(riderFound);
+        // const accessToken =  generateAccessToken(riderFound);
+        // const refreshToken =  generateRefreshToken(riderFound);
 
-        return { ...riderFound.toObject(), accessToken, refreshToken };
+        // return { ...riderFound.toObject(), accessToken, refreshToken };
+        console.log("token for restaurent should be genereated while login")
       }
 
       return false;
