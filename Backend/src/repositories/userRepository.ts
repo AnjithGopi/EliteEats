@@ -50,7 +50,7 @@ class UserRepository implements IUserRepository {
 
   findUsers = async () => {
     try {
-      return await User.find({ otpVerified: true, isAdmin: false });
+      return await User.find({isAdmin: false });
     } catch (error) {
       console.log(error);
     }

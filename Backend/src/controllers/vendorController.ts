@@ -17,15 +17,38 @@ export class VendorController {
         res
           .status(HttpStatusCode.CREATED)
           .json({ message: "Registration successfull", data });
-      }
+      }else{
 
-      res
+        res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
         .json("Internal server error");
+
+      }
+
+    
     } catch (error) {
       console.log(error);
     }
   };
+
+  verifyOtp =async(req:Request,res:Response)=>{
+
+    try {
+
+        const{otp,token}=req.body
+        const data = await this._vendorService.verifyOtp(otp,token);
+        if(data){
+          console.log("USER Registered")
+          res
+          .status(HttpStatusCode.CREATED)
+          .json({ messsage: "User Registered Successfully",data });
+        }
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+  }
 
   login = async (req: Request, res: Response) => {
     try {

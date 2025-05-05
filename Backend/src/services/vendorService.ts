@@ -28,6 +28,8 @@ import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository"
 
       const otp = generateOtp();
 
+      console.log("otp send:",otp)
+
       const verificationToken = redisVerificationToken();
 
       if (vendorToSave && otp && verificationToken) {
@@ -50,19 +52,21 @@ import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository"
 
   verifyOtp = async (userProvidedotp: string, token: string) => {
     try {
+      console.log("token from user:",token)
       const storedData = await redisClient.get(`reg:${token}`);
-
+      console.log("StoredData:",storedData)
       if (!storedData) {
         throw new Error("Invalid or expired token");
       }
 
-      const { otp, user } = JSON.parse(storedData);
+      const { otp, vendor } = JSON.parse(storedData);
 
       if (otp !== userProvidedotp) {
         throw new Error("Incorrect otp");
       }
+      console.log("userto save:",vendor)
 
-      const savedVendor = await this._vendorRepository.saveRestuarent(user);
+      const savedVendor = await this._vendorRepository.saveRestuarent(vendor);
       await redisClient.del(`reg:${token}`);
 
       if (!savedVendor) {

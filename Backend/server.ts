@@ -6,6 +6,7 @@ import cors from "cors";
 import userRoute from "./src/routes/userRoutes";
 import riderRoute from "./src/routes/riderRoutes";
 import adminRoute from "./src/routes/adminRoutes";
+import vendorRoute from "./src/routes/resturantRoutes"
 import { connectRedis } from "./src/config/redis";
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cors());
 app.use("/user", userRoute);
 app.use("/rider", riderRoute);
 app.use("/admin", adminRoute);
+app.use("/vendor",vendorRoute);
 
 Promise.all([connectDb(), connectRedis()])
   .then(() =>

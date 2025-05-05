@@ -21,7 +21,7 @@ export class VendorRepository implements IVendorRepository {
   saveRestuarent= async(data:any)=>{
 
     try {
-
+  
        return await Vendor.create(data)
         
     } catch (error) {
