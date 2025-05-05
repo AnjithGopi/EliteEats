@@ -1,9 +1,10 @@
-import Vendor from "../models/vendorModel.ts";
+import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository";
+import Vendor from "../models/vendorModel";
 
-class VendorRepository {
+export class VendorRepository implements IVendorRepository {
   constructor() {}
 
-  checkExists = async (userData) => {
+  checkExists = async (userData:any) => {
     try {
       console.log("userData:", userData);
       const exists = await Vendor.findOne({
@@ -17,7 +18,7 @@ class VendorRepository {
   };
 
 
-  saveRestuarent= async(data)=>{
+  saveRestuarent= async(data:any)=>{
 
     try {
 
@@ -29,7 +30,7 @@ class VendorRepository {
     }
   }
 
-  findRestaurent= async(loginData)=>{
+  findRestaurent= async(loginData:any)=>{
 
     try {
 
@@ -49,5 +50,3 @@ class VendorRepository {
 }
 
 
-
-export default VendorRepository

@@ -1,18 +1,22 @@
-import VendorRepository from "../repositories/vendorRepository";
+import { injectable, inject } from "inversify";
+import redisClient from "../config/redis";
+import { IVendorService } from "../domain/interface/Vendor/IVendorService";
+import {VendorRepository} from "../repositories/vendorRepository";
 import comparePassword from "../utils/comparePasswords";
+import generateOtp from "../utils/generateOtp";
 import hashPassword from "../utils/hashPassword";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import redisVerificationToken from "../utils/redisverificaton";
+import sendOtp from "../utils/sendIOtp";
+import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository";
 
-class VendorService {
-  private vendorRepository: VendorRepository;
+@injectable()
+ class VendorService implements IVendorService {
+  constructor(@inject("IVendorRepository") private _vendorRepository: IVendorRepository) {}
 
-  constructor() {
-    this.vendorRepository = new VendorRepository();
-  }
-
-  register = async (vendorData:any) => {
+  register = async (vendorData: any) => {
     try {
-      const existingUser = await this.vendorRepository.checkExists(vendorData);
+      const existingUser = await this._vendorRepository.checkExists(vendorData);
 
       if (existingUser) {
         throw new Error(" Restaurent already exists");
@@ -20,23 +24,60 @@ class VendorService {
 
       const password = await hashPassword(vendorData.password);
 
-      const userToSave = { ...vendorData, password: password }; // creating new restaurent object with hashed password
+      const vendorToSave = { ...vendorData, password: password }; // creating new restaurent object with hashed password
 
-      const savedUser = await this.vendorRepository.saveRestuarent(userToSave);
+      const otp = generateOtp();
 
-      if (!savedUser) {
-        throw new Error("Error in saving restuarent details");
+      const verificationToken = redisVerificationToken();
+
+      if (vendorToSave && otp && verificationToken) {
+        await redisClient.setEx(
+          `reg:${verificationToken}`,
+          300,
+          JSON.stringify({ vendor: vendorToSave, otp: otp.toString() })
+        );
+
+        await sendOtp(vendorToSave.email, otp.toString());
+
+        return { message: "OTP send Successfully", verificationToken };
+      } else {
+        throw new Error("Unable to complete registration, sending otp failed");
       }
-
-      return savedUser;
     } catch (error) {
       console.log(error);
     }
   };
 
-  login = async (loginData:any) => {
+  verifyOtp = async (userProvidedotp: string, token: string) => {
     try {
-      const verified = await this.vendorRepository.findRestaurent(loginData);
+      const storedData = await redisClient.get(`reg:${token}`);
+
+      if (!storedData) {
+        throw new Error("Invalid or expired token");
+      }
+
+      const { otp, user } = JSON.parse(storedData);
+
+      if (otp !== userProvidedotp) {
+        throw new Error("Incorrect otp");
+      }
+
+      const savedVendor = await this._vendorRepository.saveRestuarent(user);
+      await redisClient.del(`reg:${token}`);
+
+      if (!savedVendor) {
+        throw new Error("unable to verify otp ");
+      }
+
+      return savedVendor;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  login = async (loginData: { email: string; password: string }) => {
+    try {
+      const verified = await this._vendorRepository.findRestaurent(loginData);
 
       if (!verified) {
         throw new Error("Incorrect email");
@@ -52,11 +93,10 @@ class VendorService {
       }
 
       if (verified && passwordMatch) {
-       // const accessToken = generateAccessToken(verified);
-        //const refreshToken = generateRefreshToken(verified);
+        const accessToken = generateAccessToken(verified);
+        const refreshToken = generateRefreshToken(verified);
 
-       // return { ...verified.toObject(), accessToken, refreshToken };
-       console.log("token for restaurents need to be generated while login ")
+        return { ...verified.toObject(), accessToken, refreshToken };
       }
 
       return false;
@@ -66,4 +106,6 @@ class VendorService {
   };
 }
 
-export default VendorService;
+
+export default VendorService
+

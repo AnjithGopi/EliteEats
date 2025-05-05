@@ -10,14 +10,13 @@ import { LoginData } from "../domain/interface/Admin/IAdminService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
 
-
 @injectable()
 class UserService implements IUserService {
   constructor(
     @inject("IUserRepository") private _userRepository: IUserRepository
   ) {}
 
-  register = async (userData:any) => {
+  register = async (userData: any) => {
     try {
       const existingUser = await this._userRepository.checkExists(userData);
 
@@ -78,9 +77,7 @@ class UserService implements IUserService {
     }
   };
 
-  verifyLogin = async (
-    loginData: LoginData
-  ): Promise<{ accessToken: string; refreshToken: string } | false | any> => {
+  verifyLogin = async (loginData: LoginData) => {
     try {
       const user = await this._userRepository.loginVerification(loginData);
 
@@ -103,10 +100,10 @@ class UserService implements IUserService {
         console.log(accessToken);
         console.log(refreshToken);
 
-        return { accessToken, refreshToken }; // toObject is used to opt out the metadata from mongodb
+        return { accessToken, refreshToken };
       }
 
-      return false;
+      throw new Error("Unable to verify login check email and password again");
     } catch (error) {
       console.log(error);
     }

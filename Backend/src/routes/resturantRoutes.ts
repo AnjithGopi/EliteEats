@@ -1,7 +1,11 @@
-// import express from "express";
-// import vendorController from "../controllers/vendorController.ts";
+import express from "express";
+import container from "../config/inversifyConfig/inversifyConfig";
+import { VendorController } from "../controllers/vendorController";
 
-// const router = express.Router();
 
-// router.route("/signup").post(vendorController.signup);
-// router.route("/login").post(vendorController.login);
+const router = express.Router();
+
+const controller =container.get<VendorController>(VendorController)
+
+router.route("/signup").post(controller.signup);
+router.route("/login").post(controller.login);

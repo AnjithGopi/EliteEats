@@ -12,6 +12,12 @@ import { IRiderService } from "../../domain/interface/Rider/IRiderService";
 import { IRiderRepository } from "../../domain/interface/Rider/IRiderRepository";
 import RiderRepository from "../../repositories/riderRepository";
 import { RiderService } from "../../services/riderService";
+import { IVendorRepository } from "../../domain/interface/Vendor/IVendorRepository";
+import { VendorRepository } from "../../repositories/vendorRepository";
+import { IVendorService } from "../../domain/interface/Vendor/IVendorService";
+import  VendorService  from "../../services/vendorService";
+import { VendorController } from "../../controllers/vendorController";
+
 
 const container = new Container();
 //userbindings
@@ -28,6 +34,12 @@ container.bind<AdminController>(AdminController).toSelf();
 container.bind<IRiderRepository>("IRiderRepository").to(RiderRepository);
 container.bind<IRiderService>("IRiderService").to(RiderService);
 container.bind<RiderController>(RiderController).toSelf();
+
+
+// restaurent bindings
+   container.bind<IVendorRepository>("IVendorRepository").to(VendorRepository)
+   container.bind<IVendorService>("IVendorService").to(VendorService)
+   container.bind<VendorController>(VendorController).toSelf()
 
 
 export default container;
