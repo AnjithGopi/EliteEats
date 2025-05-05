@@ -1,25 +1,20 @@
 import { inject, injectable } from "inversify";
-import { LoginData } from "../domain/interface/Admin/IAdminService";
-import OtpRepository from "../repositories/otpRepository";
-import { IRider, IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
+import { IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
 import comparePassword from "../utils/comparePasswords";
 import generateOtp from "../utils/generateOtp";
 import hashPassword from "../utils/hashPassword";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import sendOtp from "../utils/sendIOtp";
 import { IRiderService } from "../domain/interface/Rider/IRiderService";
+import redisVerificationToken from "../utils/redisverificaton";
+import redisClient from "../config/redis";
 
 @injectable()
 export class RiderService implements IRiderService {
-  private otpRepository: OtpRepository;
-
   constructor(
-    @inject("IRiderRepository") private _riderRepository: IRiderRepository
-  ) {
-    this.otpRepository = new OtpRepository();
-  }
+    @inject("IRiderRepository") private _riderRepository: IRiderRepository) {}
 
-  register = async (riderData:any) => {
+  register = async (riderData: any) => {
     try {
       console.log("riderData:", riderData);
 
@@ -36,42 +31,57 @@ export class RiderService implements IRiderService {
         password: hashedPassword,
       };
 
-      const savedRider = await this._riderRepository.saveRider(riderToSave);
-
       const otp = generateOtp();
+      const verificationToken = redisVerificationToken();
 
-      const saveOtp = savedRider
-        ? await this.otpRepository.createOtp(savedRider.email, otp.toString())
-        : undefined;
-      saveOtp && savedRider ? await sendOtp(saveOtp.email, otp) : undefined;
+      if (riderToSave && otp && verificationToken) {
+        console.log("everything set for the rider to register ");
+        await redisClient.setEx(
+          `reg:${verificationToken}`,
+          300,
+          JSON.stringify({ rider: riderToSave, otp: otp.toString() })
+        );
 
-      return { message: "OTP send successfully" };
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  verifyOtp = async (otp: string) => {
-    try {
-      const user = await this.otpRepository.findbyOtp(otp);
-
-      if (!user) {
-        throw new Error("Incorrect otp");
-      }
-
-      const data = await this._riderRepository.verifyRider(user);
-
-      if (data) {
-        return data;
+        console.log(
+          JSON.stringify({ rider: riderToSave, otp: otp.toString() })
+        );
+        await sendOtp(riderToSave.email, otp.toString());
+        return { message: "OTP send successfully", verificationToken };
       } else {
-        throw new Error("Failed to verify otp");
+        throw new Error("Unable to send Otp");
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  verifyLogin = async (loginData:{email:string,password:string}) => {
+  verifyOtp = async (riderProvidedOtp: string, token: string) => {
+    try {
+      const storedData = await redisClient.get(`reg:${token}`);
+
+      if (!storedData) {
+        throw new Error("Invalid or Expired verification token");
+      }
+
+      console.log("StoredData:", storedData);
+
+      const { rider, otp } = JSON.parse(storedData);
+
+      if (otp !== riderProvidedOtp) {
+        throw new Error("Incorrect Otp");
+      }
+
+      const saveRider = await this._riderRepository.saveRider(rider);
+
+      await redisClient.del(`reg:${token}`);
+
+      return saveRider;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  verifyLogin = async (loginData: { email: string; password: string }) => {
     try {
       const riderFound = await this._riderRepository.verifyLogin(loginData);
 

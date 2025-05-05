@@ -1,7 +1,6 @@
 export interface IUserRepository {
     checkExists(userData: any): Promise<any>;
     saveUser(userData: any): Promise<any>;
-    verify(data: any): Promise<any>;
     loginVerification(loginData: any): Promise<any>;
     findAdmin(loginData: any): Promise<any>;
     findUsers(): Promise<any[] | undefined>;

@@ -19,24 +19,14 @@ class UserRepository implements IUserRepository {
 
   saveUser = async (userData: any) => {
     try {
-      const user = await User.create(userData);
-      console.log("user saved without verification :", user);
-      return user;
+      return  await User.create(userData);
+    
     } catch (error) {
       console.log(error);
     }
   };
 
-  verify = async (data: any) => {
-    try {
-      return await User.findOneAndUpdate(
-        { email: data.email },
-        { $set: { otpVerified: true } }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
   loginVerification = async (loginData: any) => {
     try {

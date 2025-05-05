@@ -1,35 +1,29 @@
 interface UserObject {
-    name: string;
-    email: string;
-    mobile: number;
-    password: string;
-    isActive: boolean;
-    otpVerified: boolean;
-    isAdmin: boolean;
-    createdAt: Date;
-    _id?: any;
+    name?: string;
+    email?: string;
+    mobile?: number;
+    password?: string;
+    isActive?: boolean;
+    otpVerified?: boolean;
+    isAdmin?: boolean;
+    createdAt?: Date;
+    _id?:string;
     __v?: number;
   }
   
 
   
  interface AuthResponse {
-    user: UserObject;
-    accessToken: string;
-    refreshToken: string;
+    user?: UserObject;
+    accessToken?: string;
+    refreshToken?: string;
   }
   
 
-interface OtpRecord {
-  email: string;
-  otp: string;
-  expiry: Date;
-}
 
 
 export interface IUserService {
-  register(userData: any): Promise<{ message: string } | undefined>;
-  findUser(otpData: any): Promise<OtpRecord | undefined>;
-  verifyUser(data: any): Promise<any>;
-  verifyLogin(loginData: any): Promise<{accessToken:string,refreshToken:string}|false|undefined>
+  register(userData: any): Promise<UserObject|any>;
+  verifyOtpAndRegister (otpData:string,token:string): Promise<UserObject>;
+  verifyLogin(loginData: any): Promise<AuthResponse|false|undefined>
 }

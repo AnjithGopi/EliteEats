@@ -22,10 +22,12 @@ app.use("/user", userRoute);
 app.use("/rider", riderRoute);
 app.use("/admin", adminRoute);
 
-connectDb()
-  .then(() => connectRedis())
-  .then(() => {
+Promise.all([connectDb(), connectRedis()])
+  .then(() =>
     app.listen(port, () => {
       console.log(`server running in http://localhost:${port}`);
-    });
+    })
+  )
+  .catch((error) => {
+    console.log("Error starting server:",error);
   });

@@ -1,6 +1,5 @@
 import generateOtp from "../utils/generateOtp";
 import sendOtp from "../utils/sendIOtp";
-import OtpRepository from "../repositories/otpRepository";
 import hashPassword from "../utils/hashPassword";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
@@ -10,19 +9,15 @@ import { IUserRepository } from "../domain/interface/User/IUserRepository";
 import { LoginData } from "../domain/interface/Admin/IAdminService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
-import { json } from "express";
+
 
 @injectable()
 class UserService implements IUserService {
-  private otpRepository: OtpRepository;
-
   constructor(
     @inject("IUserRepository") private _userRepository: IUserRepository
-  ) {
-    this.otpRepository = new OtpRepository();
-  }
+  ) {}
 
-  register = async (userData: any) => {
+  register = async (userData:any) => {
     try {
       const existingUser = await this._userRepository.checkExists(userData);
 
@@ -58,29 +53,26 @@ class UserService implements IUserService {
     }
   };
 
-  findUser = async (otpData: any) => {
+  verifyOtpAndRegister = async (userProvidedOtp: string, token: string) => {
     try {
-      let data = await this.otpRepository.findbyOtp(otpData);
+      const storedData = await redisClient.get(`reg:${token}`);
 
-      if (!data) {
-        throw new Error("incorrect otp");
+      if (!storedData) {
+        throw new Error("Invalid or expired verification token");
       }
 
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      console.log("stored in redis:", storedData);
 
-  verifyUser = async (data: any) => {
-    try {
-      console.log("data in verifyUser:", data);
-      const isVerified = await this._userRepository.verify(data);
-      if (!isVerified) {
-        throw new Error("Invalid otp");
+      const { user, otp } = JSON.parse(storedData);
+
+      if (otp !== userProvidedOtp) {
+        throw new Error("Incorrect otp");
       }
 
-      return isVerified;
+      const saveUser = await this._userRepository.saveUser(user);
+      await redisClient.del(`reg:${token}`);
+
+      return saveUser;
     } catch (error) {
       console.log(error);
     }

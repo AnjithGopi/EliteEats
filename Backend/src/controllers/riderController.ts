@@ -15,7 +15,7 @@ export class RiderController {
         ? res.status(HttpStatusCode.OK).json(data)
         : res
             .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-            .json("Internal server error");
+            .json({message:"Internal server error"});
     } catch (error) {
       console.log(error);
     }
@@ -23,7 +23,8 @@ export class RiderController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const data = await this._riderService.verifyOtp(req.body);
+      const {otp,token}=req.body
+      const data = await this._riderService.verifyOtp(otp,token);
 
       if (data) {
         res

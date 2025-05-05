@@ -25,11 +25,19 @@ export class userController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const data = await this._userService.findUser(req.body);
-      const user = await this._userService.verifyUser(data);
-      res
+
+      const{otp,token}=req.body
+      const data = await this._userService.verifyOtpAndRegister(otp,token);
+      if(data){
+        console.log("USER Registered")
+        res
         .status(HttpStatusCode.CREATED)
-        .json({ messsage: "User Registered Successfully", user });
+        .json({ messsage: "User Registered Successfully",data });
+
+      }else{
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({message:"Internal server error"})
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -38,6 +46,7 @@ export class userController {
   userLogin = async (req: Request, res: Response) => {
     try {
       const user = await this._userService.verifyLogin(req.body);
+      console.log(req.body)
 
       if (user) {
         console.log(user);

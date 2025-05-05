@@ -11,13 +11,6 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-userSchema.index(
-  { createdAt: 1 },
-  {
-    expireAfterSeconds: 240, // 4 minutes = 240 seconds
-    partialFilterExpression: { otpVerified: false },
-  }
-);
 
 const User = mongoose.model("User", userSchema);
 
