@@ -3,11 +3,11 @@ import { HttpStatusCode } from "../utils/statusCodes";
 import { injectable, inject } from "inversify";
 import { IVendorService } from "../domain/interface/Vendor/IVendorService";
 
-
 @injectable()
 export class VendorController {
   constructor(
-    @inject("IVendorService") private _vendorService:IVendorService) {}
+    @inject("IVendorService") private _vendorService: IVendorService
+  ) {}
 
   signup = async (req: Request, res: Response) => {
     try {
@@ -17,38 +17,30 @@ export class VendorController {
         res
           .status(HttpStatusCode.CREATED)
           .json({ message: "Registration successfull", data });
-      }else{
-
+      } else {
         res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json("Internal server error");
-
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json("Internal server error");
       }
-
-    
     } catch (error) {
       console.log(error);
     }
   };
 
-  verifyOtp =async(req:Request,res:Response)=>{
-
+  verifyOtp = async (req: Request, res: Response) => {
     try {
-
-        const{otp,token}=req.body
-        const data = await this._vendorService.verifyOtp(otp,token);
-        if(data){
-          console.log("USER Registered")
-          res
+      const { otp, token } = req.body;
+      const data = await this._vendorService.verifyOtp(otp, token);
+      if (data) {
+        console.log("USER Registered");
+        res
           .status(HttpStatusCode.CREATED)
-          .json({ messsage: "User Registered Successfully",data });
-        }
-        
+          .json({ messsage: "User Registered Successfully", data });
+      }
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 
   login = async (req: Request, res: Response) => {
     try {

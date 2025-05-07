@@ -4,7 +4,7 @@ import Vendor from "../models/vendorModel";
 export class VendorRepository implements IVendorRepository {
   constructor() {}
 
-  checkExists = async (userData:any) => {
+  checkExists = async (userData: any) => {
     try {
       console.log("userData:", userData);
       const exists = await Vendor.findOne({
@@ -17,36 +17,19 @@ export class VendorRepository implements IVendorRepository {
     }
   };
 
-
-  saveRestuarent= async(data:any)=>{
-
+  saveRestuarent = async (data: any) => {
     try {
-  
-       return await Vendor.create(data)
-        
+      return await Vendor.create(data);
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
+  };
 
-  findRestaurent= async(loginData:any)=>{
-
+  findRestaurent = async (loginData: any) => {
     try {
-
-        return await Vendor.findOne({email:loginData.email})
-        
+      return await Vendor.findOne({ email: loginData.email });
     } catch (error) {
-        console.log(error)
-        
+      console.log(error);
     }
-  }
-
- 
-
-
-
-
+  };
 }
-
-

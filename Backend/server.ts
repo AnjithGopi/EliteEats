@@ -8,6 +8,7 @@ import riderRoute from "./src/routes/riderRoutes";
 import adminRoute from "./src/routes/adminRoutes";
 import vendorRoute from "./src/routes/resturantRoutes"
 import { connectRedis } from "./src/config/redis";
+import cookieParser from  "cookie-parser"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser())
 
 app.use("/user", userRoute);
 app.use("/rider", riderRoute);

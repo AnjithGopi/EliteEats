@@ -2,6 +2,7 @@ import express from "express";
 import container from "../config/inversifyConfig/inversifyConfig";
 
 import { AdminController } from "../controllers/adminController";
+//import { authenticateUser } from "../middlewares/verifyToken";
 
 const router = express.Router();
 

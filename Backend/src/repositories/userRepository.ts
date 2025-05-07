@@ -19,14 +19,11 @@ class UserRepository implements IUserRepository {
 
   saveUser = async (userData: any) => {
     try {
-      return  await User.create(userData);
-    
+      return await User.create(userData);
     } catch (error) {
       console.log(error);
     }
   };
-
- 
 
   loginVerification = async (loginData: any) => {
     try {
@@ -50,7 +47,7 @@ class UserRepository implements IUserRepository {
 
   findUsers = async () => {
     try {
-      return await User.find({isAdmin: false });
+      return await User.find({ isAdmin: false }).sort({ createdAt: -1 });
     } catch (error) {
       console.log(error);
     }

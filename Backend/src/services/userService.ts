@@ -17,6 +17,7 @@ class UserService implements IUserService {
   ) {}
 
   register = async (userData: any) => {
+    console.log(userData)
     try {
       const existingUser = await this._userRepository.checkExists(userData);
 
@@ -27,6 +28,7 @@ class UserService implements IUserService {
       const password = await hashPassword(userData.password);
 
       const userToSave = { ...userData, password: password }; // creating new user object with hashed password
+      console.log(userToSave)
 
       const otp = generateOtp();
 
