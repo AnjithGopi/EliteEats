@@ -6,11 +6,9 @@ const userSchema = new mongoose.Schema({
   mobile: { type: Number, unique: true, required: true },
   password: { type: String, required: true },
   isActive: { type: Boolean, default: true },
-  otpVerified: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
+  registered_On: { type: Date, default: Date.now },
 });
-
 
 const User = mongoose.model("User", userSchema);
 
