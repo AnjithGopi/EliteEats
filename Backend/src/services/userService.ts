@@ -88,8 +88,8 @@ class UserService implements IUserService {
     try {
       const user = await this._userRepository.loginVerification(loginData);
 
-      if(user.isActive===false){
-        throw new Error("Unable to login , userBlocked by admin")
+      if (user.isActive === false) {
+        throw new Error("Unable to login , userBlocked by admin");
       }
 
       if (!user) {
@@ -146,7 +146,7 @@ class UserService implements IUserService {
 
       if (sendLink) {
         console.log(
-          `Click the following link to reset your password: http://localhost:${process.env.port}/reset-password/${token}`
+          `Click the following link to reset your password: http://localhost:${process.env.port}/users/reset-password/${token}`
         );
         console.log(`email send to :${user.email} with token :${token}`);
       }
@@ -173,14 +173,6 @@ class UserService implements IUserService {
 
       if (password === confirmPassword) {
         const hashed = await hashPassword(password);
-
-        
-
-        console.log("userId:",checkUser._id.toString())
-        console.log(checkUser.user.email)
-        console.log("Hashed password:",hashed)
-
-         
         const passWordUpdated = await this._userRepository.updatePassword(
           checkUser.user.email,
           hashed
@@ -189,6 +181,10 @@ class UserService implements IUserService {
         if (!passWordUpdated) {
           throw new Error("Unable to reset Password");
         }
+
+        const deleteToken = await this._passwordResetRepository.deleteToken(
+          token
+        );
 
         return passWordUpdated;
       }

@@ -14,6 +14,11 @@ export class PasswordResetRepository implements IPasswordResetRepository {
 
     return await Token.findOne({token:token}).populate("user")
   }
+
+  deleteToken =async(token:string)=>{
+
+    return await Token.findOneAndDelete({token:token})
+  }
 }
 
 
