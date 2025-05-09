@@ -9,6 +9,7 @@ router.route("/signup").post(controller.userSignup);
 router.route("/verify_otp").post(controller.verifyOtp);
 router.route("/login").post(controller.userLogin);
 router.route("/forgot_password").post(controller.forgotPassword)
+router.route("/reset_password/:token").post(controller.resetPassword)
 
 
 

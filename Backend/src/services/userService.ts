@@ -9,15 +9,20 @@ import { IUserRepository } from "../domain/interface/User/IUserRepository";
 import { LoginData } from "../domain/interface/Admin/IAdminService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
+import { passwordResetToken } from "../utils/password _reset";
+import { IPasswordResetRepository } from "../domain/interface/IPasswordResetRepository";
+import { sendPasswordResetLink } from "../utils/sendResetLink";
 
 @injectable()
 class UserService implements IUserService {
   constructor(
-    @inject("IUserRepository") private _userRepository: IUserRepository
+    @inject("IUserRepository") private _userRepository: IUserRepository,
+    @inject("IPasswordResetRepository")
+    private _passwordResetRepository: IPasswordResetRepository
   ) {}
 
   register = async (userData: any) => {
-    console.log(userData)
+    console.log(userData);
     try {
       const existingUser = await this._userRepository.checkExists(userData);
 
@@ -28,7 +33,7 @@ class UserService implements IUserService {
       const password = await hashPassword(userData.password);
 
       const userToSave = { ...userData, password: password }; // creating new user object with hashed password
-      console.log(userToSave)
+      console.log(userToSave);
 
       const otp = generateOtp();
 
@@ -111,22 +116,52 @@ class UserService implements IUserService {
     }
   };
 
-  forgotPassword=async(email:string)=>{
+  forgotPassword = async (email: string) => {
+    try {
+      const user = await this._userRepository.findwithEmail(email);
+
+      if (!user) {
+        throw new Error("Incorrect email");
+      }
+
+      const token = passwordResetToken();
+
+      const data = {
+        user: user._id,
+        userModel: "User",
+        token: token,
+      };
+
+      const saveUser = await this._passwordResetRepository.saveToken(data);
+
+      if (!saveUser) {
+        throw new Error("Error in password reset");
+      }
+
+      const sendLink = await sendPasswordResetLink(user.email, token);
+
+      if (sendLink) {
+        console.log(
+          `Click the following link to reset your password: http://localhost:${process.env.port}/reset-password/${token}`
+        );
+        console.log(`email send to :${user.email} with token :${token}`);
+      }
+
+      return {
+        message: `A link send to your email ${user.email} to reset your passoword`,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  verifyAndResetPassword=async(token:string)=>{
 
     try {
 
-      const user=this._userRepository.findwithEmail(email)
-
-      if(!user){
-        throw new Error("Incorrect email")
-      }
-
-      
-
-      
+        const checkUser=await this._passwordResetRepository.checkuser(token)
 
 
-      return user
       
     } catch (error) {
       console.log(error)

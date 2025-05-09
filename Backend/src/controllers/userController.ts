@@ -82,13 +82,33 @@ export class userController {
 
       const user = await this._userService.forgotPassword(email);
 
-      console.log("userfound:",user)
-
       if (!user) {
         res.status(HttpStatusCode.NOT_FOUND).json({ message: "No user Found" });
       } else {
         res.status(HttpStatusCode.OK).json({ message: "User found", user });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  resetPassword = async (req: Request, res: Response) => {
+    try {
+      const { token } = req.params;
+
+      const verified = await this._userService.verifyAndResetPassword(token);
+
+      if (!verified) {
+        res
+          .status(HttpStatusCode.BAD_REQUEST)
+          .json({ message: "Unable to verify the user" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Password Changed successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
