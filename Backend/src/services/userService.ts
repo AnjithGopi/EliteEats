@@ -110,6 +110,29 @@ class UserService implements IUserService {
       console.log(error);
     }
   };
+
+  forgotPassword=async(email:string)=>{
+
+    try {
+
+      const user=this._userRepository.findwithEmail(email)
+
+      if(!user){
+        throw new Error("Incorrect email")
+      }
+
+      
+
+      
+
+
+      return user
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserService;

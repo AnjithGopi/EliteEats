@@ -7,4 +7,5 @@ export interface IUserRepository {
     getDetails(id: string): Promise<any>;
     block(id: string): Promise<any>;
     unblock(id: string): Promise<any>;
+    findwithEmail(email:string):Promise<any>;
   }

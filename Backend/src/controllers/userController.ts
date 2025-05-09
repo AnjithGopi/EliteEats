@@ -13,7 +13,7 @@ export class userController {
     try {
       let data = await this._userService.register(req.body);
 
-      console.log("Data from registration:",data)
+      console.log("Data from registration:", data);
 
       if (data) {
         res.status(HttpStatusCode.OK).json(data);
@@ -25,19 +25,18 @@ export class userController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-
-      const{otp,token}=req.body
-      const data = await this._userService.verifyOtpAndRegister(otp,token);
-      if(data){
-        console.log("USER Registered")
+      const { otp, token } = req.body;
+      const data = await this._userService.verifyOtpAndRegister(otp, token);
+      if (data) {
+        console.log("USER Registered");
         res
-        .status(HttpStatusCode.CREATED)
-        .json({ messsage: "User Registered Successfully",data });
-
-      }else{
-        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({message:"Internal server error"})
+          .status(HttpStatusCode.CREATED)
+          .json({ messsage: "User Registered Successfully", data });
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +45,7 @@ export class userController {
   userLogin = async (req: Request, res: Response) => {
     try {
       const user = await this._userService.verifyLogin(req.body);
-      console.log(req.body)
+      console.log(req.body);
 
       if (user) {
         console.log(user);
@@ -75,5 +74,21 @@ export class userController {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      const user = await this._userService.forgotPassword(email);
+
+      console.log("userfound:",user)
+
+      if (!user) {
+        res.status(HttpStatusCode.NOT_FOUND).json({ message: "No user Found" });
+      } else {
+        res.status(HttpStatusCode.OK).json({ message: "User found", user });
+      }
+    } catch (error) {}
   };
 }
