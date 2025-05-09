@@ -88,6 +88,10 @@ class UserService implements IUserService {
     try {
       const user = await this._userRepository.loginVerification(loginData);
 
+      if(user.isActive===false){
+        throw new Error("Unable to login , userBlocked by admin")
+      }
+
       if (!user) {
         throw new Error("Incorrect email");
       }
@@ -155,19 +159,43 @@ class UserService implements IUserService {
     }
   };
 
-  verifyAndResetPassword=async(token:string)=>{
-
+  verifyAndResetPassword = async (
+    token: string,
+    password: string,
+    confirmPassword: string
+  ) => {
     try {
+      const checkUser = await this._passwordResetRepository.checkuser(token);
 
-        const checkUser=await this._passwordResetRepository.checkuser(token)
+      if (!checkUser) {
+        throw new Error("Invalid token ");
+      }
 
+      if (password === confirmPassword) {
+        const hashed = await hashPassword(password);
 
-      
+        
+
+        console.log("userId:",checkUser._id.toString())
+        console.log(checkUser.user.email)
+        console.log("Hashed password:",hashed)
+
+         
+        const passWordUpdated = await this._userRepository.updatePassword(
+          checkUser.user.email,
+          hashed
+        );
+
+        if (!passWordUpdated) {
+          throw new Error("Unable to reset Password");
+        }
+
+        return passWordUpdated;
+      }
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default UserService;

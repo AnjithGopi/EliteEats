@@ -8,4 +8,5 @@ export interface IUserRepository {
     block(id: string): Promise<any>;
     unblock(id: string): Promise<any>;
     findwithEmail(email:string):Promise<any>;
+    updatePassword(email:any,password:string|any):Promise<any>
   }

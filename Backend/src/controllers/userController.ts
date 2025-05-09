@@ -95,8 +95,12 @@ export class userController {
   resetPassword = async (req: Request, res: Response) => {
     try {
       const { token } = req.params;
+      const {password,confirmPassword}=req.body
+      
+      console.log("Password:",password)
+      console.log("Confirm password:",confirmPassword)
 
-      const verified = await this._userService.verifyAndResetPassword(token);
+      const verified = await this._userService.verifyAndResetPassword(token,password,confirmPassword);
 
       if (!verified) {
         res

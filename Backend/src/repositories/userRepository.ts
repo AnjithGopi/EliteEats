@@ -85,17 +85,25 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  findwithEmail=async(email:string)=>{
-
+  findwithEmail = async (email: string) => {
     try {
-
-      return await User.findOne({email:email})
-      
+      return await User.findOne({ email: email });
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  updatePassword = async (email: any, password: string | any) => {
+    try {
+      return await User.findOneAndUpdate(
+        { email },
+        { $set: { password: password } },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserRepository;

@@ -12,7 +12,7 @@ export class PasswordResetRepository implements IPasswordResetRepository {
 
   checkuser=async(token:string)=>{
 
-    return await Token.find({token:token})
+    return await Token.findOne({token:token}).populate("user")
   }
 }
 

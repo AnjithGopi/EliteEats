@@ -27,6 +27,6 @@ export interface IUserService {
   verifyOtpAndRegister (otpData:string,token:string): Promise<UserObject>;
   verifyLogin(loginData: any): Promise<AuthResponse|false|undefined>;
   forgotPassword(email:string):Promise<AuthResponse|UserObject|undefined|string|object>;
-  verifyAndResetPassword(token:string):Promise<any>
+  verifyAndResetPassword(token:string,password:string,confirmPassword:string):Promise<any>
 
 }
