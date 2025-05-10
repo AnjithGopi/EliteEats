@@ -95,12 +95,21 @@ export class userController {
   resetPassword = async (req: Request, res: Response) => {
     try {
       const { token } = req.params;
-      const {password,confirmPassword}=req.body
-      
-      console.log("Password:",password)
-      console.log("Confirm password:",confirmPassword)
+      const { password, confirmPassword } = req.body;
 
-      const verified = await this._userService.verifyAndResetPassword(token,password,confirmPassword);
+      let verified;
+
+      if (password === confirmPassword) {
+        verified = await this._userService.verifyAndResetPassword(
+          token,
+          password,
+          confirmPassword
+        );
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json("Passwords do not match");
+      }
 
       if (!verified) {
         res

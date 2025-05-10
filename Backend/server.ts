@@ -6,9 +6,10 @@ import cors from "cors";
 import userRoute from "./src/routes/userRoutes";
 import riderRoute from "./src/routes/riderRoutes";
 import adminRoute from "./src/routes/adminRoutes";
-import vendorRoute from "./src/routes/resturantRoutes"
+import vendorRoute from "./src/routes/resturantRoutes";
 import { connectRedis } from "./src/config/redis";
-import cookieParser from  "cookie-parser"
+import cookieParser from "cookie-parser";
+import Api from "./src/config/constants/api";
 
 dotenv.config();
 
@@ -19,19 +20,19 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.use("/user", userRoute);
 app.use("/rider", riderRoute);
 app.use("/admin", adminRoute);
-app.use("/vendor",vendorRoute);
+app.use("/vendor", vendorRoute);
 
 Promise.all([connectDb(), connectRedis()])
   .then(() =>
     app.listen(port, () => {
-      console.log(`server running in http://localhost:${port}`);
+      console.log(`server running in ${Api}`);
     })
   )
   .catch((error) => {
-    console.log("Error starting server:",error);
+    console.log("Error starting server:", error);
   });

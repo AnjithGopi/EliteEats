@@ -171,23 +171,21 @@ class UserService implements IUserService {
         throw new Error("Invalid token ");
       }
 
-      if (password === confirmPassword) {
-        const hashed = await hashPassword(password);
-        const passWordUpdated = await this._userRepository.updatePassword(
-          checkUser.user.email,
-          hashed
-        );
+      const hashed = await hashPassword(password);
+      const passWordUpdated = await this._userRepository.updatePassword(
+        checkUser.user.email,
+        hashed
+      );
 
-        if (!passWordUpdated) {
-          throw new Error("Unable to reset Password");
-        }
-
-        const deleteToken = await this._passwordResetRepository.deleteToken(
-          token
-        );
-
-        return passWordUpdated;
+      if (!passWordUpdated) {
+        throw new Error("Unable to reset Password");
       }
+
+      const deleteToken = await this._passwordResetRepository.deleteToken(
+        token
+      );
+
+      return passWordUpdated;
     } catch (error) {
       console.log(error);
     }

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import Api from "../config/constants/api"
 
 export const sendPasswordResetLink = async (email:string, token:string) => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -24,7 +25,7 @@ export const sendPasswordResetLink = async (email:string, token:string) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Reset Your Password",
-      text: `Click the following link to reset your password: http://localhost:${process.env.port}/reset-password/${token}`,
+      text: `Click the following link to reset your password: ${Api}/reset-password/${token}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
