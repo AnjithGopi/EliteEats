@@ -141,12 +141,13 @@ class UserService implements IUserService {
       if (!saveUser) {
         throw new Error("Error in password reset");
       }
+      const role="user"
 
-      const sendLink = await sendPasswordResetLink(user.email, token);
+      const sendLink = await sendPasswordResetLink(user.email, token,role);
 
       if (sendLink) {
         console.log(
-          `Click the following link to reset your password: http://localhost:${process.env.port}/users/reset-password/${token}`
+          `Click the following link to reset your password: http://localhost:${process.env.port}/user/reset-password/${token}`
         );
         console.log(`email send to :${user.email} with token :${token}`);
       }

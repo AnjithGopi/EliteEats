@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import Api from "../config/constants/api"
 
-export const sendPasswordResetLink = async (email:string, token:string) => {
+export const sendPasswordResetLink = async (email:string, token:string,role:string) => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error(
       "Email credentials not configured in environment variables"
@@ -25,7 +25,7 @@ export const sendPasswordResetLink = async (email:string, token:string) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Reset Your Password",
-      text: `Click the following link to reset your password: ${Api}/reset-password/${token}`,
+      text: `Click the following link to reset your password: ${Api}/${role}/reset-password/${token}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
