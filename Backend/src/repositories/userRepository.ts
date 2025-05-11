@@ -47,7 +47,7 @@ class UserRepository implements IUserRepository {
 
   findUsers = async () => {
     try {
-      return await User.find({ isAdmin: false }).sort({ createdAt: -1 });
+      return await User.find({ isAdmin: false }).sort({ registered_On: -1 });
     } catch (error) {
       console.log(error);
     }

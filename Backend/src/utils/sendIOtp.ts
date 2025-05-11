@@ -2,7 +2,7 @@
 import nodemailer from "nodemailer"
 
 
-const sendOtp=async(email:any,otp:any)=>{
+const sendOtp=async(email:string,otp:string)=>{
 
 
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {

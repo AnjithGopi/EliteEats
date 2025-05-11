@@ -141,30 +141,21 @@ class UserService implements IUserService {
       if (!saveUser) {
         throw new Error("Error in password reset");
       }
-      const role="user"
+      const role = "user";
 
-      const sendLink = await sendPasswordResetLink(user.email, token,role);
+      const sendLink = await sendPasswordResetLink(user.email, token, role);
 
-      if (sendLink) {
-        console.log(
-          `Click the following link to reset your password: http://localhost:${process.env.port}/user/reset-password/${token}`
-        );
-        console.log(`email send to :${user.email} with token :${token}`);
-      }
 
       return {
         message: `A link send to your email ${user.email} to reset your passoword`,
+        token:token
       };
     } catch (error) {
       console.log(error);
     }
   };
 
-  verifyAndResetPassword = async (
-    token: string,
-    password: string,
-    confirmPassword: string
-  ) => {
+  verifyAndResetPassword = async (token: string, password: string) => {
     try {
       const checkUser = await this._passwordResetRepository.checkuser(token);
 
@@ -186,7 +177,11 @@ class UserService implements IUserService {
         token
       );
 
-      return passWordUpdated;
+      if (deleteToken) {
+        return passWordUpdated;
+      } else {
+        throw new Error("Something went wrong ");
+      }
     } catch (error) {
       console.log(error);
     }

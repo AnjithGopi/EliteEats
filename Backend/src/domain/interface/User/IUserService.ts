@@ -1,4 +1,4 @@
-interface UserObject {
+export interface UserObject {
     name?: string;
     email?: string;
     mobile?: number;
@@ -6,7 +6,7 @@ interface UserObject {
     isActive?: boolean;
     otpVerified?: boolean;
     isAdmin?: boolean;
-    createdAt?: Date;
+    registered_On?: Date;
     _id?:string;
     __v?: number;
   }
@@ -23,10 +23,10 @@ interface UserObject {
 
 
 export interface IUserService {
-  register(userData: any): Promise<UserObject|any>;
+  register(userData: UserObject): Promise<UserObject|any>;
   verifyOtpAndRegister (otpData:string,token:string): Promise<UserObject>;
-  verifyLogin(loginData: any): Promise<AuthResponse|false|undefined>;
+  verifyLogin(loginData:{email:string,password:string}): Promise<AuthResponse|false|undefined>;
   forgotPassword(email:string):Promise<AuthResponse|UserObject|undefined|string|object>;
-  verifyAndResetPassword(token:string,password:string,confirmPassword:string):Promise<any>
+  verifyAndResetPassword(token:string,password:string):Promise<UserObject|any>
 
 }

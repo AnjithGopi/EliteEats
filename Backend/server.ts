@@ -9,7 +9,7 @@ import adminRoute from "./src/routes/adminRoutes";
 import vendorRoute from "./src/routes/resturantRoutes";
 import { connectRedis } from "./src/config/redis";
 import cookieParser from "cookie-parser";
-import Api from "./src/config/constants/api";
+import {Api }from "./src/config/constants/api";
 
 dotenv.config();
 

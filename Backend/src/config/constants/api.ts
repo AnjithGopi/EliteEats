@@ -5,8 +5,11 @@ dotenv.config()
 
 
 
-const Api=`http://localhost:${process.env.PORT}`
+export const Api=`http://localhost:${process.env.PORT}`
+
+export const frontEndURL=`http://localhost:5173`
 
 
 
-export default Api
+
+
