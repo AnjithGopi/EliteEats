@@ -85,8 +85,6 @@ export class userController {
       if (!user) {
         res.status(HttpStatusCode.NOT_FOUND).json({ message: "No user Found" });
       } else {
-
-        
         res.status(HttpStatusCode.OK).json({ message: "User found", user });
       }
     } catch (error) {
@@ -104,8 +102,7 @@ export class userController {
       if (password === confirmPassword) {
         verified = await this._userService.verifyAndResetPassword(
           token,
-          password,
-          
+          password
         );
       } else {
         res
