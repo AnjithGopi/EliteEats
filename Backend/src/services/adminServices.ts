@@ -84,7 +84,7 @@ class AdminService implements IAdminService {
         ...userDoc.toObject(),
         _id: userDoc._id.toString(),
       };
-      console.log("User details from id:",user)
+      console.log("User details from id:", user);
       return user;
     } catch (error) {
       console.log(error);
@@ -94,6 +94,7 @@ class AdminService implements IAdminService {
   blockUser = async (id: string) => {
     try {
       const blocked = await this._userRepository.block(id);
+
       console.log("BLocked:", blocked);
       if (!blocked) {
         throw new Error("Something went wrong");
