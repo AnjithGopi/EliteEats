@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { injectable, inject } from "inversify";
-import { IVendorService } from "../domain/interface/Vendor/IVendorService";
+import { IVendorService } from "../interface/Vendor/IVendorService";
 
 @injectable()
 export class VendorController {

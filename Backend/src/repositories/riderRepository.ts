@@ -1,6 +1,6 @@
 
-import { LoginData } from "../domain/interface/Admin/IAdminService";
-import { IRider, IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
+import { LoginData } from "../interface/Admin/IAdminService";
+import { IRider, IRiderRepository } from "../interface/Rider/IRiderRepository";
 import Rider from "../models/riderModel";
 
 

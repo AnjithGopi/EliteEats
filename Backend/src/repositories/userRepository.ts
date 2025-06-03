@@ -1,4 +1,4 @@
-import { IUserRepository } from "../domain/interface/User/IUserRepository";
+import { IUserRepository } from "../interface/User/IUserRepository";
 import User from "../models/userModel";
 
 class UserRepository implements IUserRepository {

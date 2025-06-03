@@ -3,14 +3,14 @@ import sendOtp from "../utils/sendIOtp";
 import hashPassword from "../utils/hashPassword";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import { IUserService } from "../domain/interface/User/IUserService";
+import { IUserService } from "../interface/User/IUserService";
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "../domain/interface/User/IUserRepository";
-import { LoginData } from "../domain/interface/Admin/IAdminService";
+import { IUserRepository } from "../interface/User/IUserRepository";
+import { LoginData } from "../interface/Admin/IAdminService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
 import { passwordResetToken } from "../utils/password _reset";
-import { IPasswordResetRepository } from "../domain/interface/IPasswordResetRepository";
+import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import { sendPasswordResetLink } from "../utils/sendResetLink";
 
 @injectable()

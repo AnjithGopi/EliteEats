@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import redisClient from "../config/redis";
-import { IVendorService } from "../domain/interface/Vendor/IVendorService";
+import { IVendorService } from "../interface/Vendor/IVendorService";
 import {VendorRepository} from "../repositories/vendorRepository";
 import comparePassword from "../utils/comparePasswords";
 import generateOtp from "../utils/generateOtp";
@@ -8,7 +8,7 @@ import hashPassword from "../utils/hashPassword";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import redisVerificationToken from "../utils/redisverificaton";
 import sendOtp from "../utils/sendIOtp";
-import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository";
+import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 
 @injectable()
  class VendorService implements IVendorService {

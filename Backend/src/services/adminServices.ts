@@ -1,11 +1,8 @@
 import { injectable, inject } from "inversify";
-import {
-  IAdminService,
-  LoginData,
-} from "../domain/interface/Admin/IAdminService";
+import { IAdminService,LoginData, } from "../interface/Admin/IAdminService";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import { IUserRepository } from "../domain/interface/User/IUserRepository";
+import { IUserRepository } from "../interface/User/IUserRepository";
 
 @injectable()
 class AdminService implements IAdminService {
@@ -26,6 +23,7 @@ class AdminService implements IAdminService {
         admin.password
       );
 
+      
       if (!passwordMatch) {
         throw new Error("Incorrect Password");
       }

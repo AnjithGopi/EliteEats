@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
-import { IAdminService } from "../domain/interface/Admin/IAdminService";
+import { IAdminService } from "../interface/Admin/IAdminService";
 import { inject, injectable } from "inversify";
 
 @injectable()

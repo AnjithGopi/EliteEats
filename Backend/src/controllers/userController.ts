@@ -3,7 +3,7 @@ import { HttpStatusCode } from "../utils/statusCodes";
 import dotenv from "dotenv";
 dotenv.config();
 import { injectable, inject } from "inversify";
-import { IUserService } from "../domain/interface/User/IUserService";
+import { IUserService } from "../interface/User/IUserService";
 
 @injectable()
 export class userController {

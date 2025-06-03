@@ -1,4 +1,4 @@
-import { IVendorRepository } from "../domain/interface/Vendor/IVendorRepository";
+import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import Vendor from "../models/vendorModel";
 
 export class VendorRepository implements IVendorRepository {

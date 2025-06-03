@@ -1,4 +1,4 @@
-import { IPasswordResetRepository } from "../domain/interface/IPasswordResetRepository";
+import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import Token from "../models/passwordResetModel";
 
 

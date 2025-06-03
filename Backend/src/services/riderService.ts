@@ -1,11 +1,11 @@
 import { inject, injectable } from "inversify";
-import { IRiderRepository } from "../domain/interface/Rider/IRiderRepository";
+import { IRiderRepository } from "../interface/Rider/IRiderRepository";
 import comparePassword from "../utils/comparePasswords";
 import generateOtp from "../utils/generateOtp";
 import hashPassword from "../utils/hashPassword";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import sendOtp from "../utils/sendIOtp";
-import { IRiderService } from "../domain/interface/Rider/IRiderService";
+import { IRiderService } from "../interface/Rider/IRiderService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
 

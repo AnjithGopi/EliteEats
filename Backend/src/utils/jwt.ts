@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {env}from "../config/env"
-import {  UserDetails } from "../domain/interface/Admin/IAdminService";
+import {  UserDetails } from "../interface/Admin/IAdminService";
 dotenv.config();
 
 export const generateAccessToken = (userData:any) => {

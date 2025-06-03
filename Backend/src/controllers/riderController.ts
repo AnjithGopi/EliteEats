@@ -1,7 +1,7 @@
 import { json, type Request, type Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { inject, injectable } from "inversify";
-import { IRiderService } from "../domain/interface/Rider/IRiderService";
+import { IRiderService } from "../interface/Rider/IRiderService";
 
 @injectable()
 export class RiderController {
