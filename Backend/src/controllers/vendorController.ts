@@ -11,6 +11,8 @@ export class VendorController {
 
   signup = async (req: Request, res: Response) => {
     try {
+      console.log(req.body)
+      console.log("registration started for restuaruet")
       let data = await this._vendorService.register(req.body);
 
       if (data) {
@@ -32,10 +34,10 @@ export class VendorController {
       const { otp, token } = req.body;
       const data = await this._vendorService.verifyOtp(otp, token);
       if (data) {
-        console.log("USER Registered");
+        console.log("Hotel registered");
         res
           .status(HttpStatusCode.CREATED)
-          .json({ messsage: "User Registered Successfully", data });
+          .json({ message: "Registration successfull ", data });
       }
     } catch (error) {
       console.log(error);

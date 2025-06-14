@@ -56,6 +56,7 @@ export class AdminController {
 
   userDetails = async (req: Request, res: Response) => {
     try {
+      console.log("user Search");
       const { id } = req.params;
 
       const user = await this._adminService.findUser(id);
@@ -102,6 +103,22 @@ export class AdminController {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
           .json({ message: "Internal server error" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getRestuarentList = async (req: Request, res: Response) => {
+    try {
+      const restaurentsFound = await this._adminService.getRestaurents();
+
+      if (!restaurentsFound) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "No restaurents found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(restaurentsFound);
       }
     } catch (error) {
       console.log(error);

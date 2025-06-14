@@ -25,6 +25,17 @@ export class VendorRepository implements IVendorRepository {
     }
   };
 
+  restaurents=async()=>{
+    try {
+
+      return await Vendor.find({isActive:true})
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
   findRestaurent = async (loginData: any) => {
     try {
       return await Vendor.findOne({ email: loginData.email });

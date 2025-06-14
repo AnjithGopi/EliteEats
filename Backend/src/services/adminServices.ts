@@ -1,13 +1,15 @@
 import { injectable, inject } from "inversify";
-import { IAdminService,LoginData, } from "../interface/Admin/IAdminService";
+import { IAdminService, LoginData } from "../interface/Admin/IAdminService";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserRepository } from "../interface/User/IUserRepository";
+import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 
 @injectable()
 class AdminService implements IAdminService {
   constructor(
-    @inject("IUserRepository") private _userRepository: IUserRepository
+    @inject("IUserRepository") private _userRepository: IUserRepository,
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository
   ) {}
 
   findAdmin = async (loginData: LoginData) => {
@@ -23,7 +25,6 @@ class AdminService implements IAdminService {
         admin.password
       );
 
-      
       if (!passwordMatch) {
         throw new Error("Incorrect Password");
       }
@@ -61,7 +62,7 @@ class AdminService implements IAdminService {
           isActive: userObject.isActive,
           otpVerified: userObject.otpVerified,
           isAdmin: userObject.isAdmin,
-          createdAt: userObject.createdAt,
+          createdAt: userObject.registered_On,
         };
       });
       return transformedUsers;
@@ -123,6 +124,32 @@ class AdminService implements IAdminService {
       };
 
       return unblockedUser;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getRestaurents = async () => {
+    try {
+      const restaurents = await this._vendorRepository.restaurents();
+
+      if (!restaurents) {
+        throw new Error("Something went wrong, unable to fetch restuarents");
+      }
+
+      const transformedData = restaurents.map((item: any) => {
+        return {
+          _id: item._id,
+          name: item.name,
+          email: item.email,
+          description: item.description,
+          isActive: item.isActive,
+          adminVerified: item.adminVerified,
+          createdAt: item.createdAt,
+        };
+      });
+
+      return transformedData;
     } catch (error) {
       console.log(error);
     }

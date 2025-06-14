@@ -12,7 +12,8 @@ import redisClient from "../config/redis";
 @injectable()
 export class RiderService implements IRiderService {
   constructor(
-    @inject("IRiderRepository") private _riderRepository: IRiderRepository) {}
+    @inject("IRiderRepository") private _riderRepository: IRiderRepository
+  ) {}
 
   register = async (riderData: any) => {
     try {

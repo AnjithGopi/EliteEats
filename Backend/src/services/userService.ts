@@ -107,6 +107,7 @@ class UserService implements IUserService {
 
       if (user && passwordMatch) {
         const accessToken = generateAccessToken(user);
+
         const refreshToken = generateRefreshToken(user);
         console.log(accessToken);
         console.log(refreshToken);
@@ -123,32 +124,25 @@ class UserService implements IUserService {
   forgotPassword = async (email: string) => {
     try {
       const user = await this._userRepository.findwithEmail(email);
-
       if (!user) {
         throw new Error("Incorrect email");
       }
-
       const token = passwordResetToken();
-
       const data = {
         user: user._id,
         userModel: "User",
         token: token,
       };
-
       const saveUser = await this._passwordResetRepository.saveToken(data);
-
       if (!saveUser) {
         throw new Error("Error in password reset");
       }
       const role = "user";
-
       const sendLink = await sendPasswordResetLink(user.email, token, role);
-
 
       return {
         message: `A link send to your email ${user.email} to reset your passoword`,
-        token:token
+        token: token,
       };
     } catch (error) {
       console.log(error);

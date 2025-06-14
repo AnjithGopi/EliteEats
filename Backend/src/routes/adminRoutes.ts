@@ -13,5 +13,6 @@ router.route("/users").get(controller.getAllusers);
 router.route("/users/:id").get(controller.userDetails)
 router.route("/users/block/:id").patch(controller.blockUser);
 router.route("/users/unblock/:id").patch(controller.unblockUser);
+router.route("/restaurents").get(controller.getRestuarentList)
 
 export default router;

@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import dotenv from "dotenv";
-dotenv.config();
 import { injectable, inject } from "inversify";
 import { IUserService } from "../interface/User/IUserService";
+dotenv.config();
 
 @injectable()
 export class userController {
@@ -44,6 +44,8 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
+      console.log("hhhh");
+
       const user = await this._userService.verifyLogin(req.body);
       console.log(req.body);
 
@@ -94,6 +96,7 @@ export class userController {
 
   resetPassword = async (req: Request, res: Response) => {
     try {
+      console.log("Worked");
       const { token } = req.params;
       const { password, confirmPassword } = req.body;
 
