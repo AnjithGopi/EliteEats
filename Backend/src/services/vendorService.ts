@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import redisClient from "../config/redis";
 import { IVendorService } from "../interface/Vendor/IVendorService";
-import {VendorRepository} from "../repositories/vendorRepository";
+import { VendorRepository } from "../repositories/vendorRepository";
 import comparePassword from "../utils/comparePasswords";
 import generateOtp from "../utils/generateOtp";
 import hashPassword from "../utils/hashPassword";
@@ -9,10 +9,13 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import redisVerificationToken from "../utils/redisverificaton";
 import sendOtp from "../utils/sendIOtp";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
+import { createRestaurentid } from "../utils/restaurent_id";
 
 @injectable()
- class VendorService implements IVendorService {
-  constructor(@inject("IVendorRepository") private _vendorRepository: IVendorRepository) {}
+class VendorService implements IVendorService {
+  constructor(
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository
+  ) {}
 
   register = async (vendorData: any) => {
     try {
@@ -23,12 +26,14 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
       }
 
       const password = await hashPassword(vendorData.password);
+      const restaurentId = createRestaurentid();
 
-      const vendorToSave = { ...vendorData, password: password }; // creating new restaurent object with hashed password
+      const vendorToSave = { ...vendorData, password: password, restaurentId:restaurentId,phone: vendorData.phone || undefined, }; // creating new restaurent object with hashed password
+      console.log("HOTEL TO SAVE::",vendorToSave)
 
       const otp = generateOtp();
 
-      console.log("otp send:",otp)
+      console.log("otp send:", otp);
 
       const verificationToken = redisVerificationToken();
 
@@ -52,9 +57,9 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 
   verifyOtp = async (userProvidedotp: string, token: string) => {
     try {
-      console.log("token from user:",token)
+      console.log("token from user:", token);
       const storedData = await redisClient.get(`reg:${token}`);
-      console.log("StoredData:",storedData)
+      console.log("StoredData:", storedData);
       if (!storedData) {
         throw new Error("Invalid or expired token");
       }
@@ -64,9 +69,10 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
       if (otp !== userProvidedotp) {
         throw new Error("Incorrect otp");
       }
-      console.log("userto save:",vendor)
+      console.log("userto save:", vendor);
 
       const savedVendor = await this._vendorRepository.saveRestuarent(vendor);
+      console.log("Saved vendor:",savedVendor)
       await redisClient.del(`reg:${token}`);
 
       if (!savedVendor) {
@@ -97,10 +103,14 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
       }
 
       if (verified && passwordMatch) {
-        const accessToken = generateAccessToken(verified);
-        const refreshToken = generateRefreshToken(verified);
+        if (!verified.adminVerified) {
+          return { message: "Your profile is under verification" };
+        } else {
+          const accessToken = generateAccessToken(verified);
+          const refreshToken = generateRefreshToken(verified);
 
-        return { ...verified.toObject(), accessToken, refreshToken };
+          return { ...verified.toObject(), accessToken, refreshToken };
+        }
       }
 
       return false;
@@ -110,6 +120,4 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
   };
 }
 
-
-export default VendorService
-
+export default VendorService;

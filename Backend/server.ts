@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use("/user", userRoute);
 app.use("/rider", riderRoute);
 app.use("/admin", adminRoute);
-app.use("/restuarent", vendorRoute);
+app.use("/restaurent", vendorRoute);
 
 Promise.all([connectDb(), connectRedis()])
   .then(() =>

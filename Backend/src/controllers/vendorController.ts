@@ -47,6 +47,7 @@ export class VendorController {
   login = async (req: Request, res: Response) => {
     try {
       const data = await this._vendorService.login(req.body);
+      console.log(data)
 
       if (!data) {
         res

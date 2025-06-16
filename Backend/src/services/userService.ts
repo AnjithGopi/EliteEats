@@ -12,6 +12,7 @@ import redisClient from "../config/redis";
 import { passwordResetToken } from "../utils/password _reset";
 import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import { sendPasswordResetLink } from "../utils/sendResetLink";
+import {generate_userId}from "../utils/generate_userid"
 
 @injectable()
 class UserService implements IUserService {
@@ -31,8 +32,9 @@ class UserService implements IUserService {
       }
 
       const password = await hashPassword(userData.password);
+      const userId=generate_userId()
 
-      const userToSave = { ...userData, password: password }; // creating new user object with hashed password
+      const userToSave = { ...userData, password: password,userId }; // creating new user object with hashed password
       console.log(userToSave);
 
       const otp = generateOtp();

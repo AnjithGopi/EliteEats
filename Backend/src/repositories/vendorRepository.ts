@@ -19,7 +19,10 @@ export class VendorRepository implements IVendorRepository {
 
   saveRestuarent = async (data: any) => {
     try {
+      console.log("Saving in progress restaurent:",data)
+
       return await Vendor.create(data);
+       
     } catch (error) {
       console.log(error);
     }

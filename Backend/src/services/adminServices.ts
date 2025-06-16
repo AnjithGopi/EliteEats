@@ -140,7 +140,9 @@ class AdminService implements IAdminService {
       const transformedData = restaurents.map((item: any) => {
         return {
           _id: item._id,
+          restuarentId:item.restaurentId,
           name: item.name,
+          mobile:item.phone,
           email: item.email,
           description: item.description,
           isActive: item.isActive,
