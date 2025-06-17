@@ -13,6 +13,7 @@ export const authenticateUser = (
   next: NextFunction
 ):void => {
   try {
+    console.log("Token verification started")
     console.log("Middle ware worked")
     console.log("Token in cookies Access:",req.cookies.AccessToken)
     const token = req.cookies.AccessToken;
