@@ -182,6 +182,35 @@ class UserService implements IUserService {
       console.log(error);
     }
   };
+
+  getHotels=async()=>{
+
+    try {
+
+      const hotels=  await this._userRepository.getHotels()
+
+      if(!hotels){
+        throw new Error("no hotels found")
+      }
+
+      const data= hotels.map((hotel:any)=>{
+
+        return {
+
+          name:hotel.name,
+          _id:hotel._id
+        }
+      })
+
+      return data
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+
+
+  }
 }
 
 export default UserService;

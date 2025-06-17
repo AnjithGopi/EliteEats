@@ -28,5 +28,6 @@ export interface IUserService {
   verifyLogin(loginData:{email:string,password:string}): Promise<AuthResponse|false|undefined>;
   forgotPassword(email:string):Promise<AuthResponse|UserObject|undefined|string|object>;
   verifyAndResetPassword(token:string,password:string):Promise<UserObject|any>
+  getHotels():Promise<any>
 
 }

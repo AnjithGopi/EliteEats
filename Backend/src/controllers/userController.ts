@@ -126,4 +126,17 @@ export class userController {
       console.log(error);
     }
   };
+
+  getAllhotels = async (req: Request, res: Response) => {
+    try {
+      const hotels = await this._userService.getHotels();
+      if (!hotels) {
+        res.status(500).json({ message: "internal server error" });
+      } else {
+        res.status(200).json(hotels);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

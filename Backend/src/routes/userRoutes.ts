@@ -10,6 +10,7 @@ router.route("/verify_otp").post(controller.verifyOtp);
 router.route("/login").post(controller.userLogin);
 router.route("/forgot_password").post(controller.forgotPassword)
 router.route("/reset-password/:token").post(controller.resetPassword)
+router.route("/restaurents").get(controller.getAllhotels)
 
 
 

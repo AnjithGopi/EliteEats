@@ -1,5 +1,6 @@
 import { IUserRepository } from "../interface/User/IUserRepository";
 import User from "../models/userModel";
+import Vendor from "../models/vendorModel";
 
 class UserRepository implements IUserRepository {
   constructor() {}
@@ -106,6 +107,18 @@ class UserRepository implements IUserRepository {
       console.log(error);
     }
   };
+
+  getHotels=async()=>{
+
+    try {
+
+      return await Vendor.find({})
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserRepository;
