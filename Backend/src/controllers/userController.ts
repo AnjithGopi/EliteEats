@@ -131,9 +131,29 @@ export class userController {
     try {
       const hotels = await this._userService.getHotels();
       if (!hotels) {
-        res.status(500).json({ message: "internal server error" });
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "internal server error" });
       } else {
-        res.status(200).json(hotels);
+        res.status(HttpStatusCode.CREATED).json(hotels);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getProfile = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const user = await this._userService.findUser(id);
+
+      if (!user) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "user Not found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(user);
       }
     } catch (error) {
       console.log(error);

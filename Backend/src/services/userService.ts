@@ -12,7 +12,7 @@ import redisClient from "../config/redis";
 import { passwordResetToken } from "../utils/password _reset";
 import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import { sendPasswordResetLink } from "../utils/sendResetLink";
-import {generate_userId}from "../utils/generate_userid"
+import { generate_userId } from "../utils/generate_userid";
 
 @injectable()
 class UserService implements IUserService {
@@ -32,9 +32,9 @@ class UserService implements IUserService {
       }
 
       const password = await hashPassword(userData.password);
-      const userId=generate_userId()
+      const userId = generate_userId();
 
-      const userToSave = { ...userData, password: password,userId }; // creating new user object with hashed password
+      const userToSave = { ...userData, password: password, userId }; // creating new user object with hashed password
       console.log(userToSave);
 
       const otp = generateOtp();
@@ -113,8 +113,16 @@ class UserService implements IUserService {
         const refreshToken = generateRefreshToken(user);
         console.log(accessToken);
         console.log(refreshToken);
+        const userData = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          mobile: user.mobile,
+          accessToken,
+          refreshToken,
+        };
 
-        return { accessToken, refreshToken };
+        return userData;
       }
 
       throw new Error("Unable to verify login check email and password again");
@@ -183,34 +191,42 @@ class UserService implements IUserService {
     }
   };
 
-  getHotels=async()=>{
-
+  getHotels = async () => {
     try {
+      const hotels = await this._userRepository.getHotels();
 
-      const hotels=  await this._userRepository.getHotels()
-
-      if(!hotels){
-        throw new Error("no hotels found")
+      if (!hotels) {
+        throw new Error("no hotels found");
       }
 
-      const data= hotels.map((hotel:any)=>{
-
+      const data = hotels.map((hotel: any) => {
         return {
+          name: hotel.name,
+          _id: hotel._id,
+        };
+      });
 
-          name:hotel.name,
-          _id:hotel._id
-        }
-      })
-
-      return data
-      
+      return data;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
+  };
 
+  findUser = async (userId: any) => {
+    try {
+      const user =await this._userRepository.getUser(userId);
 
-  }
+      if (!user) {
+        throw new Error("no user found , something went wrong");
+      }
+
+      console.log(user);
+
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserService;

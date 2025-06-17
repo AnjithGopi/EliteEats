@@ -119,6 +119,18 @@ class UserRepository implements IUserRepository {
       
     }
   }
+
+  getUser=async(userData:any)=>{
+
+    try {
+
+      return await User.findOne({_id:userData}).select("-password -isActive -isAdmin")
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserRepository;
