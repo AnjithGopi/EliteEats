@@ -6,7 +6,7 @@ const vendorSchema = new mongoose.Schema({
   address:{type:String},
   email: { type: String, unique: true },
   password: { type: String },
-  phone: { type: String||null||undefined },
+  phone: { type: String },
   description: { type: String },
   cuisineType: { type: String },
   isActive: { type: Boolean, default: true },

@@ -1,5 +1,6 @@
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import Vendor from "../models/vendorModel";
+import Menu from "../models/menuModel";
 
 export class VendorRepository implements IVendorRepository {
   constructor() {}
@@ -19,29 +20,43 @@ export class VendorRepository implements IVendorRepository {
 
   saveRestuarent = async (data: any) => {
     try {
-      console.log("Saving in progress restaurent:",data)
+      console.log("Saving in progress restaurent:", data);
 
       return await Vendor.create(data);
-       
     } catch (error) {
       console.log(error);
     }
   };
 
-  restaurents=async()=>{
+  restaurents = async () => {
     try {
-
-      return await Vendor.find({isActive:true})
-      
+      return await Vendor.find({ isActive: true });
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 
   findRestaurent = async (loginData: any) => {
     try {
       return await Vendor.findOne({ email: loginData.email });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  checkItemExist = async (data: any) => {
+    try {
+      return await Menu.findOne({ name: data.name });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  saveMenu = async (data: any) => {
+    try {
+      const menu=await Menu.create(data);
+      console.log(menu)
+      return menu
     } catch (error) {
       console.log(error);
     }

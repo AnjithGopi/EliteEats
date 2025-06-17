@@ -28,8 +28,13 @@ class VendorService implements IVendorService {
       const password = await hashPassword(vendorData.password);
       const restaurentId = createRestaurentid();
 
-      const vendorToSave = { ...vendorData, password: password, restaurentId:restaurentId,phone: vendorData.phone || undefined, }; // creating new restaurent object with hashed password
-      console.log("HOTEL TO SAVE::",vendorToSave)
+      const vendorToSave = {
+        ...vendorData,
+        password: password,
+        restaurentId: restaurentId,
+        phone: vendorData.phone || undefined,
+      }; // creating new restaurent object with hashed password
+      console.log("HOTEL TO SAVE::", vendorToSave);
 
       const otp = generateOtp();
 
@@ -72,7 +77,7 @@ class VendorService implements IVendorService {
       console.log("userto save:", vendor);
 
       const savedVendor = await this._vendorRepository.saveRestuarent(vendor);
-      console.log("Saved vendor:",savedVendor)
+      console.log("Saved vendor:", savedVendor);
       await redisClient.del(`reg:${token}`);
 
       if (!savedVendor) {
@@ -116,6 +121,27 @@ class VendorService implements IVendorService {
       return false;
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  addMenu = async (data: any) => {
+    try {
+      console.log("menu data from controller:", data);
+
+      const exist = await this._vendorRepository.checkItemExist(data);
+      if (exist) {
+        throw new Error("item already exists");
+      }
+
+      const saveItems = await this._vendorRepository.saveMenu(data);
+
+      if (!saveItems) {
+        return { errormessage:"unable to add" };
+      } else {
+        return saveItems;
+      }
+    } catch (error) {
+      console.log(data);
     }
   };
 }

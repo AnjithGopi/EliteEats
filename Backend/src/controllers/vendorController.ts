@@ -11,8 +11,8 @@ export class VendorController {
 
   signup = async (req: Request, res: Response) => {
     try {
-      console.log(req.body)
-      console.log("registration started for restuaruet")
+      console.log(req.body);
+      console.log("registration started for restuaruet");
       let data = await this._vendorService.register(req.body);
 
       if (data) {
@@ -47,7 +47,7 @@ export class VendorController {
   login = async (req: Request, res: Response) => {
     try {
       const data = await this._vendorService.login(req.body);
-      console.log(data)
+      console.log(data);
 
       if (!data) {
         res
@@ -69,6 +69,21 @@ export class VendorController {
         });
 
         res.status(200).json({ message: "login successfull", data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createMenu = async (req: Request, res: Response) => {
+    try {
+      console.log(req.body);
+      const menu = await this._vendorService.addMenu(req.body);
+
+      if (menu) {
+        res.status(201).json({ message: "item added successfully", menu });
+      } else {
+        res.status(500).json({ message: "internal server error" });
       }
     } catch (error) {
       console.log(error);
