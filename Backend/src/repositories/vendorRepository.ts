@@ -54,9 +54,19 @@ export class VendorRepository implements IVendorRepository {
 
   saveMenu = async (data: any) => {
     try {
-      const menu=await Menu.create(data);
-      console.log(menu)
-      return menu
+      const menu = await Menu.create(data);
+      console.log(menu);
+      return menu;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findhotel = async (id: string) => {
+    try {
+      return await Vendor.findByIdAndUpdate(id, {
+        adminVerified: true,
+      });
     } catch (error) {
       console.log(error);
     }

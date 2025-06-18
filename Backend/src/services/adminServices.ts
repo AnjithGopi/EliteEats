@@ -4,6 +4,7 @@ import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserRepository } from "../interface/User/IUserRepository";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
+import { sendVerificationMail } from "../utils/verfification_mail";
 
 @injectable()
 class AdminService implements IAdminService {
@@ -140,9 +141,9 @@ class AdminService implements IAdminService {
       const transformedData = restaurents.map((item: any) => {
         return {
           _id: item._id,
-          restuarentId:item.restaurentId,
+          restuarentId: item.restaurentId,
           name: item.name,
-          mobile:item.phone,
+          mobile: item.phone,
           email: item.email,
           description: item.description,
           isActive: item.isActive,
@@ -152,6 +153,24 @@ class AdminService implements IAdminService {
       });
 
       return transformedData;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findRestaurent = async (id: string) => {
+    try {
+      const verified = await this._vendorRepository.findhotel(id);
+
+      if (!verified) {
+        throw new Error("Something went wrong");
+      }
+
+      if (verified) {
+        await sendVerificationMail(verified.email);
+      }
+
+      return verified;
     } catch (error) {
       console.log(error);
     }

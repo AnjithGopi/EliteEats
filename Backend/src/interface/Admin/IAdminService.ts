@@ -24,5 +24,7 @@ export interface LoginData {
     findUser(id: string): Promise<UserDetails|null |undefined>;
     blockUser(id: string): Promise<UserDetails | null | undefined>;
     unBlockUser(id: string): Promise<UserDetails | null | undefined>;
-    getRestaurents():Promise<any>
+    getRestaurents():Promise<any>,
+    findRestaurent(id:string):Promise<any>
+
   }

@@ -27,6 +27,7 @@ const verify = async (
     console.log("req.user attached:", req.user, decoded);
     next();
   } catch (error) {
+    console.log("Unauthorized")
     res
       .status(HttpStatusCode.UNAUTHORIZED)
       .json({ message: "No token found, Authentication failed" });

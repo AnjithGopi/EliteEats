@@ -124,4 +124,24 @@ export class AdminController {
       console.log(error);
     }
   };
+
+  verifyRestaurent = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const restuarent = await this._adminService.findRestaurent(id);
+
+      if (!restuarent) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Restaurent verified successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

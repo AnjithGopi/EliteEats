@@ -7,4 +7,5 @@ export interface IVendorRepository {
     restaurents():Promise<any>,
     checkItemExist(data:any):Promise<any>
     saveMenu(data:any):Promise<any>
+    findhotel(id:string):Promise<any>
   }
