@@ -9,7 +9,7 @@ import adminRoute from "./src/routes/adminRoutes";
 import vendorRoute from "./src/routes/resturantRoutes";
 import { connectRedis } from "./src/config/redis";
 import cookieParser from "cookie-parser";
-import {Api }from "./src/config/constants/api";
+import { Api } from "./src/config/constants/api";
 
 dotenv.config();
 
@@ -19,7 +19,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+//app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true, // REQUIRED for cookies
+  })
+);
 app.use(cookieParser());
 
 app.use("/user", userRoute);

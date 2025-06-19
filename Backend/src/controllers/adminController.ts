@@ -19,15 +19,19 @@ export class AdminController {
       } else {
         res.cookie("AccessToken", data.accessToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          //secure: process.env.NODE_ENV === "production",
+          // secure:false,
+          // sameSite: "lax",
+          sameSite:"none",
+          secure:true,
           maxAge: 60 * 60 * 1000,
         });
 
         res.cookie("RefreshToken", data.refreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          //secure: process.env.NODE_ENV === "production",
+          secure:false,
+          sameSite: "lax",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -127,6 +131,7 @@ export class AdminController {
 
   verifyRestaurent = async (req: Request, res: Response) => {
     try {
+      console.log("verification controller worked")
       const { id } = req.params;
 
       const restuarent = await this._adminService.findRestaurent(id);

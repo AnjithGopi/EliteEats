@@ -33,7 +33,7 @@ class AdminService implements IAdminService {
       if (admin && passwordMatch) {
         const accessToken = generateAccessToken(admin);
         const refreshToken = generateRefreshToken(admin);
-        return { accessToken, refreshToken };
+        return { admin,accessToken, refreshToken };
       }
       return false;
     } catch (error) {

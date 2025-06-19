@@ -53,15 +53,19 @@ export class userController {
         console.log(user);
         res.cookie("AccessToken", user.accessToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          //secure: process.env.NODE_ENV === "production",
+          // secure:false,
+          // sameSite: "lax",
+          sameSite:"none",
+          secure:true,
           maxAge: 60 * 60 * 1000,
         });
 
         res.cookie("RefreshToken", user.refreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+         // secure: process.env.NODE_ENV === "production",
+         secure:false,
+          sameSite: "lax",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
