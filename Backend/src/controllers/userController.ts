@@ -53,9 +53,9 @@ export class userController {
         console.log(user);
         res.cookie("AccessToken", user.accessToken, {
           httpOnly: true,
-           secure: process.env.NODE_ENV === "production",
-        //  secure:false,
-          path:'/',
+          secure: process.env.NODE_ENV === "production",
+          //  secure:false,
+          path: "/",
           sameSite: "lax",
           // sameSite: "none",
           // secure: true,
@@ -63,8 +63,6 @@ export class userController {
         });
 
         res.cookie("RefreshToken", user.refreshToken, {
-
-
           httpOnly: true,
           secure: false,
           sameSite: "lax",
@@ -160,6 +158,30 @@ export class userController {
           .json({ message: "user Not found" });
       } else {
         res.status(HttpStatusCode.OK).json(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  addtoCart = async (req: Request, res: Response) => {
+    try {
+      const { userId, productId, quantity } = req.query;
+
+      const cart = await this._userService.cartImplementation(
+        userId,
+        productId,
+        quantity
+      );
+
+      if (!cart) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
+      } else {
+        res
+          .status(HttpStatusCode.CREATED)
+          .json({ message: "Added to cart", cart });
       }
     } catch (error) {
       console.log(error);

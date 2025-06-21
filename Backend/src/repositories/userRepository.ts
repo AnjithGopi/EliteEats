@@ -1,4 +1,6 @@
+import { captureRejectionSymbol } from "nodemailer/lib/xoauth2";
 import { IUserRepository } from "../interface/User/IUserRepository";
+import Cart from "../models/cartModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
 
@@ -17,8 +19,6 @@ class UserRepository implements IUserRepository {
       console.log(error);
     }
   };
-
-  
 
   saveUser = async (userData: any) => {
     try {
@@ -108,29 +108,52 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  getHotels=async()=>{
-
+  getHotels = async () => {
     try {
-
-      return await Vendor.find({})
-      
+      return await Vendor.find({});
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 
-  getUser=async(userData:any)=>{
-
+  getUser = async (userData: any) => {
     try {
-
-      return await User.findOne({_id:userData}).select("-password -isActive -isAdmin")
-      
+      return await User.findOne({ _id: userData }).select(
+        "-password -isActive -isAdmin"
+      );
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  cart = async (userId: any, productId: any) => {
+    try {
+      console.log("in user repository:", userId, productId);
+
+      const cart = await Cart.findOne({ userId: userId });
+      return cart;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findCart = async (id: any) => {
+    try {
+      console.log(`find if cart exist for the given user with id : ${id}`);
+
+      return await Cart.findOne({ userId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createNewCart = async (data: any) => {
+    try {
+      return await Cart.create(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserRepository;

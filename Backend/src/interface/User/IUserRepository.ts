@@ -10,5 +10,9 @@ export interface IUserRepository {
     findwithEmail(email:string):Promise<any>;
     updatePassword(email:any,password:string|any):Promise<any>;
     getHotels():Promise<any>
-    getUser(userData:any):Promise<any>
+    getUser(userData:any):Promise<any>;
+    findCart(id:any):Promise<any>;
+    createNewCart(data:any):Promise<any>
+    
+   
   }

@@ -10,6 +10,7 @@ export interface IVendorRepository {
     findhotel(id:string):Promise<any>,
     categoryExistCheck(data:any):Promise<any>,
     createnewCategory(data:any):Promise<any>
+    findItem(data:any):Promise<any>
    
 
 

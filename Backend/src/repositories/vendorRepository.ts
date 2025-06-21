@@ -88,4 +88,16 @@ export class VendorRepository implements IVendorRepository {
       console.log(error);
     }
   };
+
+  findItem=async(productId:any)=>{
+
+    try {
+
+      return await Menu.findOne({_id:productId})
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }

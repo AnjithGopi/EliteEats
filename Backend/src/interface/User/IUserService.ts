@@ -30,5 +30,10 @@ export interface IUserService {
   verifyAndResetPassword(token:string,password:string):Promise<UserObject|any>
   getHotels():Promise<any>
   findUser(userData:any):Promise<any>
+  cartImplementation(userId:any,productId:any,quantity:any):Promise<any>
+ 
+  
+
+
 
 }

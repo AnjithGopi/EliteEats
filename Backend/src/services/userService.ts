@@ -13,13 +13,15 @@ import { passwordResetToken } from "../utils/password _reset";
 import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import { sendPasswordResetLink } from "../utils/sendResetLink";
 import { generate_userId } from "../utils/generate_userid";
+import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 
 @injectable()
 class UserService implements IUserService {
   constructor(
     @inject("IUserRepository") private _userRepository: IUserRepository,
     @inject("IPasswordResetRepository")
-    private _passwordResetRepository: IPasswordResetRepository
+    private _passwordResetRepository: IPasswordResetRepository,
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository
   ) {}
 
   register = async (userData: any) => {
@@ -214,7 +216,7 @@ class UserService implements IUserService {
 
   findUser = async (userId: any) => {
     try {
-      const user =await this._userRepository.getUser(userId);
+      const user = await this._userRepository.getUser(userId);
 
       if (!user) {
         throw new Error("no user found , something went wrong");
@@ -223,6 +225,44 @@ class UserService implements IUserService {
       console.log(user);
 
       return user;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  cartImplementation = async (userId: any, productId: any) => {
+    try {
+      const data = {
+        userId: userId,
+        productId: productId,
+        quantity: 1,
+        totalPrice: 0,
+      };
+
+      const user = await this._userRepository.getUser(data.userId);
+      console.log("userFor cart:", user);
+      const product = await this._vendorRepository.findItem(data.productId);
+      console.log("product for cart:", product);
+
+      const cart = await this._userRepository.findCart(data.userId);
+
+      console.log(`cart found for the user : ${cart}`);
+
+      if (!cart) {
+        const data_to_store = {
+          userId: data.userId,
+          items: [
+            {
+              productId: data.productId,
+              quantity: data.quantity,
+            },
+          ],
+          totalPrice: data.totalPrice,
+        };
+        const newCart = await this._userRepository.createNewCart(data_to_store);
+
+        return newCart;
+      }
     } catch (error) {
       console.log(error);
     }
