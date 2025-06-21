@@ -23,15 +23,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true, // REQUIRED for cookies
+    credentials: true,
   })
 );
 app.use(cookieParser());
 
-app.use("/user", userRoute);
-app.use("/rider", riderRoute);
-app.use("/admin", adminRoute);
-app.use("/restaurent", vendorRoute);
+app.use("/user/", userRoute);
+app.use("/rider/", riderRoute);
+app.use("/admin/", adminRoute);
+app.use("/restaurent/", vendorRoute);
 
 Promise.all([connectDb(), connectRedis()])
   .then(() =>

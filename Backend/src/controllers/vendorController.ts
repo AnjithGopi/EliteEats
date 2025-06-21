@@ -77,7 +77,8 @@ export class VendorController {
 
   createMenu = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
+      console.log(req.body)
+      console.log(req.body.id);
       const menu = await this._vendorService.addMenu(req.body);
 
       if (menu) {

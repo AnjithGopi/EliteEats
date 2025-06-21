@@ -16,6 +16,9 @@ export const generateAccessToken = (userData:any) => {
     return jwt.sign(payLoad, env.JWT_ACCESS_SECRET, {
       expiresIn: "1h",
     });
+
+
+    
   } catch (error) {
     console.log(error);
   }

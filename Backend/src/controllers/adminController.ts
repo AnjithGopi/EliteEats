@@ -12,6 +12,7 @@ export class AdminController {
       const data = await this._adminService.findAdmin(req.body);
 
       console.log("admin found:", data);
+      console.log("data.accesstoken:",data.accessToken)
       if (!data) {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
