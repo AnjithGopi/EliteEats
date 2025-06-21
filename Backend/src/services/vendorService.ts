@@ -144,6 +144,36 @@ class VendorService implements IVendorService {
       console.log(data);
     }
   };
+
+  addCategory=async(data:any)=>{
+
+    try {
+
+      const categoryExist=await this._vendorRepository.categoryExistCheck(data)
+
+      if(categoryExist){
+        throw new Error("Category already exists")
+      }
+
+
+      const savenewCategory=await this._vendorRepository.createnewCategory(data)
+
+      if(!savenewCategory){
+
+        throw new Error("unable to create category, something went wrong")
+      }
+
+      return savenewCategory  
+
+
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
+  
 }
 
 export default VendorService;

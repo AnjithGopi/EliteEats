@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const menuSchema = new mongoose.Schema({
   hotelId: { type: mongoose.Schema.ObjectId, ref: "Vendor" },
-  name: { type: String, required: true },
-  //category: { type: mongoose.Schema.ObjectId, ref: "MenuCategory" },
+  itemName: { type: String, required: true },
+  category: { type: mongoose.Schema.ObjectId, ref: "MenuCategory" },
   description: { type: String, required: true },
   quantity: { type: Number, required: true },
   isAvailable: { type: Boolean, default: true },

@@ -1,6 +1,7 @@
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import Vendor from "../models/vendorModel";
 import Menu from "../models/menuModel";
+import MenuCategory from "../models/menuCategoryModel";
 
 export class VendorRepository implements IVendorRepository {
   constructor() {}
@@ -67,6 +68,22 @@ export class VendorRepository implements IVendorRepository {
       return await Vendor.findByIdAndUpdate(id, {
         adminVerified: true,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  categoryExistCheck = async (data: any) => {
+    try {
+      return await MenuCategory.findOne({ name: data.name });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createnewCategory = async (data: any) => {
+    try {
+      return await MenuCategory.create(data);
     } catch (error) {
       console.log(error);
     }

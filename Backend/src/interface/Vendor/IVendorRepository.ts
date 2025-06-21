@@ -7,5 +7,10 @@ export interface IVendorRepository {
     restaurents():Promise<any>,
     checkItemExist(data:any):Promise<any>
     saveMenu(data:any):Promise<any>
-    findhotel(id:string):Promise<any>
+    findhotel(id:string):Promise<any>,
+    categoryExistCheck(data:any):Promise<any>,
+    createnewCategory(data:any):Promise<any>
+   
+
+
   }

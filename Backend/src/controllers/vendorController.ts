@@ -77,7 +77,7 @@ export class VendorController {
 
   createMenu = async (req: Request, res: Response) => {
     try {
-      console.log(req.body)
+      console.log(req.body);
       console.log(req.body.id);
       const menu = await this._vendorService.addMenu(req.body);
 
@@ -85,6 +85,26 @@ export class VendorController {
         res.status(201).json({ message: "item added successfully", menu });
       } else {
         res.status(500).json({ message: "internal server error" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createCategory = async (req: Request, res: Response) => {
+    try {
+      console.log(req.body);
+
+      const category = await this._vendorService.addCategory(req.body);
+
+      if (!category) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server Error" });
+      } else {
+        res
+          .status(HttpStatusCode.CREATED)
+          .json({ message: "Category saved successfully", category });
       }
     } catch (error) {
       console.log(error);
