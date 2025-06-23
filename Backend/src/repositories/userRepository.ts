@@ -127,17 +127,7 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  // cart = async (userId: any, productId: any) => {
-  //   try {
-  //     console.log("in user repository:", userId, productId);
-
-  //     const cart = await Cart.findOne({ userId: userId });
-  //     return cart;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  
   findCart = async (id: any) => {
     try {
       console.log(`find if cart exist for the given user with id : ${id}`);
