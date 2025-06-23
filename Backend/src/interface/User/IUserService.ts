@@ -31,6 +31,7 @@ export interface IUserService {
   getHotels():Promise<any>
   findUser(userData:any):Promise<any>
   cartImplementation(userId:any,productId:any,quantity:any):Promise<any>
+  findCart(id:string):Promise<any>
  
   
 

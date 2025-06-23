@@ -14,6 +14,7 @@ router.route("/reset-password/:token").post(controller.resetPassword);
 router.route("/restaurents").get(controller.getAllhotels);
 router.route("/profile/:id").get(verify,controller.getProfile);
 router.route("/addto_cart").post(controller.addtoCart);
+router.route("/view_cart/:id").get(controller.getCartDetails)
 
 
 

@@ -187,4 +187,20 @@ export class userController {
       console.log(error);
     }
   };
+
+  getCartDetails = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const cart = await this._userService.findCart(id);
+
+      if (!cart) {
+        res.status(HttpStatusCode.NOT_FOUND).json({ message: "No cart found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(cart);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

@@ -13,6 +13,8 @@ export interface IUserRepository {
     getUser(userData:any):Promise<any>;
     findCart(id:any):Promise<any>;
     createNewCart(data:any):Promise<any>
+    updateCart(userId:any,cart:any):Promise<any>
+    getCart(id:string):Promise<any>
     
    
   }

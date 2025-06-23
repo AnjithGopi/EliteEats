@@ -3,6 +3,7 @@ import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
+import { generate_userId } from "../utils/generate_userid";
 
 class UserRepository implements IUserRepository {
   constructor() {}
@@ -126,16 +127,16 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  cart = async (userId: any, productId: any) => {
-    try {
-      console.log("in user repository:", userId, productId);
+  // cart = async (userId: any, productId: any) => {
+  //   try {
+  //     console.log("in user repository:", userId, productId);
 
-      const cart = await Cart.findOne({ userId: userId });
-      return cart;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     const cart = await Cart.findOne({ userId: userId });
+  //     return cart;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   findCart = async (id: any) => {
     try {
@@ -150,6 +151,30 @@ class UserRepository implements IUserRepository {
   createNewCart = async (data: any) => {
     try {
       return await Cart.create(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateCart = async (userId: any, cart: any) => {
+    try {
+      return await Cart.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            items: cart.items,
+          },
+        },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getCart = async (id: string) => {
+    try {
+      return await Cart.findOne({ userId: id });
     } catch (error) {
       console.log(error);
     }

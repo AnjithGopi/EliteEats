@@ -240,13 +240,18 @@ class UserService implements IUserService {
       };
 
       const user = await this._userRepository.getUser(data.userId);
-      console.log("userFor cart:", user);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
       const product = await this._vendorRepository.findItem(data.productId);
-      console.log("product for cart:", product);
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
 
       const cart = await this._userRepository.findCart(data.userId);
-
-      console.log(`cart found for the user : ${cart}`);
 
       if (!cart) {
         const data_to_store = {
@@ -262,7 +267,39 @@ class UserService implements IUserService {
         const newCart = await this._userRepository.createNewCart(data_to_store);
 
         return newCart;
+      } else {
+        console.log("Existing cart found");
+
+        const itemIndex = cart.items.findIndex(
+          (item: any) => item.productId.toString() === productId.toString()
+        );
+
+        console.log("item index:", itemIndex);
+
+        if (itemIndex > -1) {
+          cart.items[itemIndex].quantity += 1;
+        } else {
+          cart.items.push({ productId: productId, quantity: 1 });
+        }
+
+        console.log("cart after updation:", cart);
+
+        const saveCart = await this._userRepository.updateCart(userId, cart);
+
+        if (!saveCart) {
+          throw new Error("Something went wrong");
+        }
+
+        return saveCart;
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findCart = async (id: string) => {
+    try {
+      return await this._userRepository.getCart(id);
     } catch (error) {
       console.log(error);
     }
