@@ -205,6 +205,7 @@ class UserService implements IUserService {
         return {
           name: hotel.name,
           _id: hotel._id,
+          displayPicture: hotel.displayPicture,
         };
       });
 

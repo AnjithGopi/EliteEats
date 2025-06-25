@@ -31,8 +31,9 @@ export class VendorController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const { otp, token } = req.body;
-      const data = await this._vendorService.verifyOtp(otp, token);
+      const { otp, token ,image} = req.body;
+      console.log("image:",image)
+      const data = await this._vendorService.verifyOtp(otp, token,image);
       if (data) {
         console.log("Hotel registered");
         res

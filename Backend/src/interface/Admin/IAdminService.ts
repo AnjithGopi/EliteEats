@@ -18,7 +18,7 @@ export interface LoginData {
   }
   
   export interface IAdminService {
-    // findAdmin(loginData: LoginData): Promise<AuthResponse | false | undefined>;
+
     findAdmin(loginData: LoginData): Promise<{accessToken:string,refreshToken:string}|false|undefined|any>
     findUsers(): Promise<UserDetails[] | undefined>;
     findUser(id: string): Promise<UserDetails|null |undefined>;

@@ -1,9 +1,7 @@
-import { captureRejectionSymbol } from "nodemailer/lib/xoauth2";
 import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
-import { generate_userId } from "../utils/generate_userid";
 
 class UserRepository implements IUserRepository {
   constructor() {}
@@ -127,7 +125,6 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  
   findCart = async (id: any) => {
     try {
       console.log(`find if cart exist for the given user with id : ${id}`);

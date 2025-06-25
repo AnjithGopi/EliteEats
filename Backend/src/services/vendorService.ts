@@ -60,7 +60,7 @@ class VendorService implements IVendorService {
     }
   };
 
-  verifyOtp = async (userProvidedotp: string, token: string) => {
+  verifyOtp = async (userProvidedotp: string, token: string,image:string) => {
     try {
       console.log("token from user:", token);
       const storedData = await redisClient.get(`reg:${token}`);
@@ -76,7 +76,11 @@ class VendorService implements IVendorService {
       }
       console.log("userto save:", vendor);
 
-      const savedVendor = await this._vendorRepository.saveRestuarent(vendor);
+      const restaurent={...vendor,displayPicture:image}
+
+      console.log("restaurent to save with image::::::::::",restaurent)
+
+      const savedVendor = await this._vendorRepository.saveRestuarent(restaurent);
       console.log("Saved vendor:", savedVendor);
       await redisClient.del(`reg:${token}`);
 
@@ -84,7 +88,11 @@ class VendorService implements IVendorService {
         throw new Error("unable to verify otp ");
       }
 
-      return savedVendor;
+      console.log("Saved hotel with image:",savedVendor)
+
+      return savedVendor
+
+      
     } catch (error) {
       console.log(error);
     }
