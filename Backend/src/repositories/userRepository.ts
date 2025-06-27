@@ -109,9 +109,10 @@ class UserRepository implements IUserRepository {
 
   getHotels = async () => {
     try {
-      return await Vendor.find({});
+      return await Vendor.find({}).limit(5);
     } catch (error) {
       console.log(error);
+      return [];
     }
   };
 
