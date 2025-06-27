@@ -8,6 +8,7 @@ import sendOtp from "../utils/sendIOtp";
 import { IRiderService } from "../interface/Rider/IRiderService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
+import { Roles } from "../utils/roles";
 
 @injectable()
 export class RiderService implements IRiderService {
@@ -99,10 +100,12 @@ export class RiderService implements IRiderService {
         throw new Error("Incorrect Password");
       }
 
+      const role=Roles.RIDER
+
       if (riderFound && passwordMatch) {
         console.log("Rider found:", riderFound);
-        const accessToken = generateAccessToken(riderFound);
-        const refreshToken = generateRefreshToken(riderFound);
+        const accessToken = generateAccessToken(riderFound,role);
+        const refreshToken = generateRefreshToken(riderFound,role);
 
         return { ...riderFound.toObject(), accessToken, refreshToken };
       }

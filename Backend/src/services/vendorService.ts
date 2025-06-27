@@ -10,6 +10,7 @@ import redisVerificationToken from "../utils/redisverificaton";
 import sendOtp from "../utils/sendIOtp";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { createRestaurentid } from "../utils/restaurent_id";
+import { Roles } from "../utils/roles";
 
 @injectable()
 class VendorService implements IVendorService {
@@ -60,7 +61,7 @@ class VendorService implements IVendorService {
     }
   };
 
-  verifyOtp = async (userProvidedotp: string, token: string,image:string) => {
+  verifyOtp = async (userProvidedotp: string, token: string, image: string) => {
     try {
       console.log("token from user:", token);
       const storedData = await redisClient.get(`reg:${token}`);
@@ -76,11 +77,13 @@ class VendorService implements IVendorService {
       }
       console.log("userto save:", vendor);
 
-      const restaurent={...vendor,displayPicture:image}
+      const restaurent = { ...vendor, displayPicture: image };
 
-      console.log("restaurent to save with image::::::::::",restaurent)
+      console.log("restaurent to save with image::::::::::", restaurent);
 
-      const savedVendor = await this._vendorRepository.saveRestuarent(restaurent);
+      const savedVendor = await this._vendorRepository.saveRestuarent(
+        restaurent
+      );
       console.log("Saved vendor:", savedVendor);
       await redisClient.del(`reg:${token}`);
 
@@ -88,11 +91,9 @@ class VendorService implements IVendorService {
         throw new Error("unable to verify otp ");
       }
 
-      console.log("Saved hotel with image:",savedVendor)
+      console.log("Saved hotel with image:", savedVendor);
 
-      return savedVendor
-
-      
+      return savedVendor;
     } catch (error) {
       console.log(error);
     }
@@ -119,8 +120,9 @@ class VendorService implements IVendorService {
         if (!verified.adminVerified) {
           return { message: "Your profile is under verification" };
         } else {
-          const accessToken = generateAccessToken(verified);
-          const refreshToken = generateRefreshToken(verified);
+          const role = Roles.RESTAURENT;
+          const accessToken = generateAccessToken(verified, role);
+          const refreshToken = generateRefreshToken(verified, role);
 
           return { ...verified.toObject(), accessToken, refreshToken };
         }
@@ -144,7 +146,7 @@ class VendorService implements IVendorService {
       const saveItems = await this._vendorRepository.saveMenu(data);
 
       if (!saveItems) {
-        return { errormessage:"unable to add" };
+        return { errormessage: "unable to add" };
       } else {
         return saveItems;
       }
@@ -153,35 +155,29 @@ class VendorService implements IVendorService {
     }
   };
 
-  addCategory=async(data:any)=>{
-
+  addCategory = async (data: any) => {
     try {
+      const categoryExist = await this._vendorRepository.categoryExistCheck(
+        data
+      );
 
-      const categoryExist=await this._vendorRepository.categoryExistCheck(data)
-
-      if(categoryExist){
-        throw new Error("Category already exists")
+      if (categoryExist) {
+        throw new Error("Category already exists");
       }
 
+      const savenewCategory = await this._vendorRepository.createnewCategory(
+        data
+      );
 
-      const savenewCategory=await this._vendorRepository.createnewCategory(data)
-
-      if(!savenewCategory){
-
-        throw new Error("unable to create category, something went wrong")
+      if (!savenewCategory) {
+        throw new Error("unable to create category, something went wrong");
       }
 
-      return savenewCategory  
-
-
-      
+      return savenewCategory;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
-
-  
+  };
 }
 
 export default VendorService;

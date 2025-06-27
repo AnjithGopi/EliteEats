@@ -5,7 +5,7 @@ import { env } from "../config/env";
 import User from "../models/userModel";
 // import User from "../models/userModel";
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
@@ -29,6 +29,7 @@ const verify = async (
     console.log("typeof decoded:", typeof decoded);
 
     req.user = decoded;
+    console.log("role from token:",req.user.role)
 
     console.log("req.user attached:", req.user);
     next();

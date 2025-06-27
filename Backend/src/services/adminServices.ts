@@ -5,6 +5,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserRepository } from "../interface/User/IUserRepository";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { sendVerificationMail } from "../utils/verfification_mail";
+import { Roles } from "../utils/roles";
 
 @injectable()
 class AdminService implements IAdminService {
@@ -30,9 +31,11 @@ class AdminService implements IAdminService {
         throw new Error("Incorrect Password");
       }
 
+      const role=Roles.ADMIN
+
       if (admin && passwordMatch) {
-        const accessToken = generateAccessToken(admin);
-        const refreshToken = generateRefreshToken(admin);
+        const accessToken = generateAccessToken(admin,role);
+        const refreshToken = generateRefreshToken(admin,role);
         return { admin,accessToken, refreshToken };
       }
       return false;

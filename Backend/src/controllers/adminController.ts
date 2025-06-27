@@ -48,10 +48,11 @@ export class AdminController {
   getAllusers = async (req: Request, res: Response) => {
     try {
       const users = await this._adminService.findUsers();
-
+      
       if (!users) {
         res.status(HttpStatusCode.NOT_FOUND).json("No users found");
       } else {
+        console.log("users returned")
         res.status(HttpStatusCode.OK).json(users);
       }
     } catch (error) {

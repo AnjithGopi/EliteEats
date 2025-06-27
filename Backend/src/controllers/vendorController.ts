@@ -94,7 +94,7 @@ export class VendorController {
 
   createCategory = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
+      console.log("creating category:",req.body);
 
       const category = await this._vendorService.addCategory(req.body);
 

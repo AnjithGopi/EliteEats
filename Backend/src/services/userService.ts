@@ -14,7 +14,7 @@ import { IPasswordResetRepository } from "../interface/IPasswordResetRepository"
 import { sendPasswordResetLink } from "../utils/sendResetLink";
 import { generate_userId } from "../utils/generate_userid";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
-
+import { Roles } from "../utils/roles";
 @injectable()
 class UserService implements IUserService {
   constructor(
@@ -109,10 +109,12 @@ class UserService implements IUserService {
         throw new Error("Incorrect Password");
       }
 
-      if (user && passwordMatch) {
-        const accessToken = generateAccessToken(user);
+      const role=Roles.USER
 
-        const refreshToken = generateRefreshToken(user);
+      if (user && passwordMatch) {
+        const accessToken = generateAccessToken(user,role);
+
+        const refreshToken = generateRefreshToken(user,role);
         console.log(accessToken);
         console.log(refreshToken);
         const userData = {
