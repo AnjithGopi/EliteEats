@@ -21,8 +21,6 @@ export class VendorRepository implements IVendorRepository {
 
   saveRestuarent = async (data: any) => {
     try {
-
- 
       console.log("Saving in progress restaurent:", data);
 
       return await Vendor.create(data);
@@ -49,7 +47,8 @@ export class VendorRepository implements IVendorRepository {
 
   checkItemExist = async (data: any) => {
     try {
-      return await Menu.findOne({ name: data.name });
+      console.log("item checked::::::::::");
+      return await Menu.findOne({ name: data.itemName });
     } catch (error) {
       console.log(error);
     }
@@ -57,8 +56,9 @@ export class VendorRepository implements IVendorRepository {
 
   saveMenu = async (data: any) => {
     try {
+      console.log("inside repository:", data);
       const menu = await Menu.create(data);
-      console.log(menu);
+      console.log("created::::", menu);
       return menu;
     } catch (error) {
       console.log(error);
@@ -91,15 +91,27 @@ export class VendorRepository implements IVendorRepository {
     }
   };
 
-  findItem=async(productId:any)=>{
-
+  findItem = async (productId: any) => {
     try {
-
-      return await Menu.findOne({_id:productId})
-      
+      return await Menu.findOne({ _id: productId });
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  findCategory = async (id: string) => {
+    try {
+      return await MenuCategory.find({ hotelId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findMenu = async (id: string) => {
+    try {
+      return await Menu.find({ hotelId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

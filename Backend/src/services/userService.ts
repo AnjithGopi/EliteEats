@@ -122,8 +122,9 @@ class UserService implements IUserService {
           name: user.name,
           email: user.email,
           mobile: user.mobile,
-          accessToken,
-          refreshToken,
+          role:role,
+           accessToken,
+           refreshToken,
         };
 
         return userData;
@@ -151,7 +152,7 @@ class UserService implements IUserService {
       if (!saveUser) {
         throw new Error("Error in password reset");
       }
-      const role = "user";
+      const role = Roles.USER;
       const sendLink = await sendPasswordResetLink(user.email, token, role);
 
       return {

@@ -13,10 +13,10 @@ router.route("/login").post(controller.userLogin);
 router.route("/forgot_password").post(controller.forgotPassword);
 router.route("/reset-password/:token").post(controller.resetPassword);
 router.route("/restaurents").get(controller.getAllhotels);
-router.route("/profile/:id").get(verify,verifyUser,controller.getProfile);
-router.route("/addto_cart").post(verify,verifyUser,controller.addtoCart);
-router.route("/view_cart/:id").get(verify,verifyUser,controller.getCartDetails)
-
-
-
+router.route("/profile/:id").get(verify, verifyUser, controller.getProfile);
+router.route("/addto_cart").post(verify, verifyUser, controller.addtoCart);
+router
+  .route("/view_cart/:id")
+  .get(verify, verifyUser, controller.getCartDetails);
+router.route("/logout").get(verify,verifyUser,controller.userLogout)
 export default router;

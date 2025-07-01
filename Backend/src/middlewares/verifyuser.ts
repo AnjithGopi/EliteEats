@@ -23,6 +23,9 @@ export const verifyUser = async (
       next();
     }
   } catch (error) {
+    res
+      .status(HttpStatusCode.UNAUTHORIZED)
+      .json({ message: "Unauthorized Access " });
     console.log(error);
   }
 };

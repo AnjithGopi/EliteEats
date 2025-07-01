@@ -11,6 +11,7 @@ import sendOtp from "../utils/sendIOtp";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { createRestaurentid } from "../utils/restaurent_id";
 import { Roles } from "../utils/roles";
+import MenuCategory from "../models/menuCategoryModel";
 
 @injectable()
 class VendorService implements IVendorService {
@@ -124,7 +125,16 @@ class VendorService implements IVendorService {
           const accessToken = generateAccessToken(verified, role);
           const refreshToken = generateRefreshToken(verified, role);
 
-          return { ...verified.toObject(), accessToken, refreshToken };
+          const data = {
+            _id: verified._id,
+            email: verified.email,
+            mobile: verified.phone,
+            role: role,
+            accessToken,
+            refreshToken,
+          };
+
+          return data;
         }
       }
 
@@ -148,6 +158,7 @@ class VendorService implements IVendorService {
       if (!saveItems) {
         return { errormessage: "unable to add" };
       } else {
+        console.log("Saved menu:", saveItems);
         return saveItems;
       }
     } catch (error) {
@@ -157,6 +168,7 @@ class VendorService implements IVendorService {
 
   addCategory = async (data: any) => {
     try {
+      console.log("CategoryDATa:", data);
       const categoryExist = await this._vendorRepository.categoryExistCheck(
         data
       );
@@ -174,6 +186,45 @@ class VendorService implements IVendorService {
       }
 
       return savenewCategory;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchCategories = async (id: string) => {
+    try {
+      const categories = await this._vendorRepository.findCategory(id);
+
+      if (!categories) {
+        throw new Error("Something went wrong! no categories found");
+      }
+
+      return categories;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchMenu = async (id: string) => {
+    try {
+      const menu = await this._vendorRepository.findMenu(id);
+      if(!menu){
+        throw new Error("Something went wrong!")
+      }
+
+      const data={
+
+        _id:menu._id,
+        hotelId:menu.hotelId,
+        itemName:menu.itemName,
+        category:menu.category,
+        description :menu.description,
+        price:menu.price,
+        
+
+      }
+
+      return menu
     } catch (error) {
       console.log(error);
     }
