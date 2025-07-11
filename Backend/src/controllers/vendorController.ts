@@ -171,4 +171,25 @@ export class VendorController {
       console.log(error);
     }
   };
+
+  deleteCategory = async (req: Request, res: Response) => {
+    try {
+
+      console.log("inside controller to delete category")
+      const { id } = req.params;
+
+      const deleted = await this._vendorService.handleCategoryDeletion(id);
+      if (!deleted) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server Error" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Category Deleted Successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

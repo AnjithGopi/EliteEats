@@ -235,7 +235,7 @@ export class userController {
       const { id } = req.params;
 
       const data = await this._userService.fetchRestaurentData(id);
-
+      console.log(data)
       if (data) {
         res.status(HttpStatusCode.OK).json(data);
       } else {

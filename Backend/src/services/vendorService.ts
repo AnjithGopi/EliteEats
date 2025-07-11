@@ -208,23 +208,35 @@ class VendorService implements IVendorService {
   fetchMenu = async (id: string) => {
     try {
       const menu = await this._vendorRepository.findMenu(id);
-      if(!menu){
-        throw new Error("Something went wrong!")
+      if (!menu) {
+        throw new Error("Something went wrong!");
       }
 
-      const data={
+      const data = {
+        _id: menu._id,
+        hotelId: menu.hotelId,
+        itemName: menu.itemName,
+        category: menu.category,
+        description: menu.description,
+        price: menu.price,
+      };
 
-        _id:menu._id,
-        hotelId:menu.hotelId,
-        itemName:menu.itemName,
-        category:menu.category,
-        description :menu.description,
-        price:menu.price,
-        
+      return menu;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  handleCategoryDeletion = async (id: string) => {
+    try {
+      console.log("Inside deletion service")
+      const categoryDeletion = await this._vendorRepository.handleDelete(id);
+
+      if (!categoryDeletion) {
+        throw new Error("Something went wrong! , unable to delete Category");
       }
 
-      return menu
+      return categoryDeletion;
     } catch (error) {
       console.log(error);
     }

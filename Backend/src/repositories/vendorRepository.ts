@@ -114,4 +114,23 @@ export class VendorRepository implements IVendorRepository {
       console.log(error);
     }
   };
+
+  handleDelete = async (id: string) => {
+    try {
+      const [menuDeleted, categoryDeleted] = await Promise.all([
+        MenuCategory.findByIdAndDelete(id),
+        Menu.deleteMany({ category: id }),
+      ]);
+      console.log("menu category:",categoryDeleted)
+      console.log("item:",menuDeleted)
+
+      if (menuDeleted && categoryDeleted) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

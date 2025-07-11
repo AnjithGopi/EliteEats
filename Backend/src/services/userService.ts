@@ -307,7 +307,12 @@ class UserService implements IUserService {
 
   findCart = async (id: string) => {
     try {
-      return await this._userRepository.getCart(id);
+      const cart= this._userRepository.getCart(id);
+
+      if(!cart){
+        throw new Error("No cart found")
+      }
+      return cart
     } catch (error) {
       console.log(error);
     }

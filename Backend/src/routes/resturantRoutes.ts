@@ -17,6 +17,11 @@ router.route("/create_category").post(verify,verifyVendor,controller.createCateg
 router.route("/add_items").post(verify,verifyVendor,controller.createMenu)
 router.route("/categories/:id").get(verify,verifyVendor,controller.getCategories)
 router.route("/menu/:id").get(verify,verifyVendor,controller.getMenu)
+router.route("/delete_category/:id").get(verify,verifyVendor,controller.deleteCategory)
+
+
+
+
 router.route("/logout").get(verify,controller.logout)
 
 
