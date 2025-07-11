@@ -6,14 +6,13 @@ const cartSchema = new mongoose.Schema({
     {
       productId: { type: mongoose.Schema.ObjectId, ref: "Menu" },
       quantity: { type: Number },
-      productName:{type:String},
+      productName: { type: String },
+      productImage: { type: String },
     },
   ],
-  totalPrice:{type:Number,default:0}
+  totalPrice: { type: Number, default: 0 },
 });
 
+const Cart = mongoose.model("Cart", cartSchema);
 
-
-const Cart= mongoose.model("Cart",cartSchema)
-
-export default Cart
+export default Cart;

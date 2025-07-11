@@ -252,6 +252,7 @@ class UserService implements IUserService {
 
       const product = await this._vendorRepository.findItem(data.productId);
       console.log("Productfor cart:",product.itemName)
+      console.log("Product image for cart:::::::",product.images)
 
       if (!product) {
         throw new Error("Product not found");
@@ -267,6 +268,7 @@ class UserService implements IUserService {
               productId: data.productId,
               quantity: data.quantity,
               productName:product.itemName,
+              productImage:product.images,
             },
           ],
           totalPrice: data.totalPrice,
@@ -287,7 +289,7 @@ class UserService implements IUserService {
         if (itemIndex > -1) {
           cart.items[itemIndex].quantity += 1;
         } else {
-          cart.items.push({ productId: productId, quantity: 1 });
+          cart.items.push({ productId: productId, quantity: 1,productName:product.itemName,productImage:product.images });
         }
 
         console.log("cart after updation:", cart);
