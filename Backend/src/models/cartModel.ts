@@ -6,6 +6,7 @@ const cartSchema = new mongoose.Schema({
     {
       productId: { type: mongoose.Schema.ObjectId, ref: "Menu" },
       quantity: { type: Number },
+      productName:{type:String},
     },
   ],
   totalPrice:{type:Number,default:0}

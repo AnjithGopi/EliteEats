@@ -1,5 +1,7 @@
 import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
+import MenuCategory from "../models/menuCategoryModel";
+import Menu from "../models/menuModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
 
@@ -167,6 +169,24 @@ class UserRepository implements IUserRepository {
       console.log(error);
     }
   };
+
+  fetchData=async(id:string)=>{
+
+    try {
+
+     const [hotel, category, menu] = await Promise.all([
+      Vendor.findOne({ _id: id }),
+      MenuCategory.find({ hotelId: id }),
+      Menu.find({ hotelId: id })
+    ]);
+
+    return {hotel,category,menu}
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserRepository;

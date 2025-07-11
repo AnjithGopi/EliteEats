@@ -154,7 +154,9 @@ export class userController {
 
   getAllhotels = async (req: Request, res: Response) => {
     try {
+      console.log("get all hotels")
       const hotels = await this._userService.getHotels();
+      console.log(hotels)
       if (!hotels) {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
@@ -187,12 +189,15 @@ export class userController {
 
   addtoCart = async (req: Request, res: Response) => {
     try {
-      const { userId, productId, quantity } = req.query;
+      const { userId, productId } = req.query;
+      console.log("userId:",userId)
+      console.log("productid:",productId)
+
+      
 
       const cart = await this._userService.cartImplementation(
         userId,
         productId,
-        quantity
       );
 
       if (!cart) {
@@ -219,6 +224,24 @@ export class userController {
         res.status(HttpStatusCode.NOT_FOUND).json({ message: "No cart found" });
       } else {
         res.status(HttpStatusCode.OK).json(cart);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getHotelData = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const data = await this._userService.fetchRestaurentData(id);
+
+      if (data) {
+        res.status(HttpStatusCode.OK).json(data);
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
       }
     } catch (error) {
       console.log(error);

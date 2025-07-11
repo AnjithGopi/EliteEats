@@ -109,12 +109,12 @@ class UserService implements IUserService {
         throw new Error("Incorrect Password");
       }
 
-      const role=Roles.USER
+      const role = Roles.USER;
 
       if (user && passwordMatch) {
-        const accessToken = generateAccessToken(user,role);
+        const accessToken = generateAccessToken(user, role);
 
-        const refreshToken = generateRefreshToken(user,role);
+        const refreshToken = generateRefreshToken(user, role);
         console.log(accessToken);
         console.log(refreshToken);
         const userData = {
@@ -122,9 +122,9 @@ class UserService implements IUserService {
           name: user.name,
           email: user.email,
           mobile: user.mobile,
-          role:role,
-           accessToken,
-           refreshToken,
+          role: role,
+          accessToken,
+          refreshToken,
         };
 
         return userData;
@@ -234,8 +234,9 @@ class UserService implements IUserService {
     }
   };
 
-  cartImplementation = async (userId: any, productId: any) => {
+  cartImplementation = async (userId:string, productId:string) => {
     try {
+      console.log("Cart implementation worked")
       const data = {
         userId: userId,
         productId: productId,
@@ -250,6 +251,7 @@ class UserService implements IUserService {
       }
 
       const product = await this._vendorRepository.findItem(data.productId);
+      console.log("Productfor cart:",product.itemName)
 
       if (!product) {
         throw new Error("Product not found");
@@ -264,11 +266,13 @@ class UserService implements IUserService {
             {
               productId: data.productId,
               quantity: data.quantity,
+              productName:product.itemName,
             },
           ],
           totalPrice: data.totalPrice,
         };
         const newCart = await this._userRepository.createNewCart(data_to_store);
+        console.log(newCart)
 
         return newCart;
       } else {
@@ -306,6 +310,23 @@ class UserService implements IUserService {
       return await this._userRepository.getCart(id);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  fetchRestaurentData = async (id: string) => {
+    try {
+      const data = await this._userRepository.fetchData(id);
+      if (!data) {
+        throw new Error(
+          "Something went wrong! cannot fetch restaurent details"
+        );
+      }
+
+      
+
+      return data;
+    } catch (error) {
+      console.log(Error);
     }
   };
 }

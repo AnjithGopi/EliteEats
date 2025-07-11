@@ -15,6 +15,7 @@ export interface IUserRepository {
     createNewCart(data:any):Promise<any>
     updateCart(userId:any,cart:any):Promise<any>
     getCart(id:string):Promise<any>
+    fetchData(id:string):Promise<any>
     
    
   }
