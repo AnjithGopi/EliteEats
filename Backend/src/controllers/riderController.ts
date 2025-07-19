@@ -15,7 +15,7 @@ export class RiderController {
         ? res.status(HttpStatusCode.OK).json(data)
         : res
             .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-            .json({message:"Internal server error"});
+            .json({ message: "Internal server error" });
     } catch (error) {
       console.log(error);
     }
@@ -23,8 +23,8 @@ export class RiderController {
 
   verifyOtp = async (req: Request, res: Response) => {
     try {
-      const {otp,token}=req.body
-      const data = await this._riderService.verifyOtp(otp,token);
+      const { otp, token } = req.body;
+      const data = await this._riderService.verifyOtp(otp, token);
 
       if (data) {
         res
@@ -68,6 +68,28 @@ export class RiderController {
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
           .json({ message: "Internal server error" });
         console.log("should handle tokens in cookies");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  verifyProfile = async (req: Request, res: Response) => {
+    try {
+      console.log("data for verification:", req.body);
+
+      const submitted = await this._riderService.submitForVerification(
+        req.body
+      );
+
+      if (!submitted) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Internal server error" });
+      } else {
+        res
+          .status(HttpStatusCode.CREATED)
+          .json({ message: "Data submitted succesfully", submitted });
       }
     } catch (error) {
       console.log(error);

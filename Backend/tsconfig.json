@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    //"target": "ES6",
+    "target": "es2021",  //to correct promise.any issue
+    "lib": ["es2021", "dom"], //to correct promise.any issue
     "module": "CommonJS", // Must be "CommonJS" (not "ESNext")
     "moduleResolution": "node", // Explicitly set to "node"
     "experimentalDecorators": true, // Required for @injectable

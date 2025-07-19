@@ -25,4 +25,14 @@ router
   .route("/verify_restaurent/:id")
   .patch(verify, verifyAdmin, controller.verifyRestaurent);
 
+router.route("/viewAllOrders").get(controller.getAllOrders);
+router.route("/riders").get(verify, verifyAdmin, controller.getAllRiders);
+router
+  .route("/view_userDetails/:id")
+  .get(verify, verifyAdmin, controller.viewUser);
+router
+  .route("/verfiy_deliverypartner/:id")
+  .get(verify, verifyAdmin, controller.verifyRider);
+
+  router.route("/logout").get(controller.logout)
 export default router;

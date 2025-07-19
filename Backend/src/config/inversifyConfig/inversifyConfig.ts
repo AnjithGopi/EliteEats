@@ -19,12 +19,14 @@ import VendorService from "../../services/vendorService";
 import { VendorController } from "../../controllers/vendorController";
 import { IPasswordResetRepository } from "../../interface/IPasswordResetRepository";
 import { PasswordResetRepository } from "../../repositories/passwordResetRepository";
+import { UserOrderController } from "../../controllers/userOrderController";
 
 const container = new Container();
 //userbindings
 container.bind<IUserService>("IUserService").to(UserService);
 container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<userController>(userController).toSelf();
+container.bind<UserOrderController>(UserOrderController).toSelf()
 container
   .bind<IPasswordResetRepository>("IPasswordResetRepository")
   .to(PasswordResetRepository);

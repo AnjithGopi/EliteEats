@@ -33,6 +33,10 @@ export interface IUserService {
   cartImplementation(userId:any,productId:any):Promise<any>
   findCart(id:string):Promise<any>,
   fetchRestaurentData(id:string):Promise<any>
+  createOrder(data:any):Promise<any>
+  itemDetail(id:string):Promise<any>
+  fetchOrders(id:String):Promise<any>
+  updateUser(data:any):Promise<any>
  
   
 

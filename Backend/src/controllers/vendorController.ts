@@ -174,8 +174,7 @@ export class VendorController {
 
   deleteCategory = async (req: Request, res: Response) => {
     try {
-
-      console.log("inside controller to delete category")
+      console.log("inside controller to delete category");
       const { id } = req.params;
 
       const deleted = await this._vendorService.handleCategoryDeletion(id);
@@ -187,6 +186,42 @@ export class VendorController {
         res
           .status(HttpStatusCode.OK)
           .json({ message: "Category Deleted Successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  viewAllOrders = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const orders = await this._vendorService.orderManagement(id);
+      if (!orders) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "No orders found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(orders);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findOrder = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      
+
+      const order = await this._vendorService.getOrder(id);
+
+      if (!order) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: " Not found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(order);
       }
     } catch (error) {
       console.log(error);

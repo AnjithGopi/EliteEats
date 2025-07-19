@@ -7,4 +7,6 @@ export interface IVendorService {
   fetchCategories(data: string): Promise<any>;
   fetchMenu(id: string): Promise<any>;
   handleCategoryDeletion(id:string):Promise<any>
+  orderManagement(id:string):Promise<any>
+  getOrder(id:string):Promise<any>
 }

@@ -12,6 +12,8 @@ export const verifyUser = async (
 
   try {
     if (!user) {
+
+      console.log("verify user worked with no user")
       res
         .status(HttpStatusCode.UNAUTHORIZED)
         .json({ message: "Unauthorized Access" });

@@ -229,7 +229,7 @@ class VendorService implements IVendorService {
 
   handleCategoryDeletion = async (id: string) => {
     try {
-      console.log("Inside deletion service")
+      console.log("Inside deletion service");
       const categoryDeletion = await this._vendorRepository.handleDelete(id);
 
       if (!categoryDeletion) {
@@ -241,6 +241,29 @@ class VendorService implements IVendorService {
       console.log(error);
     }
   };
+
+  orderManagement = async (id: string) => {
+    try {
+      const orderList = await this._vendorRepository.fetchAllOrders(id);
+
+      return orderList;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getOrder=async(id:string)=>{
+
+    try {
+
+      const order=await this._vendorRepository.findOrder(id)
+      return order
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default VendorService;

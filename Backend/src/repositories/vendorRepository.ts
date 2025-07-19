@@ -2,6 +2,8 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import Vendor from "../models/vendorModel";
 import Menu from "../models/menuModel";
 import MenuCategory from "../models/menuCategoryModel";
+import Order from "../models/orderModel";
+import User from "../models/userModel";
 
 export class VendorRepository implements IVendorRepository {
   constructor() {}
@@ -121,8 +123,8 @@ export class VendorRepository implements IVendorRepository {
         MenuCategory.findByIdAndDelete(id),
         Menu.deleteMany({ category: id }),
       ]);
-      console.log("menu category:",categoryDeleted)
-      console.log("item:",menuDeleted)
+      console.log("menu category:", categoryDeleted);
+      console.log("item:", menuDeleted);
 
       if (menuDeleted && categoryDeleted) {
         return true;
@@ -133,4 +135,26 @@ export class VendorRepository implements IVendorRepository {
       console.log(error);
     }
   };
+
+  fetchAllOrders = async (id: string) => {
+    try {
+      return await Order.find({
+        products: { $elemMatch: { hotelId: id } },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findOrder=async(id:string)=>{
+
+    try {
+
+      return await Order.findOne({_id:id})
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }

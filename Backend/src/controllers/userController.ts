@@ -44,7 +44,7 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
-      console.log("hhhh");
+      
 
       const user = await this._userService.verifyLogin(req.body);
       console.log(req.body);
@@ -247,4 +247,24 @@ export class userController {
       console.log(error);
     }
   };
+
+  updateAddress=async(req:Request,res:Response)=>{
+
+    try {
+
+      console.log(req.body)
+
+      const update=await this._userService.updateUser(req.body)
+
+      if(update){
+        res.status(HttpStatusCode.OK).json({message:"Address Added Successfully",update})
+      }else{
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({message:"Unable to add address"})
+      }
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }

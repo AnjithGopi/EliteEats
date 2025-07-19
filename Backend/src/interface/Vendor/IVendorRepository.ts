@@ -12,4 +12,8 @@ export interface IVendorRepository {
   findCategory(data: string): Promise<any>;
   findMenu(data:string):Promise<any>
   handleDelete(data:string):Promise<any>;
+  fetchAllOrders(id:string):Promise<any>;
+  findOrder(id:string):Promise<any>;
+
+  
 }

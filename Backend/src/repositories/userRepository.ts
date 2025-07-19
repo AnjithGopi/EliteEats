@@ -2,6 +2,7 @@ import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
 import MenuCategory from "../models/menuCategoryModel";
 import Menu from "../models/menuModel";
+import Order from "../models/orderModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
 
@@ -170,23 +171,82 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  fetchData=async(id:string)=>{
-
+  fetchData = async (id: string) => {
     try {
+      const [hotel, category, menu] = await Promise.all([
+        Vendor.findOne({ _id: id }),
+        MenuCategory.find({ hotelId: id }),
+        Menu.find({ hotelId: id }),
+      ]);
 
-     const [hotel, category, menu] = await Promise.all([
-      Vendor.findOne({ _id: id }),
-      MenuCategory.find({ hotelId: id }),
-      Menu.find({ hotelId: id })
-    ]);
-
-    return {hotel,category,menu}
-      
+      return { hotel, category, menu };
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  placeOrder = async (data: any) => {
+    try {
+      console.log("data in repository:", data);
+      return await Order.create(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findItem = async (id: string) => {
+    try {
+      const item = await Menu.findOne({ _id: id });
+      console.log("item found:", item);
+      return item;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findOrders = async () => {
+    try {
+      const orders = await Order.find();
+
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findallOrders = async (id: string) => {
+    try {
+      const orders = await Order.find({ userId: id });
+
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateUser = async (data: any) => {
+    try {
+      const updateData = {
+        address: {
+          fullAddress: data.address,
+          city: data.city,
+          zipcode: data.zipcode,
+          state: data.state,
+        },
+      };
+
+      const update = await User.findOneAndUpdate(
+        { _id: data.id },
+        { $set: updateData },
+        { new: true }
+      );
+
+      console.log("User updated:", update);
+      return update;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserRepository;

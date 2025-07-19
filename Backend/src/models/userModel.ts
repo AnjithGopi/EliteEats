@@ -2,7 +2,7 @@ import mongoose, { model, mongo } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  displayPicture: {type: String, },
+  displayPicture: { type: String },
   userId: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true },
   mobile: { type: Number, unique: true, required: true },
@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   isAdmin: { type: Boolean, default: false },
   registered_On: { type: Date, default: Date.now },
+  address: {
+    fullAddress: { type: String },
+    city: { type: String },
+    zipcode: { type: String },
+    state: { type: String },
+  },
 });
 
 const User = mongoose.model("User", userSchema);

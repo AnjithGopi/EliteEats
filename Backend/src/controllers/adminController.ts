@@ -12,7 +12,7 @@ export class AdminController {
       const data = await this._adminService.findAdmin(req.body);
 
       console.log("admin found:", data);
-      console.log("data.accesstoken:",data.accessToken)
+      console.log("data.accesstoken:", data.accessToken);
       if (!data) {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
@@ -23,15 +23,15 @@ export class AdminController {
           //secure: process.env.NODE_ENV === "production",
           // secure:false,
           // sameSite: "lax",
-          sameSite:"none",
-          secure:true,
+          sameSite: "none",
+          secure: true,
           maxAge: 60 * 60 * 1000,
         });
 
         res.cookie("RefreshToken", data.refreshToken, {
           httpOnly: true,
           //secure: process.env.NODE_ENV === "production",
-          secure:false,
+          secure: false,
           sameSite: "lax",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
@@ -48,11 +48,11 @@ export class AdminController {
   getAllusers = async (req: Request, res: Response) => {
     try {
       const users = await this._adminService.findUsers();
-      
+
       if (!users) {
         res.status(HttpStatusCode.NOT_FOUND).json("No users found");
       } else {
-        console.log("users returned")
+        console.log("users returned");
         res.status(HttpStatusCode.OK).json(users);
       }
     } catch (error) {
@@ -133,7 +133,7 @@ export class AdminController {
 
   verifyRestaurent = async (req: Request, res: Response) => {
     try {
-      console.log("verification controller worked")
+      console.log("verification controller worked");
       const { id } = req.params;
 
       const restuarent = await this._adminService.findRestaurent(id);
@@ -147,6 +147,97 @@ export class AdminController {
           .status(HttpStatusCode.OK)
           .json({ message: "Restaurent verified successfully" });
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getAllOrders = async (req: Request, res: Response) => {
+    try {
+      const orders = this._adminService.gerOrders();
+
+      if (!orders) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "No orders found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(orders);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getAllRiders = async (req: Request, res: Response) => {
+    try {
+      const riders = await this._adminService.findAllRiders();
+      if (!riders) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "no riders found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(riders);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  viewUser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const user = await this._adminService.findRider(id);
+
+      if (!user) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "user not found" });
+      } else {
+        res.status(HttpStatusCode.OK).json(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  verifyRider = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const verified = await this._adminService.updateRider(id);
+
+      if (!verified) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Something went wrong!" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Verified successfully", verified });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  logout = async (req: Request, res: Response) => {
+    try {
+      res.clearCookie("AccessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+
+      res.clearCookie("RefreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+
+      res
+        .status(HttpStatusCode.OK)
+        .json({ message: "Logged out successfully" });
     } catch (error) {
       console.log(error);
     }

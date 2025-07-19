@@ -16,6 +16,11 @@ export interface IUserRepository {
     updateCart(userId:any,cart:any):Promise<any>
     getCart(id:string):Promise<any>
     fetchData(id:string):Promise<any>
+    placeOrder(data:any):Promise<any>
+    findItem(id:string):Promise<any>
+    findOrders():Promise<any>
+    findallOrders(id:string):Promise<any>
+    updateUser(data:string):Promise<any>
     
    
   }

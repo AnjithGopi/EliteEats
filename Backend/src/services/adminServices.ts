@@ -6,12 +6,14 @@ import { IUserRepository } from "../interface/User/IUserRepository";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { sendVerificationMail } from "../utils/verfification_mail";
 import { Roles } from "../utils/roles";
+import { IRiderRepository } from "../interface/Rider/IRiderRepository";
 
 @injectable()
 class AdminService implements IAdminService {
   constructor(
     @inject("IUserRepository") private _userRepository: IUserRepository,
-    @inject("IVendorRepository") private _vendorRepository: IVendorRepository
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository,
+    @inject("IRiderRepository") private _riderRepository: IRiderRepository
   ) {}
 
   findAdmin = async (loginData: LoginData) => {
@@ -31,12 +33,12 @@ class AdminService implements IAdminService {
         throw new Error("Incorrect Password");
       }
 
-      const role=Roles.ADMIN
+      const role = Roles.ADMIN;
 
       if (admin && passwordMatch) {
-        const accessToken = generateAccessToken(admin,role);
-        const refreshToken = generateRefreshToken(admin,role);
-        return { admin,accessToken, refreshToken };
+        const accessToken = generateAccessToken(admin, role);
+        const refreshToken = generateRefreshToken(admin, role);
+        return { admin, accessToken, refreshToken };
       }
       return false;
     } catch (error) {
@@ -174,6 +176,56 @@ class AdminService implements IAdminService {
       }
 
       return verified;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  gerOrders = async () => {
+    try {
+      return await this._userRepository.findOrders();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findAllRiders = async () => {
+    try {
+      return await this._riderRepository.riders();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findRider = async (id: string) => {
+    try {
+      const rider = await this._riderRepository.getDetails(id);
+
+      if (rider) {
+        let data = {
+          _id: rider._id,
+          name: rider.name,
+          email: rider.email,
+          mobile: rider.mobile,
+          address: rider.address.fullAddress,
+          city: rider.address.city,
+          state: rider.address.state,
+          license: rider.license,
+          isActive: rider.isActive,
+        };
+
+        return data;
+      } else {
+        throw new Error("No user found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateRider = async (id: string) => {
+    try {
+      return await this._riderRepository.verfiyRiderDetails(id);
     } catch (error) {
       console.log(error);
     }

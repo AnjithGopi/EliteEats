@@ -22,4 +22,8 @@ export interface IRiderRepository {
   saveRider(riderData: any): Promise<IRider | any>;
   verifyRider(user: { email: string }): Promise<IRider | any>;
   verifyLogin(loginData: { email: string }): Promise<IRider | any>;
+  updateRider(data:any):Promise<any>
+  riders():Promise<any>
+  getDetails(id:string):Promise<any>
+  verfiyRiderDetails(id:string):Promise<any>
 }

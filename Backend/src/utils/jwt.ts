@@ -12,6 +12,7 @@ export const generateAccessToken = (userData:UserDetails, role: Roles) => {
     const payLoad = {
       id: userData._id,
       username: userData.name,
+      active:userData.isActive,
       role: role,
     };
 
@@ -30,6 +31,7 @@ export const generateRefreshToken = (userData:UserDetails, role: Roles) => {
     const payLoad = {
       id: userData._id,
       username: userData.name,
+      active:userData.isActive,
       role: role,
     };
     return jwt.sign(payLoad, env.JWT_REFRESH_SECRET, {

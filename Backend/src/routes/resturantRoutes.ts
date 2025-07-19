@@ -3,6 +3,7 @@ import container from "../config/inversifyConfig/inversifyConfig";
 import { VendorController } from "../controllers/vendorController";
 import verify from "../middlewares/authVerfication";
 import { verifyVendor } from "../middlewares/verifyVendor";
+import { Verify } from "crypto";
 
 
 const router = express.Router();
@@ -18,6 +19,8 @@ router.route("/add_items").post(verify,verifyVendor,controller.createMenu)
 router.route("/categories/:id").get(verify,verifyVendor,controller.getCategories)
 router.route("/menu/:id").get(verify,verifyVendor,controller.getMenu)
 router.route("/delete_category/:id").get(verify,verifyVendor,controller.deleteCategory)
+router.route("/view_orders/:id").get(verify,verifyVendor,controller.viewAllOrders)
+router.route("/find_order/:id").get(verify,verifyVendor,controller.findOrder)
 
 
 

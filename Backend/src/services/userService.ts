@@ -15,6 +15,8 @@ import { sendPasswordResetLink } from "../utils/sendResetLink";
 import { generate_userId } from "../utils/generate_userid";
 import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { Roles } from "../utils/roles";
+import { createOrderId } from "../utils/createOrderId";
+
 @injectable()
 class UserService implements IUserService {
   constructor(
@@ -234,9 +236,9 @@ class UserService implements IUserService {
     }
   };
 
-  cartImplementation = async (userId:string, productId:string) => {
+  cartImplementation = async (userId: string, productId: string) => {
     try {
-      console.log("Cart implementation worked")
+      console.log("Cart implementation worked");
       const data = {
         userId: userId,
         productId: productId,
@@ -251,8 +253,8 @@ class UserService implements IUserService {
       }
 
       const product = await this._vendorRepository.findItem(data.productId);
-      console.log("Productfor cart:",product.itemName)
-      console.log("Product image for cart:::::::",product.images)
+      console.log("Productfor cart:", product.itemName);
+      console.log("Product image for cart:::::::", product.images);
 
       if (!product) {
         throw new Error("Product not found");
@@ -267,14 +269,14 @@ class UserService implements IUserService {
             {
               productId: data.productId,
               quantity: data.quantity,
-              productName:product.itemName,
-              productImage:product.images,
+              productName: product.itemName,
+              productImage: product.images,
             },
           ],
           totalPrice: data.totalPrice,
         };
         const newCart = await this._userRepository.createNewCart(data_to_store);
-        console.log(newCart)
+        console.log(newCart);
 
         return newCart;
       } else {
@@ -289,7 +291,12 @@ class UserService implements IUserService {
         if (itemIndex > -1) {
           cart.items[itemIndex].quantity += 1;
         } else {
-          cart.items.push({ productId: productId, quantity: 1,productName:product.itemName,productImage:product.images });
+          cart.items.push({
+            productId: productId,
+            quantity: 1,
+            productName: product.itemName,
+            productImage: product.images,
+          });
         }
 
         console.log("cart after updation:", cart);
@@ -309,12 +316,12 @@ class UserService implements IUserService {
 
   findCart = async (id: string) => {
     try {
-      const cart= this._userRepository.getCart(id);
+      const cart = this._userRepository.getCart(id);
 
-      if(!cart){
-        throw new Error("No cart found")
+      if (!cart) {
+        throw new Error("No cart found");
       }
-      return cart
+      return cart;
     } catch (error) {
       console.log(error);
     }
@@ -329,13 +336,75 @@ class UserService implements IUserService {
         );
       }
 
-      
-
       return data;
     } catch (error) {
-      console.log(Error);
+      console.log(error);
     }
   };
+
+  createOrder = async (data: any) => {
+    try {
+      console.log(data);
+
+      const orderId = createOrderId();
+
+      const datatoSave = {
+        ...data,
+        orderId,
+        products: [
+          {
+            productId: data.productId,
+            productName: data.itemName,
+            quantity: data.quantity,
+            hotelId: data.restaurentId,
+          },
+        ],
+      };
+
+      const created = await this._userRepository.placeOrder(datatoSave);
+      if (!created) {
+        throw new Error("Something went wrong! unable to create order");
+      }
+      return created;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  itemDetail = async (id: string) => {
+    try {
+      const itemFound = await this._userRepository.findItem(id);
+
+      return itemFound;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchOrders = async (id: string) => {
+    try {
+      const orders = await this._userRepository.findallOrders(id);
+
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateUser=async(data:any)=>{
+
+    try {
+
+      console.log("data to save:",data)
+
+      const updateUser=await this._userRepository.updateUser(data)
+      return updateUser
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserService;

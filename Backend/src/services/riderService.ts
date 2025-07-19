@@ -115,4 +115,20 @@ export class RiderService implements IRiderService {
       console.log(error);
     }
   };
+
+  submitForVerification=async(data:any)=>{
+
+    try {
+
+      const dataforSubmission=data
+      console.log("data in services:",dataforSubmission)
+
+      const submitted=this._riderRepository.updateRider(data)
+      return submitted
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
