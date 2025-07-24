@@ -44,8 +44,6 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
-      
-
       const user = await this._userService.verifyLogin(req.body);
       console.log(req.body);
 
@@ -154,9 +152,9 @@ export class userController {
 
   getAllhotels = async (req: Request, res: Response) => {
     try {
-      console.log("get all hotels")
+      console.log("get all hotels");
       const hotels = await this._userService.getHotels();
-      console.log(hotels)
+      console.log(hotels);
       if (!hotels) {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
@@ -190,14 +188,10 @@ export class userController {
   addtoCart = async (req: Request, res: Response) => {
     try {
       const { userId, productId } = req.query;
-      console.log("userId:",userId)
-      console.log("productid:",productId)
-
-      
 
       const cart = await this._userService.cartImplementation(
         userId,
-        productId,
+        productId
       );
 
       if (!cart) {
@@ -235,7 +229,7 @@ export class userController {
       const { id } = req.params;
 
       const data = await this._userService.fetchRestaurentData(id);
-      console.log(data)
+      console.log(data);
       if (data) {
         res.status(HttpStatusCode.OK).json(data);
       } else {
@@ -248,23 +242,23 @@ export class userController {
     }
   };
 
-  updateAddress=async(req:Request,res:Response)=>{
-
+  updateAddress = async (req: Request, res: Response) => {
     try {
+      console.log(req.body);
 
-      console.log(req.body)
+      const update = await this._userService.updateUser(req.body);
 
-      const update=await this._userService.updateUser(req.body)
-
-      if(update){
-        res.status(HttpStatusCode.OK).json({message:"Address Added Successfully",update})
-      }else{
-        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({message:"Unable to add address"})
+      if (update) {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Address Added Successfully", update });
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Unable to add address" });
       }
-      
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }

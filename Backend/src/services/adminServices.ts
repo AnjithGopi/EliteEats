@@ -20,6 +20,8 @@ class AdminService implements IAdminService {
     try {
       const admin = await this._userRepository.findAdmin(loginData);
 
+      console.log("ADMIN FOUND:", admin);
+
       if (!admin) {
         throw new Error("Incorrect email");
       }
@@ -38,9 +40,20 @@ class AdminService implements IAdminService {
       if (admin && passwordMatch) {
         const accessToken = generateAccessToken(admin, role);
         const refreshToken = generateRefreshToken(admin, role);
-        return { admin, accessToken, refreshToken };
+
+        const data = {
+          _id: admin._id,
+          name: admin.name,
+          email: admin.email,
+          mobile: admin.mobile,
+          role: role,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        };
+
+        return data;
       }
-      return false;
+      return { message: "login failed" };
     } catch (error) {
       console.log(error);
     }
