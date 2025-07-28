@@ -21,6 +21,7 @@ class VendorService implements IVendorService {
 
   register = async (vendorData: any) => {
     try {
+      console.log("Data got in backend for restaurent signup :", vendorData);
       const existingUser = await this._vendorRepository.checkExists(vendorData);
 
       if (existingUser) {
@@ -78,7 +79,11 @@ class VendorService implements IVendorService {
       }
       console.log("userto save:", vendor);
 
-      const restaurent = { ...vendor, displayPicture: image };
+      const restaurent = {
+        ...vendor,
+        displayPicture: image,
+        location: { latitude: vendor.latitude, longitude: vendor.longitude },
+      };
 
       console.log("restaurent to save with image::::::::::", restaurent);
 
@@ -130,6 +135,7 @@ class VendorService implements IVendorService {
             email: verified.email,
             mobile: verified.phone,
             role: role,
+            adminVerified: verified.adminVerified,
             accessToken,
             refreshToken,
           };
@@ -252,18 +258,14 @@ class VendorService implements IVendorService {
     }
   };
 
-  getOrder=async(id:string)=>{
-
+  getOrder = async (id: string) => {
     try {
-
-      const order=await this._vendorRepository.findOrder(id)
-      return order
-      
+      const order = await this._vendorRepository.findOrder(id);
+      return order;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default VendorService;

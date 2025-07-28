@@ -1,26 +1,35 @@
+import { LoginData } from "../Admin/IAdminService";
+import { LocationData } from "../Admin/IAdminService";
+
+export interface UserLocation {
+  location: LocationData;
+  timestamp: Date;
+  userId?:string
+}
+
+
 export interface IUserRepository {
-    checkExists(userData: any): Promise<any>;
-    saveUser(userData: any): Promise<any>;
-    loginVerification(loginData: any): Promise<any>;
-    findAdmin(loginData: any): Promise<any>;
-    findUsers(): Promise<any[] | undefined>;
-    getDetails(id: string): Promise<any>;
-    block(id: string): Promise<any>;
-    unblock(id: string): Promise<any>;
-    findwithEmail(email:string):Promise<any>;
-    updatePassword(email:any,password:string|any):Promise<any>;
-    getHotels():Promise<any>
-    getUser(userData:any):Promise<any>;
-    findCart(id:any):Promise<any>;
-    createNewCart(data:any):Promise<any>
-    updateCart(userId:any,cart:any):Promise<any>
-    getCart(id:string):Promise<any>
-    fetchData(id:string):Promise<any>
-    placeOrder(data:any):Promise<any>
-    findItem(id:string):Promise<any>
-    findOrders():Promise<any>
-    findallOrders(id:string):Promise<any>
-    updateUser(data:string):Promise<any>
-    
-   
-  }
+  checkExists(userData: any): Promise<any>;
+  saveUser(userData: any): Promise<any>;
+  loginVerification(loginData: LoginData): Promise<any>;
+  findAdmin(loginData: any): Promise<any>;
+  findUsers(): Promise<any[] | undefined>;
+  getDetails(id: string): Promise<any>;
+  block(id: string): Promise<any>;
+  unblock(id: string): Promise<any>;
+  findwithEmail(email: string): Promise<any>;
+  updatePassword(email: any, password: string | any): Promise<any>;
+  getHotels(): Promise<any>;
+  getUser(userData: any): Promise<any>;
+  findCart(id: any): Promise<any>;
+  createNewCart(data: any): Promise<any>;
+  updateCart(userId: any, cart: any): Promise<any>;
+  getCart(id: string): Promise<any>;
+  fetchData(id: string): Promise<any>;
+  placeOrder(data: any): Promise<any>;
+  findItem(id: string): Promise<any>;
+  findOrders(): Promise<any>;
+  findallOrders(id: string): Promise<any>;
+  updateUser(data: string): Promise<any>;
+  saveUserLocation(data:UserLocation): Promise<any>;
+}

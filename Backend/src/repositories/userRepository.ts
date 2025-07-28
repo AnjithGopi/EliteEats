@@ -1,3 +1,5 @@
+import { LoginData } from "../interface/Admin/IAdminService";
+import { LocationData } from "../interface/Admin/IAdminService";
 import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
 import MenuCategory from "../models/menuCategoryModel";
@@ -5,6 +7,7 @@ import Menu from "../models/menuModel";
 import Order from "../models/orderModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
+import { UserLocation } from "../interface/User/IUserRepository";
 
 class UserRepository implements IUserRepository {
   constructor() {}
@@ -30,9 +33,23 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  loginVerification = async (loginData: any) => {
+  loginVerification = async (loginData: LoginData) => {
     try {
       return await User.findOne({ email: loginData.email });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  saveUserLocation = async (data: UserLocation) => {
+    try {
+      console.log("Location in repository:", data);
+
+      return await User.findOneAndUpdate(
+        { _id: data.userId },
+        { $push: { loginHistory: data } },
+        { new: true }
+      );
     } catch (error) {
       console.log(error);
     }

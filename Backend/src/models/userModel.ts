@@ -16,6 +16,16 @@ const userSchema = new mongoose.Schema({
     zipcode: { type: String },
     state: { type: String },
   },
+
+  loginHistory: [
+    {
+      timestamp: { type: Date },
+      location: {
+        latitude: { type: Number },
+        longitude: { type: Number },
+      },
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

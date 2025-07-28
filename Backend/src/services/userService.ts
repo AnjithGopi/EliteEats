@@ -6,7 +6,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserService } from "../interface/User/IUserService";
 import { inject, injectable } from "inversify";
 import { IUserRepository } from "../interface/User/IUserRepository";
-import { LoginData } from "../interface/Admin/IAdminService";
+import { LoginData, LocationData } from "../interface/Admin/IAdminService";
 import redisVerificationToken from "../utils/redisverificaton";
 import redisClient from "../config/redis";
 import { passwordResetToken } from "../utils/password _reset";
@@ -92,7 +92,14 @@ class UserService implements IUserService {
 
   verifyLogin = async (loginData: LoginData) => {
     try {
-      const user = await this._userRepository.loginVerification(loginData);
+      const loginCredentials = {
+        email: loginData.email,
+        password: loginData.password,
+      };
+
+      const user = await this._userRepository.loginVerification(
+        loginCredentials
+      );
 
       if (user.isActive === false) {
         throw new Error("Unable to login , userBlocked by admin");
@@ -111,28 +118,35 @@ class UserService implements IUserService {
         throw new Error("Incorrect Password");
       }
 
+      const location = {
+        latitude: loginData.location?.latitude,
+        longitude: loginData.location?.longitude,
+      };
+
+      const timestamp = new Date();
+      const userId = user._id;
+
+      const userWithLocation = await this._userRepository.saveUserLocation({
+        location,
+        timestamp,
+        userId,
+      });
+
       const role = Roles.USER;
+      const accessToken = generateAccessToken(user, role);
+      const refreshToken = generateRefreshToken(user, role);
+      console.log(accessToken);
+      console.log(refreshToken);
 
-      if (user && passwordMatch) {
-        const accessToken = generateAccessToken(user, role);
-
-        const refreshToken = generateRefreshToken(user, role);
-        console.log(accessToken);
-        console.log(refreshToken);
-        const userData = {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          mobile: user.mobile,
-          role: role,
-          accessToken,
-          refreshToken,
-        };
-
-        return userData;
-      }
-
-      throw new Error("Unable to verify login check email and password again");
+      return {
+        _id: userWithLocation._id,
+        name: userWithLocation.name,
+        email: userWithLocation.email,
+        mobile: userWithLocation.mobile,
+        role: role,
+        accessToken,
+        refreshToken,
+      };
     } catch (error) {
       console.log(error);
     }
@@ -391,20 +405,16 @@ class UserService implements IUserService {
     }
   };
 
-  updateUser=async(data:any)=>{
-
+  updateUser = async (data: any) => {
     try {
+      console.log("data to save:", data);
 
-      console.log("data to save:",data)
-
-      const updateUser=await this._userRepository.updateUser(data)
-      return updateUser
-      
+      const updateUser = await this._userRepository.updateUser(data);
+      return updateUser;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default UserService;

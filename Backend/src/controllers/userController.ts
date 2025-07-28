@@ -44,8 +44,8 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
+   
       const user = await this._userService.verifyLogin(req.body);
-      console.log(req.body);
 
       if (user) {
         console.log(user);
