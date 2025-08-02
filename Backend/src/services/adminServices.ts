@@ -7,6 +7,7 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { sendVerificationMail } from "../utils/verfification_mail";
 import { Roles } from "../utils/roles";
 import { IRiderRepository } from "../interface/Rider/IRiderRepository";
+import { sendRejectionMailtoRider } from "../utils/rejectionMail";
 
 @injectable()
 class AdminService implements IAdminService {
@@ -243,6 +244,24 @@ class AdminService implements IAdminService {
       console.log(error);
     }
   };
+
+  rejectRiderRequest=async(id:string,reason:string)=>{
+
+    try {
+
+      const rejected= await this._riderRepository.reject(id,reason)
+
+      if(rejected){
+        await sendRejectionMailtoRider(rejected.email,rejected.rejectionReason)
+      }
+
+      return rejected
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default AdminService;

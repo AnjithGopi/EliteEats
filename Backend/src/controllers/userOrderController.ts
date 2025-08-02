@@ -61,4 +61,23 @@ export class UserOrderController {
       console.log(error);
     }
   };
+
+  clearCart = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      
+      
+      const cleared = await this._userService.deleteCart(id);
+
+      if (!cleared) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Error in cart deletion" });
+      } else {
+        res.status(HttpStatusCode.OK).json({ message: "Cart cleared" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

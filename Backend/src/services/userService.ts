@@ -135,8 +135,6 @@ class UserService implements IUserService {
       const role = Roles.USER;
       const accessToken = generateAccessToken(user, role);
       const refreshToken = generateRefreshToken(user, role);
-      console.log(accessToken);
-      console.log(refreshToken);
 
       return {
         _id: userWithLocation._id,
@@ -250,82 +248,58 @@ class UserService implements IUserService {
     }
   };
 
-  cartImplementation = async (userId: string, productId: string) => {
-    try {
-      console.log("Cart implementation worked");
-      const data = {
-        userId: userId,
-        productId: productId,
-        quantity: 1,
-        totalPrice: 0,
-      };
-
-      const user = await this._userRepository.getUser(data.userId);
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      const product = await this._vendorRepository.findItem(data.productId);
-      console.log("Productfor cart:", product.itemName);
-      console.log("Product image for cart:::::::", product.images);
-
-      if (!product) {
-        throw new Error("Product not found");
-      }
-
-      const cart = await this._userRepository.findCart(data.userId);
-
-      if (!cart) {
-        const data_to_store = {
-          userId: data.userId,
-          items: [
-            {
-              productId: data.productId,
-              quantity: data.quantity,
-              productName: product.itemName,
-              productImage: product.images,
-            },
-          ],
-          totalPrice: data.totalPrice,
-        };
-        const newCart = await this._userRepository.createNewCart(data_to_store);
-        console.log(newCart);
-
-        return newCart;
-      } else {
-        console.log("Existing cart found");
-
-        const itemIndex = cart.items.findIndex(
-          (item: any) => item.productId.toString() === productId.toString()
-        );
-
-        console.log("item index:", itemIndex);
-
-        if (itemIndex > -1) {
-          cart.items[itemIndex].quantity += 1;
-        } else {
-          cart.items.push({
-            productId: productId,
-            quantity: 1,
-            productName: product.itemName,
-            productImage: product.images,
-          });
-        }
-
-        console.log("cart after updation:", cart);
-
-        const saveCart = await this._userRepository.updateCart(userId, cart);
-
-        if (!saveCart) {
-          throw new Error("Something went wrong");
-        }
-
-        return saveCart;
-      }
-    } catch (error) {
-      console.log(error);
+  cartImplementation = async (
+    userId: string,
+    productId: string,
+    quantity: number,
+    price: number
+  ) => {
+    if (quantity <= 0 || price <= 0) {
+      throw new Error("Invalid quantity or price");
     }
+
+    const [user, product] = await Promise.all([
+      this._userRepository.getUser(userId),
+      this._vendorRepository.findItem(productId),
+    ]);
+
+    if (!user) throw new Error("User not found");
+    if (!product) throw new Error("Product not found");
+
+    const cart = await this._userRepository.findCart(userId);
+
+    const newItem = {
+      productId,
+      quantity,
+      productName: product.itemName,
+      productImage: product.images,
+      productPrice: price,
+    };
+
+    if (!cart) {
+      return this._userRepository.createNewCart({
+        userId,
+        items: [newItem],
+        totalPrice: price * quantity,
+      });
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item: any) => item.productId.toString() === productId.toString()
+    );
+
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity += quantity;
+    } else {
+      cart.items.push(newItem);
+    }
+
+    cart.totalPrice = cart.items.reduce(
+      (total: any, item: any) => total + item.quantity * item.productPrice,
+      0
+    );
+
+    return this._userRepository.updateCart(userId, cart);
   };
 
   findCart = async (id: string) => {
@@ -358,28 +332,37 @@ class UserService implements IUserService {
 
   createOrder = async (data: any) => {
     try {
-      console.log(data);
+      console.log("Incoming order data:", data);
 
       const orderId = createOrderId();
 
-      const datatoSave = {
-        ...data,
+      const userId = data.userId;
+      const hotelId = data.hotelId;
+
+      const products = data.products.map((item: any) => ({
+        productName: item[0],
+        quantity: item[1],
+        hotelId: hotelId,
+      }));
+
+      const totalAmount = data.subtotal + data.tax + data.deliveryfee;
+
+      const orderData = {
         orderId,
-        products: [
-          {
-            productId: data.productId,
-            productName: data.itemName,
-            quantity: data.quantity,
-            hotelId: data.restaurentId,
-          },
-        ],
+        userId,
+        products,
+        totalAmount,
+        paymentMethod: data.paymentMethod,
       };
 
-      const created = await this._userRepository.placeOrder(datatoSave);
-      if (!created) {
-        throw new Error("Something went wrong! unable to create order");
+      const createdOrder = await this._userRepository.placeOrder(orderData);
+
+      if (!createdOrder) {
+        throw new Error("Failed to save order to database");
       }
-      return created;
+
+      console.log("Order created successfully:", createdOrder);
+      return createdOrder;
     } catch (error) {
       console.log(error);
     }
@@ -411,6 +394,64 @@ class UserService implements IUserService {
 
       const updateUser = await this._userRepository.updateUser(data);
       return updateUser;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  hotelsNearUser = async (id: string) => {
+    try {
+      const location = await this._userRepository.fetchLocation(id);
+
+      console.log("Location found for the user:", location);
+      console.log("latitude:", location.latitude);
+      console.log("longitude:", location.longitude);
+
+      const restaurents = await this._userRepository.findWithLocation(
+        location.longitude,
+        location.latitude
+      );
+
+      console.log(restaurents);
+
+      return restaurents;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  deleteCart = async (id: string) => {
+    try {
+      const clear_cart = await this._userRepository.clear(id);
+
+      return clear_cart;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  addressManagement = async (data: any) => {
+    try {
+      const { street, city, state, country, pincode, userId } = data;
+
+      const addressPayload = {
+        userId,
+        addresses: 
+          {
+            street,
+            city,
+            state,
+            country,
+            pinCode: pincode,
+          },
+        
+      };
+
+      const addAdress = await this._userRepository.createAddress(
+        addressPayload
+      );
+
+      return addAdress;
     } catch (error) {
       console.log(error);
     }

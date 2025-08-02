@@ -1,6 +1,9 @@
 import nodemailer from "nodemailer";
 
-export const sendVerificationMail = async (email: string) => {
+export const sendRejectionMailtoRider = async (
+  email: string,
+  reason: string
+) => {
   try {
     console.log(email);
 
@@ -15,8 +18,8 @@ export const sendVerificationMail = async (email: string) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Your Restaurent is verified",
-      text: `Your profile is verifed successfully`,
+      subject: "Application Rejected",
+      text: `Your application to Eliteeats has been rejected.\n\nReason: ${reason}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -26,4 +29,3 @@ export const sendVerificationMail = async (email: string) => {
     console.log(error);
   }
 };
-

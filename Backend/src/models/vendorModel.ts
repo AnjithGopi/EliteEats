@@ -15,10 +15,12 @@ const vendorSchema = new mongoose.Schema({
   adminVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now() },
   location: {
-    latitude: { type: Number },
-    longitude: { type: Number },
+    type: { type: String, enum: ["Point"], default: "Point" },
+    coordinates: { type: [Number] },
   },
 });
+
+ vendorSchema.index({ location: "2dsphere" });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);
 

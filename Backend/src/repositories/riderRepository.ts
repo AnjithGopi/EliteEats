@@ -97,6 +97,25 @@ class RiderRepository implements IRiderRepository {
       console.log(error);
     }
   };
+
+  reject = async (id: string, reason: string) => {
+    try {
+      const updatedRider = await Rider.findOneAndUpdate(
+        { _id: id },
+        { $set: { isRejected: true, rejectionReason: reason } },
+        { new: true }
+      );
+
+      if (!updatedRider) {
+        console.log(`Rider with ID ${id} not found.`);
+      }
+
+      return updatedRider;
+    } catch (error) {
+      console.error(`Error rejecting rider with ID ${id}:`, error);
+      return null;
+    }
+  };
 }
 
 export default RiderRepository;

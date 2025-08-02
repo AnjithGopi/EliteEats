@@ -8,10 +8,8 @@ export interface LoginData {
 }
 
 export type LocationData = {
- 
-    latitude?: number;
-    longitude?: number;
-  
+  latitude?: number;
+  longitude?: number;
 };
 
 export interface UserDetails {
@@ -41,4 +39,5 @@ export interface IAdminService {
   findAllRiders(): Promise<any>;
   findRider(id: string): Promise<any>;
   updateRider(id: string): Promise<any>;
+  rejectRiderRequest(id: string,reason:string): Promise<any>;
 }

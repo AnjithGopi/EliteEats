@@ -20,13 +20,21 @@ router
   .route("/restaurent/:id")
   .get(verify, verifyUser, controller.getHotelData);
 router.route("/profile/:id").get(verify, verifyUser, controller.getProfile);
+
 router.route("/addto_cart").post(verify, verifyUser, controller.addtoCart);
 router
   .route("/view_cart/:id")
   .get(verify, verifyUser, controller.getCartDetails);
 router.route("/logout").get(verify, verifyUser, controller.userLogout);
 
-router.route("/update_useraddress/").post(verify,verifyUser,controller.updateAddress)
+router
+  .route("/update_useraddress/")
+  .post(verify, verifyUser, controller.updateAddress);
+router
+  .route("/restuarents_near_user/:id")
+  .get(verify, verifyUser, controller.fetchnearbyrestaurents);
+
+  router.route("/add_multiple_address").post(controller.createAddress)
 
 //handling orders.......
 
@@ -40,5 +48,9 @@ router
 router
   .route("/viewOrders/:id")
   .get(verify, verifyUser, userOrderController.getOrders);
+
+router
+  .route("/clear_cart/:id")
+  .get(verify, verifyUser, userOrderController.clearCart);
 
 export default router;

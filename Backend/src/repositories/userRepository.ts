@@ -7,6 +7,7 @@ import Menu from "../models/menuModel";
 import Order from "../models/orderModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
+import Address from "../models/userOrderAddress";
 import { UserLocation } from "../interface/User/IUserRepository";
 
 class UserRepository implements IUserRepository {
@@ -43,11 +44,17 @@ class UserRepository implements IUserRepository {
 
   saveUserLocation = async (data: UserLocation) => {
     try {
-      console.log("Location in repository:", data);
+      const loginEntry = {
+        timestamp: data.timestamp,
+        location: {
+          type: "Point",
+          coordinates: [data.location.longitude, data.location.latitude],
+        },
+      };
 
       return await User.findOneAndUpdate(
         { _id: data.userId },
-        { $push: { loginHistory: data } },
+        { $push: { loginHistory: loginEntry } },
         { new: true }
       );
     } catch (error) {
@@ -129,7 +136,10 @@ class UserRepository implements IUserRepository {
 
   getHotels = async () => {
     try {
-      return await Vendor.find({}).limit(5);
+      const hotels = await Vendor.find({ isActive: true, adminVerified: true });
+      console.log("Hotels:", hotels);
+
+      return hotels;
     } catch (error) {
       console.log(error);
       return [];
@@ -264,6 +274,87 @@ class UserRepository implements IUserRepository {
       console.log(error);
     }
   };
+
+  fetchLocation = async (id: string) => {
+    try {
+      const user = await User.findById(id);
+      console.log("User found for location", user);
+
+      if (user && user.loginHistory.length > 0) {
+        const recentLogin = user.loginHistory.pop();
+        console.log("Recent login", recentLogin);
+
+        if (recentLogin?.location?.coordinates) {
+          const [longitude, latitude] = recentLogin.location.coordinates;
+
+          if (typeof longitude === "number" && typeof latitude === "number") {
+            console.log(longitude, latitude);
+            return { longitude, latitude };
+          } else {
+            throw new Error(
+              "Invalid coordinates: longitude or latitude is not a number"
+            );
+          }
+        }
+      }
+
+      throw new Error("No valid login history with coordinates found");
+    } catch (error) {
+      console.error("fetchLocation error:", error);
+      throw error; // important to let upstream catch it
+    }
+  };
+
+  findWithLocation = async (
+    longitude: number,
+    latitude: number,
+    maxDistanceKm = 20
+  ) => {
+    try {
+      const nearbyRestaurants = await Vendor.find({
+        location: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [longitude, latitude],
+            },
+            $maxDistance: 100000, //100 km
+          },
+        },
+        isActive: true,
+        adminVerified: true,
+      });
+
+      console.log("resturents found:", nearbyRestaurants);
+
+      return nearbyRestaurants;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  clear = async (id: string) => {
+    try {
+      const clearedCart = await Cart.findOneAndDelete({ userId: id });
+
+      console.log("Cart cleared:", clearedCart);
+      return clearedCart;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createAddress=async(data:any)=>{
+
+    try {
+
+      return await Address.create(data)
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }
 
 export default UserRepository;

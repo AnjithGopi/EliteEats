@@ -79,10 +79,17 @@ class VendorService implements IVendorService {
       }
       console.log("userto save:", vendor);
 
+      const location = {
+        type: "Point",
+        coordinates: [Number(vendor.longitude), Number(vendor.latitude)],
+      };
+
+      console.log("Location to save:", location);
+      console.log("checking types:",typeof location.coordinates[0])
       const restaurent = {
         ...vendor,
         displayPicture: image,
-        location: { latitude: vendor.latitude, longitude: vendor.longitude },
+        location: location,
       };
 
       console.log("restaurent to save with image::::::::::", restaurent);
@@ -251,6 +258,8 @@ class VendorService implements IVendorService {
   orderManagement = async (id: string) => {
     try {
       const orderList = await this._vendorRepository.fetchAllOrders(id);
+
+      console.log("The orders of restauretn with id:",id,":",orderList)
 
       return orderList;
     } catch (error) {

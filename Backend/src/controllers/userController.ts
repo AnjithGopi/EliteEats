@@ -44,7 +44,6 @@ export class userController {
 
   userLogin = async (req: Request, res: Response) => {
     try {
-   
       const user = await this._userService.verifyLogin(req.body);
 
       if (user) {
@@ -187,24 +186,30 @@ export class userController {
 
   addtoCart = async (req: Request, res: Response) => {
     try {
-      const { userId, productId } = req.query;
+      const { userId, productId, quantity, price } = req.body;
+
+      if (!userId || !productId || !quantity || !price) {
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          message: "Missing required fields",
+        });
+      }
 
       const cart = await this._userService.cartImplementation(
         userId,
-        productId
+        productId,
+        Number(quantity),
+        Number(price)
       );
 
-      if (!cart) {
-        res
-          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-          .json({ message: "Internal server error" });
-      } else {
-        res
-          .status(HttpStatusCode.CREATED)
-          .json({ message: "Added to cart", cart });
-      }
-    } catch (error) {
-      console.log(error);
+      res.status(HttpStatusCode.CREATED).json({
+        message: "Added to cart",
+        cart,
+      });
+    } catch (error: any) {
+      console.error(error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        message: error.message || "Failed to add to cart",
+      });
     }
   };
 
@@ -256,6 +261,47 @@ export class userController {
         res
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
           .json({ message: "Unable to add address" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchnearbyrestaurents = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const restaurents = await this._userService.hotelsNearUser(id);
+
+      if (!restaurents) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ message: "No restuarents found" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Restaurents fetched successfully", restaurents });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createAddress = async (req: Request, res: Response) => {
+    try {
+      
+       console.log("data in controller:",req.body)
+
+      const created = await this._userService.addressManagement(req.body);
+
+      if (!created) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "Unable to add address" });
+      } else {
+        res
+          .status(HttpStatusCode.CREATED)
+          .json({ message: "Address added successfully" });
       }
     } catch (error) {
       console.log(error);

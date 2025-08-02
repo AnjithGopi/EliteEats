@@ -8,6 +8,7 @@ const cartSchema = new mongoose.Schema({
       quantity: { type: Number },
       productName: { type: String },
       productImage: { type: String },
+      productPrice:{type:Number}
     },
   ],
   totalPrice: { type: Number, default: 0 },

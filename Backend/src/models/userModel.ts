@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema({
     {
       timestamp: { type: Date },
       location: {
-        latitude: { type: Number },
-        longitude: { type: Number },
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: { type: [Number] },
       },
     },
   ],

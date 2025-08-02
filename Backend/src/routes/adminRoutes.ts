@@ -33,6 +33,8 @@ router
 router
   .route("/verfiy_deliverypartner/:id")
   .get(verify, verifyAdmin, controller.verifyRider);
-
-  router.route("/logout").get(controller.logout)
+router
+  .route("/reject_deliverypartner/:id")
+  .post(verify, verifyAdmin, controller.rejectRider);
+router.route("/logout").get(controller.logout);
 export default router;

@@ -32,4 +32,8 @@ export interface IUserRepository {
   findallOrders(id: string): Promise<any>;
   updateUser(data: string): Promise<any>;
   saveUserLocation(data:UserLocation): Promise<any>;
+  findWithLocation(longitude:number,latitude:number):Promise<any>
+  fetchLocation(id:string):Promise<any>
+  clear(id:string):Promise<any>
+  createAddress(data:any):Promise<any>
 }

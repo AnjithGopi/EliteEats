@@ -242,4 +242,28 @@ export class AdminController {
       console.log(error);
     }
   };
+
+  rejectRider=async(req:Request,res:Response)=>{
+
+    try {
+
+      console.log("Reject rider worked")
+
+      const {id}=req.params
+
+      const{reason}=req.body
+
+      const rejected=await this._adminService.rejectRiderRequest(id,reason)
+
+      if(!rejected){
+        res.status(HttpStatusCode.SERVICE_UNAVAILABLE).json({message:"!something went wrong"})
+      }else{
+        res.status(HttpStatusCode.OK).json({message:"Application rejected"})
+      }
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 }

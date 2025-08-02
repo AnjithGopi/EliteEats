@@ -95,4 +95,29 @@ export class RiderController {
       console.log(error);
     }
   };
+
+  logout = async (req: Request, res: Response) => {
+    try {
+      res.clearCookie("AccessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+
+      res.clearCookie("RefreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+
+      res
+        .status(HttpStatusCode.OK)
+        .json({ message: "Logged out successfully" });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ message: "Something went wrong in logout" });
+    }
+  };
 }

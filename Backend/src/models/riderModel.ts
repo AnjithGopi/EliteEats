@@ -10,17 +10,30 @@ const riderSchema= new mongoose.Schema({
     license:{type:String},
     vehicleType:{type:String},
     isVerified:{type:Boolean,default:false},
+    isRejected:{type:Boolean,default:false},
+    rejectionReason:{type:String,default:"Rejection pending"},
     mobile:{type:Number,unique:true,required:true},
     password:{type:String,required:true},
-    isActive:{type:Boolean,default:true},
+    isActive:{type:Boolean,default:false},
     isOnline:{type:Boolean,default:true},
+    registered_On: { type: Date, default: Date.now },
     address:{
 
         fullAddress:{type:String},
         city:{type:String},
         state:{type:String},
         zipCode:{type:String}
-    }
+    },
+
+    loginHistory: [
+    {
+      timestamp: { type: Date },
+      location: {
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: { type: [Number] },
+      },
+    },
+  ],
     
 })
 

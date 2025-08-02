@@ -26,4 +26,5 @@ export interface IRiderRepository {
   riders():Promise<any>
   getDetails(id:string):Promise<any>
   verfiyRiderDetails(id:string):Promise<any>
+  reject(id:string,reason:string):Promise<any>
 }

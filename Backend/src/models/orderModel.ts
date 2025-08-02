@@ -5,7 +5,6 @@ const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.ObjectId, ref: "User" },
   products: [
     {
-      productId: { type: mongoose.Schema.ObjectId, ref: "Menu" },
       productName: { type: String },
       hotelId: { type: mongoose.Schema.ObjectId, ref: "Vendor" },
       quantity: { type: Number },
