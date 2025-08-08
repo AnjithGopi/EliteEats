@@ -344,17 +344,13 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  createAddress=async(data:any)=>{
-
+  createAddress = async (data: any) => {
     try {
-
-      return await Address.create(data)
-      
+      return await Address.create(data);
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default UserRepository;

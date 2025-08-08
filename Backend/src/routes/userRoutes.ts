@@ -4,11 +4,13 @@ import container from "../config/inversifyConfig/inversifyConfig";
 import verify from "../middlewares/authVerfication";
 import { verifyUser } from "../middlewares/verifyuser";
 import { UserOrderController } from "../controllers/userOrderController";
+import { UserCartController } from "../controllers/userCartController";
 const router = express.Router();
 
 const controller = container.get<userController>(userController);
 const userOrderController =
   container.get<UserOrderController>(UserOrderController);
+const cartController = container.get<UserCartController>(UserCartController);
 
 router.route("/signup").post(controller.userSignup);
 router.route("/verify_otp").post(controller.verifyOtp);
@@ -26,15 +28,18 @@ router
   .route("/view_cart/:id")
   .get(verify, verifyUser, controller.getCartDetails);
 router.route("/logout").get(verify, verifyUser, controller.userLogout);
-
 router
-  .route("/update_useraddress/")
+  .route("/incrementCartItems")
+  .put(verify, verifyUser, cartController.incrementItemInCart);
+router.route("/decrementCartItems").put(cartController.decrementItems);
+router
+  .route("/update_useraddress")
   .post(verify, verifyUser, controller.updateAddress);
 router
   .route("/restuarents_near_user/:id")
   .get(verify, verifyUser, controller.fetchnearbyrestaurents);
 
-  router.route("/add_multiple_address").post(controller.createAddress)
+router.route("/add_multiple_address").post(controller.createAddress);
 
 //handling orders.......
 

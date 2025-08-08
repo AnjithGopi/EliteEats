@@ -20,17 +20,24 @@ import { VendorController } from "../../controllers/vendorController";
 import { IPasswordResetRepository } from "../../interface/IPasswordResetRepository";
 import { PasswordResetRepository } from "../../repositories/passwordResetRepository";
 import { UserOrderController } from "../../controllers/userOrderController";
+import { UserCartController } from "../../controllers/userCartController";
+import { UserCartService } from "../../services/userCartServices";
+import { IUserCartService } from "../../interface/User/IUserCartService";
+import { ICartRepository } from "../../interface/User/ICartRepository";
+import { CartRepository } from "../../repositories/cartRepository";
 
 const container = new Container();
 //userbindings
 container.bind<IUserService>("IUserService").to(UserService);
 container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<userController>(userController).toSelf();
-container.bind<UserOrderController>(UserOrderController).toSelf()
+container.bind<UserOrderController>(UserOrderController).toSelf();
 container
   .bind<IPasswordResetRepository>("IPasswordResetRepository")
   .to(PasswordResetRepository);
-
+container.bind<UserCartController>(UserCartController).toSelf();
+container.bind<IUserCartService>("IUserCartService").to(UserCartService)
+container.bind<ICartRepository>("ICartRepository").to(CartRepository)
 //adminbindings
 container.bind<IAdminService>("IAdminService").to(AdminService);
 container.bind<AdminController>(AdminController).toSelf();
