@@ -10,9 +10,9 @@ export class UserCartController {
     @inject("IUserCartService") private _userCartService: IUserCartService
   ) {}
 
-   addtoCart = async (req: Request, res: Response) => {
+  addtoCart = async (req: Request, res: Response) => {
     try {
-      const { userId, productId,hotelId, quantity, price } = req.body;
+      const { userId, productId, hotelId, quantity, price } = req.body;
 
       if (!userId || !productId || !quantity || !price) {
         res.status(HttpStatusCode.BAD_REQUEST).json({
@@ -56,7 +56,6 @@ export class UserCartController {
     }
   };
 
-
   incrementItemInCart = async (req: Request, res: Response) => {
     try {
       console.log("items :", req.body);
@@ -98,13 +97,36 @@ export class UserCartController {
           .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
           .json({ success: false, message: "Unable to update Cart" });
       } else {
+        res.status(HttpStatusCode.OK).json({
+          success: true,
+          message: "Quantity decremented",
+          updatedCart,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  deleteCartItems = async (req: Request, res: Response) => {
+    try {
+
+      console.log("Delete item worked in cart controller")
+      const { userId, itemId } = req.body;
+
+      const deleted = await this._userCartService.deleteIteminCart(
+        userId,
+        itemId
+      );
+
+      if (!deleted) {
+        res
+          .status(HttpStatusCode.NOT_MODIFIED)
+          .json({ success: false, message: "Cannot delete Item" });
+      } else {
         res
           .status(HttpStatusCode.OK)
-          .json({
-            success: true,
-            message: "Quantity decremented",
-            updatedCart,
-          });
+          .json({ success: true, message: "Deleted Successfully", deleted });
       }
     } catch (error) {
       console.log(error);

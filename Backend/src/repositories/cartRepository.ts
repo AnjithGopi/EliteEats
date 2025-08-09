@@ -1,52 +1,51 @@
 import { ICartRepository } from "../interface/User/ICartRepository";
 import Cart from "../models/cartModel";
-
+import { ObjectId } from "mongodb";
 
 export class CartRepository implements ICartRepository {
   constructor() {}
 
-   findCart = async (id: any) => {
-      try {
-        console.log(`find if cart exist for the given user with id : ${id}`);
-  
-        return await Cart.findOne({ userId: id });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    createNewCart = async (data: any) => {
-      try {
-        return await Cart.create(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    updateCart = async (userId: any, cart: any) => {
-      try {
-        return await Cart.findOneAndUpdate(
-          { userId },
-          {
-            $set: {
-              items: cart.items,
-            },
+  findCart = async (id: any) => {
+    try {
+      console.log(`find if cart exist for the given user with id : ${id}`);
+
+      return await Cart.findOne({ userId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createNewCart = async (data: any) => {
+    try {
+      return await Cart.create(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateCart = async (userId: any, cart: any) => {
+    try {
+      return await Cart.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            items: cart.items,
           },
-          { new: true }
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    getCart = async (id: string) => {
-      try {
-        return await Cart.findOne({ userId: id });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
+        },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getCart = async (id: string) => {
+    try {
+      return await Cart.findOne({ userId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   findCartAndUpdate = async (
     userId: string,
@@ -72,6 +71,23 @@ export class CartRepository implements ICartRepository {
 
       const updatedCart = await cart.save();
       console.log("updated:", updatedCart);
+      return updatedCart;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  deleteItems = async (userId: string, itemId: string) => {
+    try {
+      const updatedCart = await Cart.updateOne(
+        { userId: userId },
+        {
+          $pull: { items: { _id: itemId } },
+        }
+      );
+
+      console.log(updatedCart);
+
       return updatedCart;
     } catch (error) {
       console.log(error);

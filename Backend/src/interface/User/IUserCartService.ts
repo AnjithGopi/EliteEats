@@ -17,4 +17,5 @@ export interface IUserCartService {
     itemId: string,
     quantity: number
   ): Promise<any>;
+  deleteIteminCart(userId: string, itemId: string): Promise<any>;
 }

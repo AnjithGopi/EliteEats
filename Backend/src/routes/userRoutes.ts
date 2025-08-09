@@ -31,7 +31,8 @@ router.route("/logout").get(verify, verifyUser, controller.userLogout);
 router
   .route("/incrementCartItems")
   .put(verify, verifyUser, cartController.incrementItemInCart);
-router.route("/decrementCartItems").put(cartController.decrementItems);
+router.route("/decrementCartItems").put(verify,verifyUser,cartController.decrementItems);
+router.route("/delete_item").put(verify,verifyUser,cartController.deleteCartItems)
 router
   .route("/update_useraddress")
   .post(verify, verifyUser, controller.updateAddress);

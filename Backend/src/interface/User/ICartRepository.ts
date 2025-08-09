@@ -8,4 +8,6 @@ export interface ICartRepository {
     itemId: string,
     quantity: number
   ): Promise<any>;
+
+  deleteItems(userId: string, itemId: string): Promise<any>;
 }

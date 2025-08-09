@@ -32,7 +32,8 @@ export class UserCartService implements IUserCartService {
     if (!product) throw new Error("Product not found");
 
     const cart = await this._cartRepository.findCart(userId);
-    if (cart.hotelId !== hotelId) {
+    if (cart && cart.hotelId.toString() !== hotelId) {
+      console.log("Cart found::::::::>>>>>>>",cart)
       throw new Error("Cart is already ready with another restaurent Data");
     }
 
@@ -115,6 +116,18 @@ export class UserCartService implements IUserCartService {
         quantity
       );
       return updatedCart;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  deleteIteminCart = async (userId: string, itemId: string) => {
+    try {
+
+      console.log("Deletion in service cart")
+      const deleteItem = await this._cartRepository.deleteItems(userId, itemId);
+
+      return deleteItem;
     } catch (error) {
       console.log(error);
     }
