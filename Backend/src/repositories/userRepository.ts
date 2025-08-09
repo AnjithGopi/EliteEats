@@ -156,48 +156,7 @@ class UserRepository implements IUserRepository {
     }
   };
 
-  findCart = async (id: any) => {
-    try {
-      console.log(`find if cart exist for the given user with id : ${id}`);
-
-      return await Cart.findOne({ userId: id });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  createNewCart = async (data: any) => {
-    try {
-      return await Cart.create(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  updateCart = async (userId: any, cart: any) => {
-    try {
-      return await Cart.findOneAndUpdate(
-        { userId },
-        {
-          $set: {
-            items: cart.items,
-          },
-        },
-        { new: true }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  getCart = async (id: string) => {
-    try {
-      return await Cart.findOne({ userId: id });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+ 
   fetchData = async (id: string) => {
     try {
       const [hotel, category, menu] = await Promise.all([

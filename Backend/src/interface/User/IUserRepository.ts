@@ -21,10 +21,6 @@ export interface IUserRepository {
   updatePassword(email: any, password: string | any): Promise<any>;
   getHotels(): Promise<any>;
   getUser(userData: any): Promise<any>;
-  findCart(id: any): Promise<any>;
-  createNewCart(data: any): Promise<any>;
-  updateCart(userId: any, cart: any): Promise<any>;
-  getCart(id: string): Promise<any>;
   fetchData(id: string): Promise<any>;
   placeOrder(data: any): Promise<any>;
   findItem(id: string): Promise<any>;

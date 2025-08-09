@@ -184,51 +184,7 @@ export class userController {
     }
   };
 
-  addtoCart = async (req: Request, res: Response) => {
-    try {
-      const { userId, productId, quantity, price } = req.body;
-
-      if (!userId || !productId || !quantity || !price) {
-        res.status(HttpStatusCode.BAD_REQUEST).json({
-          message: "Missing required fields",
-        });
-      }
-
-      const cart = await this._userService.cartImplementation(
-        userId,
-        productId,
-        Number(quantity),
-        Number(price)
-      );
-
-      res.status(HttpStatusCode.CREATED).json({
-        message: "Added to cart",
-        cart,
-      });
-    } catch (error: any) {
-      console.error(error);
-      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-        message: error.message || "Failed to add to cart",
-      });
-    }
-  };
-
-  getCartDetails = async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-
-      const cart = await this._userService.findCart(id);
-
-      if (!cart) {
-        res.status(HttpStatusCode.NOT_FOUND).json({ message: "No cart found" });
-      } else {
-        res.status(HttpStatusCode.OK).json(cart);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+ 
   getHotelData = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
