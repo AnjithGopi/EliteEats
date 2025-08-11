@@ -248,8 +248,6 @@ class UserService implements IUserService {
     }
   };
 
- 
-
   fetchRestaurentData = async (id: string) => {
     try {
       const data = await this._userRepository.fetchData(id);
@@ -371,15 +369,13 @@ class UserService implements IUserService {
 
       const addressPayload = {
         userId,
-        addresses: 
-          {
-            street,
-            city,
-            state,
-            country,
-            pinCode: pincode,
-          },
-        
+        addresses: {
+          street,
+          city,
+          state,
+          country,
+          pinCode: pincode,
+        },
       };
 
       const addAdress = await this._userRepository.createAddress(
@@ -387,6 +383,20 @@ class UserService implements IUserService {
       );
 
       return addAdress;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchAddressOfuser = async (id: string) => {
+    try {
+      const address = await this._userRepository.findAddress(id);
+
+      const addressStrings = address.map((item: any) =>
+        Object.values(item.addresses).join(" ,")
+      );
+
+      return addressStrings;
     } catch (error) {
       console.log(error);
     }

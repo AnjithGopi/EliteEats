@@ -156,7 +156,6 @@ class UserRepository implements IUserRepository {
     }
   };
 
- 
   fetchData = async (id: string) => {
     try {
       const [hotel, category, menu] = await Promise.all([
@@ -306,6 +305,14 @@ class UserRepository implements IUserRepository {
   createAddress = async (data: any) => {
     try {
       return await Address.create(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findAddress = async (id: string) => {
+    try {
+      return await Address.find({ userId: id });
     } catch (error) {
       console.log(error);
     }

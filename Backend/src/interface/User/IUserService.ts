@@ -38,6 +38,7 @@ export interface IUserService {
   hotelsNearUser(id:string):Promise<any>
   deleteCart(id:string):Promise<any>
   addressManagement(data:any):Promise<any>
+  fetchAddressOfuser(id:string):Promise<any>
  
   
 

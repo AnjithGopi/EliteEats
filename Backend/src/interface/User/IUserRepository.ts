@@ -32,4 +32,5 @@ export interface IUserRepository {
   fetchLocation(id:string):Promise<any>
   clear(id:string):Promise<any>
   createAddress(data:any):Promise<any>
+  findAddress(id:string):Promise<any>
 }

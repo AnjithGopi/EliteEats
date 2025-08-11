@@ -263,4 +263,27 @@ export class userController {
       console.log(error);
     }
   };
+
+  getAllAddress=async(req:Request,res:Response)=>{
+
+    try {
+
+      const {id}=req.params
+
+      const addresses=await this._userService.fetchAddressOfuser(id)
+
+      if(!addresses){
+        res.status(HttpStatusCode.NOT_FOUND).json({success:false,message:"No address found "})
+      }else{
+        res.status(HttpStatusCode.OK).json({success:true,message:"Address found",addresses})
+      }
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
+
+
 }

@@ -23,6 +23,8 @@ router
   .get(verify, verifyUser, controller.getHotelData);
 router.route("/profile/:id").get(verify, verifyUser, controller.getProfile);
 
+// Cart operations
+
 router.route("/addto_cart").post(verify, verifyUser, cartController.addtoCart);
 router
   .route("/view_cart/:id")
@@ -31,8 +33,12 @@ router.route("/logout").get(verify, verifyUser, controller.userLogout);
 router
   .route("/incrementCartItems")
   .put(verify, verifyUser, cartController.incrementItemInCart);
-router.route("/decrementCartItems").put(verify,verifyUser,cartController.decrementItems);
-router.route("/delete_item").put(verify,verifyUser,cartController.deleteCartItems)
+router
+  .route("/decrementCartItems")
+  .put(verify, verifyUser, cartController.decrementItems);
+router
+  .route("/delete_item")
+  .put(verify, verifyUser, cartController.deleteCartItems);
 router
   .route("/update_useraddress")
   .post(verify, verifyUser, controller.updateAddress);
@@ -41,6 +47,7 @@ router
   .get(verify, verifyUser, controller.fetchnearbyrestaurents);
 
 router.route("/add_multiple_address").post(controller.createAddress);
+router.route("/getAddress/:id").get(controller.getAllAddress)
 
 //handling orders.......
 
