@@ -2,10 +2,14 @@ import { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { injectable, inject } from "inversify";
 import { IUserService } from "../interface/User/IUserService";
+import { IUserOrderService } from "../interface/User/IUserOrderService";
 
 @injectable()
 export class UserOrderController {
-  constructor(@inject("IUserService") private _userService: IUserService) {}
+  constructor(
+    @inject("IUserService") private _userService: IUserService,
+    @inject("IUserOrderService") private _userOrderService: IUserOrderService
+  ) {}
 
   getItemDetails = async (req: Request, res: Response) => {
     try {
@@ -65,8 +69,7 @@ export class UserOrderController {
   clearCart = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      
-      
+
       const cleared = await this._userService.deleteCart(id);
 
       if (!cleared) {
@@ -75,6 +78,48 @@ export class UserOrderController {
           .json({ message: "Error in cart deletion" });
       } else {
         res.status(HttpStatusCode.OK).json({ message: "Cart cleared" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createOrder = async (req: Request, res: Response) => {
+    try {
+      console.log(req.body);
+
+      const order = await this._userOrderService.createOrder(req.body);
+
+      if (!order) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: "Couldn't place Order" });
+      } else {
+        res.status(HttpStatusCode.CREATED).json({
+          success: true,
+          message: "Order Created Successfully",
+          order,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchUserOrders = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const orders = await this._userOrderService.fetchOrders(id);
+
+      if (!orders) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ success: false, message: "No orders Found" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, message: "Orders Found", orders });
       }
     } catch (error) {
       console.log(error);

@@ -25,6 +25,10 @@ import { UserCartService } from "../../services/userCartServices";
 import { IUserCartService } from "../../interface/User/IUserCartService";
 import { ICartRepository } from "../../interface/User/ICartRepository";
 import { CartRepository } from "../../repositories/cartRepository";
+import { IUserOrderService } from "../../interface/User/IUserOrderService";
+import { UserOrderService } from "../../services/userOrderServices";
+import { IOrderRepository } from "../../interface/Orders/IOrderRepository";
+import { OrderRepository } from "../../repositories/orderRepository";
 
 const container = new Container();
 //userbindings
@@ -38,6 +42,8 @@ container
 container.bind<UserCartController>(UserCartController).toSelf();
 container.bind<IUserCartService>("IUserCartService").to(UserCartService)
 container.bind<ICartRepository>("ICartRepository").to(CartRepository)
+container.bind<IUserOrderService>("IUserOrderService").to(UserOrderService)
+container.bind<IOrderRepository>("IOrderRepository").to(OrderRepository)
 //adminbindings
 container.bind<IAdminService>("IAdminService").to(AdminService);
 container.bind<AdminController>(AdminController).toSelf();

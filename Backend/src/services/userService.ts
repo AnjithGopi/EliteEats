@@ -401,6 +401,41 @@ class UserService implements IUserService {
       console.log(error);
     }
   };
+
+  resetPassword = async (data: any) => {
+    try {
+      console.log("data for changing password:", data);
+      const { currentPassword, newPassword, userId, confirmPassword } = data;
+
+      if (newPassword !== confirmPassword) {
+        throw new Error("New passwords do not match");
+      }
+
+      const user = await this._userRepository.finduserById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const isMatch = await comparePassword(currentPassword, user.password);
+      if (!isMatch) {
+        throw new Error("Current password is incorrect");
+      }
+
+      const hashedPassword = await hashPassword(newPassword);
+      console.log("hashed password type:", typeof hashedPassword);
+      const updated = await this._userRepository.updateUserPassword(
+        userId,
+        hashedPassword
+      );
+
+      // return { success: true, message: "Password updated successfully" };
+      if (updated) {
+        return true;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserService;

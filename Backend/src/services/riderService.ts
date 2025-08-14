@@ -87,6 +87,14 @@ export class RiderService implements IRiderService {
     try {
       const riderFound = await this._riderRepository.verifyLogin(loginData);
 
+      if (riderFound.isRejected) {
+        throw new Error("Your Application is Rejected by Eliteeats");
+      }
+
+      if (!riderFound.isVerified) {
+        throw new Error("Your profile is under Verification ");
+      }
+
       if (!riderFound) {
         throw new Error("Incorrect email");
       }
@@ -100,12 +108,12 @@ export class RiderService implements IRiderService {
         throw new Error("Incorrect Password");
       }
 
-      const role=Roles.RIDER
+      const role = Roles.RIDER;
 
       if (riderFound && passwordMatch) {
         console.log("Rider found:", riderFound);
-        const accessToken = generateAccessToken(riderFound,role);
-        const refreshToken = generateRefreshToken(riderFound,role);
+        const accessToken = generateAccessToken(riderFound, role);
+        const refreshToken = generateRefreshToken(riderFound, role);
 
         return { ...riderFound.toObject(), accessToken, refreshToken };
       }
@@ -116,19 +124,15 @@ export class RiderService implements IRiderService {
     }
   };
 
-  submitForVerification=async(data:any)=>{
-
+  submitForVerification = async (data: any) => {
     try {
+      const dataforSubmission = data;
+      console.log("data in services:", dataforSubmission);
 
-      const dataforSubmission=data
-      console.log("data in services:",dataforSubmission)
-
-      const submitted=this._riderRepository.updateRider(data)
-      return submitted
-      
+      const submitted = this._riderRepository.updateRider(data);
+      return submitted;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }

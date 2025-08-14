@@ -317,6 +317,26 @@ class UserRepository implements IUserRepository {
       console.log(error);
     }
   };
+
+  finduserById = async (id: string) => {
+    try {
+      return await User.findOne({ _id: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateUserPassword = async (id: string, hashedPassword: any) => {
+    try {
+      return await User.findByIdAndUpdate(
+        id,
+        { password: hashedPassword },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default UserRepository;

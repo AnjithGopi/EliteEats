@@ -1,11 +1,5 @@
-import { LoginData } from "../Admin/IAdminService";
-import { LocationData } from "../Admin/IAdminService";
-
-export interface UserLocation {
-  location: LocationData;
-  timestamp: Date;
-  userId?:string
-}
+import { LoginData } from "../../types/loginData";
+import { UserLocation } from "../../types/userLocation";
 
 
 export interface IUserRepository {
@@ -33,4 +27,6 @@ export interface IUserRepository {
   clear(id:string):Promise<any>
   createAddress(data:any):Promise<any>
   findAddress(id:string):Promise<any>
+  finduserById(userId:string):Promise<any>
+  updateUserPassword(id:string,password:any):Promise<any>
 }

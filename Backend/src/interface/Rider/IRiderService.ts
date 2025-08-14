@@ -1,4 +1,4 @@
-import { IRider } from "./IRiderRepository";
+import { IRider } from "../../types/riderData";
 
 export interface IRiderService {
   register(riderData: IRider): Promise<string | IRider | undefined | any>;

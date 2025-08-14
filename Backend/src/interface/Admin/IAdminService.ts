@@ -1,27 +1,6 @@
-export interface LoginData {
-  email: string;
-  password: string;
-  location?: {
-    latitude?: number;
-    longitude?: number;
-  };
-}
+import { LoginData } from "../../types/loginData";
+import { UserDetails } from "../../types/userDetails";
 
-export type LocationData = {
-  latitude?: number;
-  longitude?: number;
-};
-
-export interface UserDetails {
-  _id: string;
-  name: string;
-  email: string;
-  mobile: number;
-  isActive: boolean;
-  otpVerified: boolean;
-  isAdmin: boolean;
-  createdAt: NativeDate;
-}
 
 export interface IAdminService {
   findAdmin(

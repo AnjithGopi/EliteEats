@@ -112,7 +112,7 @@ export class RiderController {
 
       res
         .status(HttpStatusCode.OK)
-        .json({ message: "Logged out successfully" });
+        .json({success:true, message: "Logged out successfully" });
     } catch (error) {
       console.log(error);
       res

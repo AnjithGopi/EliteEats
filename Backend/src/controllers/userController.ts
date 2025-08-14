@@ -184,7 +184,6 @@ export class userController {
     }
   };
 
- 
   getHotelData = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -245,8 +244,7 @@ export class userController {
 
   createAddress = async (req: Request, res: Response) => {
     try {
-      
-       console.log("data in controller:",req.body)
+      console.log("data in controller:", req.body);
 
       const created = await this._userService.addressManagement(req.body);
 
@@ -264,26 +262,41 @@ export class userController {
     }
   };
 
-  getAllAddress=async(req:Request,res:Response)=>{
-
+  getAllAddress = async (req: Request, res: Response) => {
     try {
+      const { id } = req.params;
 
-      const {id}=req.params
+      const addresses = await this._userService.fetchAddressOfuser(id);
 
-      const addresses=await this._userService.fetchAddressOfuser(id)
-
-      if(!addresses){
-        res.status(HttpStatusCode.NOT_FOUND).json({success:false,message:"No address found "})
-      }else{
-        res.status(HttpStatusCode.OK).json({success:true,message:"Address found",addresses})
+      if (!addresses) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ success: false, message: "No address found " });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, message: "Address found", addresses });
       }
-      
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 
+  changePassword = async (req: Request, res: Response) => {
+    try {
+      const passwordChanged = await this._userService.resetPassword(req.body);
 
-
+      if (!passwordChanged) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: "Error in changing password" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, message: "Password Changed Successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

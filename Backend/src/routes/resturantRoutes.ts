@@ -19,8 +19,10 @@ router.route("/add_items").post(verify,verifyVendor,controller.createMenu)
 router.route("/categories/:id").get(verify,verifyVendor,controller.getCategories)
 router.route("/menu/:id").get(verify,verifyVendor,controller.getMenu)
 router.route("/delete_category/:id").get(verify,verifyVendor,controller.deleteCategory)
-router.route("/view_orders/:id").get(verify,verifyVendor,controller.viewAllOrders)
+router.route("/view_orders/:id").get(controller.viewAllOrders)
 router.route("/find_order/:id").get(verify,verifyVendor,controller.findOrder)
+
+router.route("/fetchOrders_restaurent/:id").get(controller.fetchOrders)
 
 
 

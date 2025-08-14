@@ -2,11 +2,13 @@ import type { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { injectable, inject } from "inversify";
 import { IVendorService } from "../interface/Vendor/IVendorService";
+import { IUserOrderService } from "../interface/User/IUserOrderService";
 
 @injectable()
 export class VendorController {
   constructor(
-    @inject("IVendorService") private _vendorService: IVendorService
+    @inject("IVendorService") private _vendorService: IVendorService,
+    @inject("IUserOrderService") private _userOrderService: IUserOrderService
   ) {}
 
   signup = async (req: Request, res: Response) => {
@@ -212,16 +214,37 @@ export class VendorController {
   findOrder = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      
 
       const order = await this._vendorService.getOrder(id);
 
       if (!order) {
-        res
-          .status(HttpStatusCode.NOT_FOUND)
-          .json({ message: " Not found" });
+        res.status(HttpStatusCode.NOT_FOUND).json({ message: " Not found" });
       } else {
         res.status(HttpStatusCode.OK).json(order);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchOrders = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const orders = await this._userOrderService.fetchOrders_with_Id(id);
+
+      if (!orders) {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ success: false, message: "No orders found" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({
+            success: true,
+            message: "Orders Fetched Successfully",
+            orders,
+          });
       }
     } catch (error) {
       console.log(error);
