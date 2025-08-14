@@ -1,5 +1,6 @@
-import { LoginData } from "../interface/Admin/IAdminService";
-import { LocationData } from "../interface/Admin/IAdminService";
+
+import { LoginData } from "../types/loginData";
+import { LocationData } from "../types/LocationData";
 import { IUserRepository } from "../interface/User/IUserRepository";
 import Cart from "../models/cartModel";
 import MenuCategory from "../models/menuCategoryModel";
@@ -8,7 +9,7 @@ import Order from "../models/orderModel";
 import User from "../models/userModel";
 import Vendor from "../models/vendorModel";
 import Address from "../models/userOrderAddress";
-import { UserLocation } from "../interface/User/IUserRepository";
+import { UserLocation } from "../types/userLocation";
 
 class UserRepository implements IUserRepository {
   constructor() {}

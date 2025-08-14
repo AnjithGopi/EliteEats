@@ -1,5 +1,7 @@
-import { LoginData } from "../interface/Admin/IAdminService";
-import { IRider, IRiderRepository } from "../interface/Rider/IRiderRepository";
+
+import { LoginData } from "../types/loginData";
+import { IRider } from "../types/riderData";
+import {  IRiderRepository } from "../interface/Rider/IRiderRepository";
 import Rider from "../models/riderModel";
 
 class RiderRepository implements IRiderRepository {

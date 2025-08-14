@@ -1,5 +1,6 @@
 import { injectable, inject } from "inversify";
-import { IAdminService, LoginData } from "../interface/Admin/IAdminService";
+import { IAdminService } from "../interface/Admin/IAdminService";
+import { LoginData } from "../types/loginData";
 import comparePassword from "../utils/comparePasswords";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { IUserRepository } from "../interface/User/IUserRepository";
