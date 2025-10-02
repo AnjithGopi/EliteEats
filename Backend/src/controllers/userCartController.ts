@@ -12,7 +12,9 @@ export class UserCartController {
 
   addtoCart = async (req: Request, res: Response) => {
     try {
-      const { userId, productId, hotelId, quantity, price } = req.body;
+      console.log("cart implementation object::::::::>>>>>>", req.body);
+      const { userId, productId, hotelId, quantity, price, variant, addons } =
+        req.body;
 
       if (!userId || !productId || !quantity || !price) {
         res.status(HttpStatusCode.BAD_REQUEST).json({
@@ -25,7 +27,9 @@ export class UserCartController {
         productId,
         hotelId,
         Number(quantity),
-        Number(price)
+        Number(price),
+        variant,
+        addons
       );
 
       res.status(HttpStatusCode.CREATED).json({
@@ -110,8 +114,7 @@ export class UserCartController {
 
   deleteCartItems = async (req: Request, res: Response) => {
     try {
-
-      console.log("Delete item worked in cart controller")
+      console.log("Delete item worked in cart controller");
       const { userId, itemId } = req.body;
 
       const deleted = await this._userCartService.deleteIteminCart(

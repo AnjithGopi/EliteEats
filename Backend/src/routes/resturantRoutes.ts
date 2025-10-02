@@ -22,12 +22,14 @@ router.route("/delete_category/:id").get(verify,verifyVendor,controller.deleteCa
 router.route("/view_orders/:id").get(controller.viewAllOrders)
 router.route("/find_order/:id").get(verify,verifyVendor,controller.findOrder)
 
-router.route("/fetchOrders_restaurent/:id").get(controller.fetchOrders)
+router.route("/fetchOrders_restaurent/:id").get(verify,verifyVendor,controller.fetchOrders)
+router.route("/forgotPassword").post(controller.forgotPassword)
+router.route("/resetPassword/:token").post(controller.resetPassword)
 
 
 
 
-router.route("/logout").get(verify,controller.logout)
+router.route("/logout").post(verify,controller.logout)
 
 
 

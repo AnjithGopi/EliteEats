@@ -12,11 +12,16 @@ import { IVendorRepository } from "../interface/Vendor/IVendorRepository";
 import { createRestaurentid } from "../utils/restaurent_id";
 import { Roles } from "../utils/roles";
 import MenuCategory from "../models/menuCategoryModel";
+import { passwordResetToken } from "../utils/password _reset";
+import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
+import { sendPasswordResetLink } from "../utils/sendResetLink";
 
 @injectable()
 class VendorService implements IVendorService {
   constructor(
-    @inject("IVendorRepository") private _vendorRepository: IVendorRepository
+    @inject("IVendorRepository") private _vendorRepository: IVendorRepository,
+    @inject("IPasswordResetRepository")
+    private _passwordResetRepository: IPasswordResetRepository
   ) {}
 
   register = async (vendorData: any) => {
@@ -85,7 +90,7 @@ class VendorService implements IVendorService {
       };
 
       console.log("Location to save:", location);
-      console.log("checking types:",typeof location.coordinates[0])
+      console.log("checking types:", typeof location.coordinates[0]);
       const restaurent = {
         ...vendor,
         displayPicture: image,
@@ -259,7 +264,7 @@ class VendorService implements IVendorService {
     try {
       const orderList = await this._vendorRepository.fetchAllOrders(id);
 
-      console.log("The orders of restauretn with id:",id,":",orderList)
+      console.log("The orders of restauretn with id:", id, ":", orderList);
 
       return orderList;
     } catch (error) {
@@ -271,6 +276,76 @@ class VendorService implements IVendorService {
     try {
       const order = await this._vendorRepository.findOrder(id);
       return order;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  resetPassword = async (email: string) => {
+    try {
+      const hotel = await this._vendorRepository.findHotelWithEmail(email);
+
+      if (!hotel) {
+        throw new Error(`No hotel Found with email ${email}`);
+      }
+
+      const token = passwordResetToken()
+      console.log("Token for password changing:",token);
+
+      const data = {
+        user: hotel._id,
+        userModel: "Vendor",
+        token: token,
+      };
+
+      const saveHotel = await this._passwordResetRepository.saveTokenforRestaurent(data);
+
+      if (!saveHotel) {
+        throw new Error("Error in password reset");
+      }
+
+      const role = Roles.RESTAURENT;
+
+      const sendLink = await sendPasswordResetLink(hotel.email, token, role);
+
+      return {
+        message: `A link send to your email ${hotel.email} to reset your passoword`,
+        token: token,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  verifyAndResetPassword = async (token: string, password: string) => {
+    try {
+      const checkUser = await this._passwordResetRepository.checkHotel(token);
+      console.log("CHECK USER::>>>>>>>>",checkUser)
+
+      if (!checkUser) {
+        throw new Error("Invalid token ");
+      }
+
+      const hashed = await hashPassword(password);
+      console.log("hased password", hashed);
+      const passWordUpdated = await this._vendorRepository.updatePassword(
+        checkUser.user.email,
+        hashed
+      );
+
+      if (!passWordUpdated) {
+        throw new Error("Unable to reset Password");
+      }
+
+      const deleteToken = await this._passwordResetRepository.deleteToken(
+        token
+      );
+
+      if (deleteToken) {
+        return passWordUpdated;
+      } else {
+        throw new Error("Something went wrong ");
+      }
     } catch (error) {
       console.log(error);
     }

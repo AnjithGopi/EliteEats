@@ -3,6 +3,7 @@ import { HttpStatusCode } from "../utils/statusCodes";
 import { injectable, inject } from "inversify";
 import { IVendorService } from "../interface/Vendor/IVendorService";
 import { IUserOrderService } from "../interface/User/IUserOrderService";
+import { CookieMaxAge } from "../utils/cookieMaxage";
 
 @injectable()
 export class VendorController {
@@ -58,24 +59,22 @@ export class VendorController {
           .json("Internal server Error");
       } else {
         res.cookie("AccessToken", data.accessToken, {
-          // httpOnly: true,
-          // secure: process.env.NODE_ENV === "production",
-          // sameSite: "strict",
-          // maxAge: 60 * 60 * 1000,
           httpOnly: true,
           sameSite: "lax",
           secure: true,
-          maxAge: 60 * 60 * 1000,
+          maxAge: CookieMaxAge.AccessToken,
         });
 
         res.cookie("RefreshToken", data.refreshToken, {
           httpOnly: true,
           secure: true,
           sameSite: "lax",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: CookieMaxAge.RefreshToken,
         });
 
-        res.status(200).json({ message: "login successfull", ...data });
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "login successfull", ...data });
       }
     } catch (error) {
       console.log(error);
@@ -84,13 +83,17 @@ export class VendorController {
 
   createMenu = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
+      console.log("items to create Menu:::::::>>>", req.body);
       const menu = await this._vendorService.addMenu(req.body);
 
       if (menu) {
-        res.status(201).json({ message: "item added successfully", menu });
+        res
+          .status(HttpStatusCode.CREATED)
+          .json({ message: "item added successfully", menu });
       } else {
-        res.status(500).json({ message: "internal server error" });
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ message: "internal server error" });
       }
     } catch (error) {
       console.log(error);
@@ -238,16 +241,68 @@ export class VendorController {
           .status(HttpStatusCode.NOT_FOUND)
           .json({ success: false, message: "No orders found" });
       } else {
-        res
-          .status(HttpStatusCode.OK)
-          .json({
-            success: true,
-            message: "Orders Fetched Successfully",
-            orders,
-          });
+        res.status(HttpStatusCode.OK).json({
+          success: true,
+          message: "Orders Fetched Successfully",
+          orders,
+        });
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      const passwordReset = this._vendorService.resetPassword(email);
+
+      if (!passwordReset) {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: "Error in changing Password" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, message:"user found" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+   resetPassword = async (req: Request, res: Response) => {
+    try {
+      console.log("Worked");
+      const { token } = req.params;
+      const { password, confirmPassword } = req.body;
+
+      let verified;
+
+      if (password === confirmPassword) {
+        verified = await this._vendorService.verifyAndResetPassword(
+          token,
+          password
+        );
+      } else {
+        res
+          .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+          .json("Passwords do not match");
+      }
+
+      if (!verified) {
+        res
+          .status(HttpStatusCode.BAD_REQUEST)
+          .json({ message: "Unable to verify the user" });
+      } else {
+        res
+          .status(HttpStatusCode.OK)
+          .json({ message: "Password Changed successfully" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 }

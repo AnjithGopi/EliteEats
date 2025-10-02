@@ -59,6 +59,7 @@ export class UserOrderController {
           .status(HttpStatusCode.NOT_FOUND)
           .json({ message: "No orders found " });
       } else {
+        
         res.status(HttpStatusCode.OK).json(orders);
       }
     } catch (error) {
@@ -86,7 +87,7 @@ export class UserOrderController {
 
   createOrder = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
+      console.log("Data from frontEnd to create the order:>>>>>>>>>",req.body);
 
       const order = await this._userOrderService.createOrder(req.body);
 
@@ -117,6 +118,7 @@ export class UserOrderController {
           .status(HttpStatusCode.NOT_FOUND)
           .json({ success: false, message: "No orders Found" });
       } else {
+        console.log("Orders from db:",orders)
         res
           .status(HttpStatusCode.OK)
           .json({ success: true, message: "Orders Found", orders });

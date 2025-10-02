@@ -3,6 +3,7 @@ import { HttpStatusCode } from "../utils/statusCodes";
 import dotenv from "dotenv";
 import { injectable, inject } from "inversify";
 import { IUserService } from "../interface/User/IUserService";
+import { CookieMaxAge } from "../utils/cookieMaxage";
 dotenv.config();
 
 @injectable()
@@ -52,14 +53,14 @@ export class userController {
           httpOnly: true,
           sameSite: "lax",
           secure: true,
-          maxAge: 60 * 60 * 1000,
+          maxAge:CookieMaxAge.AccessToken
         });
 
         res.cookie("RefreshToken", user.refreshToken, {
           httpOnly: true,
           secure: true,
           sameSite: "lax",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge:CookieMaxAge.RefreshToken
         });
 
         res

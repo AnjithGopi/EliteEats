@@ -2,6 +2,7 @@ import { json, type Request, type Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { inject, injectable } from "inversify";
 import { IRiderService } from "../interface/Rider/IRiderService";
+import { CookieMaxAge } from "../utils/cookieMaxage";
 
 @injectable()
 export class RiderController {
@@ -50,14 +51,14 @@ export class RiderController {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
-          maxAge: 60 * 60 * 1000,
+          maxAge:CookieMaxAge.AccessToken
         });
 
         res.cookie("RefreshToken", user.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge:CookieMaxAge.RefreshToken
         });
 
         res

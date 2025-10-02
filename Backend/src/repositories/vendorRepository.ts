@@ -60,7 +60,7 @@ export class VendorRepository implements IVendorRepository {
     try {
       console.log("inside repository:", data);
       const menu = await Menu.create(data);
-      console.log("created::::", menu);
+      console.log("menu items created::::>>>>>>>>>", menu);
       return menu;
     } catch (error) {
       console.log(error);
@@ -146,15 +146,34 @@ export class VendorRepository implements IVendorRepository {
     }
   };
 
-  findOrder=async(id:string)=>{
-
+  findOrder = async (id: string) => {
     try {
-
-      return await Order.findOne({_id:id})
-      
+      return await Order.findOne({ _id: id });
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
+
+  findHotelWithEmail = async (email: string) => {
+    try {
+      const hotel = await Vendor.findOne({ email: email });
+      console.log("Hotel with email:", hotel);
+
+      return hotel;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  updatePassword = async (email: string, hashed: string) => {
+    try {
+      console.log("update password worked");
+      const updated = await Vendor.updateOne(
+        { email: email },
+        { $set: { password: hashed } }
+      );
+      return updated;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

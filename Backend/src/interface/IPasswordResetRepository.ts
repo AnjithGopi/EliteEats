@@ -5,4 +5,7 @@ export interface IPasswordResetRepository {
   ): Promise<IUserObject | false | undefined | any>;
   checkuser(token: string): Promise<any>;
   deleteToken(token: string): Promise<any>;
+  saveTokenforRestaurent(data:any):Promise<any>
+  checkHotel(token:string):Promise<any>
+
 }

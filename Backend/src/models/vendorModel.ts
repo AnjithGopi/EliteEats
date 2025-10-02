@@ -1,6 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Schema,Model } from "mongoose";
+import { IVendor } from "../interface/Vendor/IVendorModel";
 
-const vendorSchema = new mongoose.Schema({
+
+
+const vendorSchema:Schema<IVendor> = new mongoose.Schema({
   restaurentId: { type: String, unique: true },
   name: { type: String },
   displayPicture: { type: String },
@@ -22,6 +25,7 @@ const vendorSchema = new mongoose.Schema({
 
  vendorSchema.index({ location: "2dsphere" });
 
-const Vendor = mongoose.model("Vendor", vendorSchema);
+//const Vendor = mongoose.model("Vendor", vendorSchema);
+const Vendor: Model<IVendor> = mongoose.model<IVendor>("Vendor", vendorSchema);
 
 export default Vendor;

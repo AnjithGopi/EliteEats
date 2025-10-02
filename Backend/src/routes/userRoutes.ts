@@ -22,7 +22,9 @@ router
   .route("/restaurent/:id")
   .get(verify, verifyUser, controller.getHotelData);
 router.route("/profile/:id").get(verify, verifyUser, controller.getProfile);
-router.route("/change_password").post(verify,verifyUser,controller.changePassword)
+router
+  .route("/change_password")
+  .post(verify, verifyUser, controller.changePassword);
 
 // Cart operations
 
@@ -48,7 +50,7 @@ router
   .get(verify, verifyUser, controller.fetchnearbyrestaurents);
 
 router.route("/add_multiple_address").post(controller.createAddress);
-router.route("/getAddress/:id").get(controller.getAllAddress)
+router.route("/getAddress/:id").get(controller.getAllAddress);
 
 //handling orders.......
 
@@ -58,15 +60,22 @@ router
 router
   .route("/instant_order")
   .post(verify, verifyUser, userOrderController.instantOrder);
-router.route("/place_order").post(verify,verifyUser,userOrderController.createOrder)
+router
+  .route("/place_order")
+  .post(verify, verifyUser, userOrderController.createOrder);
 router
   .route("/viewOrders/:id")
   .get(verify, verifyUser, userOrderController.getOrders);
 
-router.route("/getOrders/:id").get(verify,verifyUser,userOrderController.fetchUserOrders)  
+router
+  .route("/getOrders/:id")
+  .get( verify,verifyUser,userOrderController.fetchUserOrders);
 
 router
   .route("/clear_cart/:id")
   .get(verify, verifyUser, userOrderController.clearCart);
+
+
+  
 
 export default router;

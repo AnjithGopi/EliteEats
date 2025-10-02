@@ -187,6 +187,7 @@ class UserService implements IUserService {
       if (!checkUser) {
         throw new Error("Invalid token ");
       }
+      console.log("Check user in user side",checkUser)
 
       const hashed = await hashPassword(password);
       const passWordUpdated = await this._userRepository.updatePassword(
@@ -214,6 +215,11 @@ class UserService implements IUserService {
 
   getHotels = async () => {
     try {
+    if (!this._userRepository?.getHotels) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const hotels = await this._userRepository.getHotels();
 
       if (!hotels) {
@@ -236,6 +242,11 @@ class UserService implements IUserService {
 
   findUser = async (userId: any) => {
     try {
+      if (!this._userRepository?.getUser) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const user = await this._userRepository.getUser(userId);
 
       if (!user) {
@@ -252,6 +263,11 @@ class UserService implements IUserService {
 
   fetchRestaurentData = async (id: string) => {
     try {
+      if (!this._userRepository?.fetchData) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const data = await this._userRepository.fetchData(id);
       if (!data) {
         throw new Error(
@@ -281,6 +297,7 @@ class UserService implements IUserService {
       }));
 
       const totalAmount = data.subtotal + data.tax + data.deliveryfee;
+      console.log("Total amount calculated in Backend:",totalAmount)
 
       const orderData = {
         orderId,
@@ -289,6 +306,12 @@ class UserService implements IUserService {
         totalAmount,
         paymentMethod: data.paymentMethod,
       };
+
+      if (!this._userRepository?.placeOrder) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
 
       const createdOrder = await this._userRepository.placeOrder(orderData);
 
@@ -315,6 +338,11 @@ class UserService implements IUserService {
 
   fetchOrders = async (id: string) => {
     try {
+      if (!this._userRepository?.findallOrders) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const orders = await this._userRepository.findallOrders(id);
 
       return orders;
@@ -327,6 +355,12 @@ class UserService implements IUserService {
     try {
       console.log("data to save:", data);
 
+      if (!this._userRepository?.updateUser) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
+
       const updateUser = await this._userRepository.updateUser(data);
       return updateUser;
     } catch (error) {
@@ -336,11 +370,23 @@ class UserService implements IUserService {
 
   hotelsNearUser = async (id: string) => {
     try {
+
+      if (!this._userRepository?.fetchLocation) {
+        throw new Error(
+          "fetchLocation method is not implemented in UserRepository"
+        );
+      }
       const location = await this._userRepository.fetchLocation(id);
 
       console.log("Location found for the user:", location);
       console.log("latitude:", location.latitude);
       console.log("longitude:", location.longitude);
+
+      if (!this._userRepository?.findWithLocation) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
 
       const restaurents = await this._userRepository.findWithLocation(
         location.longitude,
@@ -357,6 +403,11 @@ class UserService implements IUserService {
 
   deleteCart = async (id: string) => {
     try {
+      if (!this._userRepository?.clear) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const clear_cart = await this._userRepository.clear(id);
 
       return clear_cart;
@@ -380,6 +431,12 @@ class UserService implements IUserService {
         },
       };
 
+      if (!this._userRepository?.createAddress) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
+
       const addAdress = await this._userRepository.createAddress(
         addressPayload
       );
@@ -392,6 +449,12 @@ class UserService implements IUserService {
 
   fetchAddressOfuser = async (id: string) => {
     try {
+
+      if (!this._userRepository?.findAddress) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const address = await this._userRepository.findAddress(id);
 
       const addressStrings = address.map((item: any) =>
@@ -413,6 +476,12 @@ class UserService implements IUserService {
         throw new Error("New passwords do not match");
       }
 
+      if (!this._userRepository?.finduserById) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
+
       const user = await this._userRepository.finduserById(userId);
       if (!user) {
         throw new Error("User not found");
@@ -425,6 +494,11 @@ class UserService implements IUserService {
 
       const hashedPassword = await hashPassword(newPassword);
       console.log("hashed password type:", typeof hashedPassword);
+      if (!this._userRepository?.updateUserPassword) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
       const updated = await this._userRepository.updateUserPassword(
         userId,
         hashedPassword

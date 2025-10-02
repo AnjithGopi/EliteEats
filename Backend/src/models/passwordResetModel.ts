@@ -3,13 +3,12 @@ import mongoose from "mongoose";
 const passwordresetTokenSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
-    required: true,
     refPath: "userModel",
   },
 
   userModel: {
     type: String,
-    required: true,
+   // required: true,
     enum: ["User", "Rider", "Vendor"],
   },
   token: { type: String },

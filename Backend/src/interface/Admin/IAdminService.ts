@@ -14,7 +14,7 @@ export interface IAdminService {
   unBlockUser(id: string): Promise<UserDetails | null | undefined>;
   getRestaurents(): Promise<any>;
   findRestaurent(id: string): Promise<any>;
-  gerOrders(): Promise<any>;
+  getOrders(): Promise<any>;
   findAllRiders(): Promise<any>;
   findRider(id: string): Promise<any>;
   updateRider(id: string): Promise<any>;

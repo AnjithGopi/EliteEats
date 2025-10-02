@@ -14,6 +14,8 @@ export interface IVendorRepository {
   handleDelete(data:string):Promise<any>;
   fetchAllOrders(id:string):Promise<any>;
   findOrder(id:string):Promise<any>;
+  findHotelWithEmail(email:string):Promise<any>
+  updatePassword(email:string,hashed:string|undefined):Promise<any>
 
   
 }

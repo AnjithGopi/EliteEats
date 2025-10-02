@@ -4,7 +4,9 @@ export interface IUserCartService {
     productId: any,
     hotelId: string,
     quantity: any,
-    price: number
+    price: number,
+    variant:string,
+    addons:[],
   ): Promise<any>;
   findCart(id: string): Promise<any>;
   updateQuantityinCart(

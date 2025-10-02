@@ -196,9 +196,15 @@ class AdminService implements IAdminService {
     }
   };
 
-  gerOrders = async () => {
+  getOrders = async () => {
     try {
-      return await this._userRepository.findOrders();
+      if (!this._userRepository?.findOrders) {
+        throw new Error(
+          "findOrders method is not implemented in UserRepository"
+        );
+      }
+      const orders = await this._userRepository.findOrders();
+      return orders
     } catch (error) {
       console.log(error);
     }
@@ -246,23 +252,22 @@ class AdminService implements IAdminService {
     }
   };
 
-  rejectRiderRequest=async(id:string,reason:string)=>{
-
+  rejectRiderRequest = async (id: string, reason: string) => {
     try {
+      const rejected = await this._riderRepository.reject(id, reason);
 
-      const rejected= await this._riderRepository.reject(id,reason)
-
-      if(rejected){
-        await sendRejectionMailtoRider(rejected.email,rejected.rejectionReason)
+      if (rejected) {
+        await sendRejectionMailtoRider(
+          rejected.email,
+          rejected.rejectionReason
+        );
       }
 
-      return rejected
-      
+      return rejected;
     } catch (error) {
-      console.log(error)
-      
+      console.log(error);
     }
-  }
+  };
 }
 
 export default AdminService;

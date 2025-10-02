@@ -1,24 +1,26 @@
 import { IPasswordResetRepository } from "../interface/IPasswordResetRepository";
 import Token from "../models/passwordResetModel";
 
-
-
 export class PasswordResetRepository implements IPasswordResetRepository {
   constructor() {}
 
-  saveToken = async (user:any) => {
+  saveToken = async (user: any) => {
     return await Token.create(user);
   };
 
-  checkuser=async(token:string)=>{
+  checkuser = async (token: string) => {
+    return await Token.findOne({ token: token }).populate("user");
+  };
 
+  deleteToken = async (token: string) => {
+    return await Token.findOneAndDelete({ token: token });
+  };
+
+  saveTokenforRestaurent = async (data: any) => {
+    return await Token.create(data);
+  };
+
+  checkHotel=async(token:string)=>{
     return await Token.findOne({token:token}).populate("user")
   }
-
-  deleteToken =async(token:string)=>{
-
-    return await Token.findOneAndDelete({token:token})
-  }
 }
-
-

@@ -10,6 +10,7 @@ import vendorRoute from "./src/routes/resturantRoutes";
 import { connectRedis } from "./src/config/redis";
 import cookieParser from "cookie-parser";
 import { Api } from "./src/config/constants/api";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -17,9 +18,10 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
+app.use(morgan("dev"));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(cors());
 app.use(
   cors({
     origin: "http://localhost:5173",

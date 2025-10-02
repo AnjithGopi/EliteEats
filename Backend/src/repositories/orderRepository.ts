@@ -15,7 +15,7 @@ export class OrderRepository implements IOrderRepository {
 
   findOrdersFromRestaurent = async (id: string) => {
     try {
-      return await Order.find({ hotelId: id });
+      return await Order.find({ hotelId: id }).sort({createdAt:-1});
     } catch (error) {
       console.log(error);
     }
@@ -23,9 +23,15 @@ export class OrderRepository implements IOrderRepository {
 
   findOrdersOfUser = async (id: string) => {
     try {
-      return await Order.find({ userId: id });
+      const orders = await Order.find({ userId: id }).sort({
+        createdAt: -1,
+      });
+      console.log("orders found for user:", orders);
+      return orders;
     } catch (error) {
       console.log(error);
     }
   };
+
+
 }

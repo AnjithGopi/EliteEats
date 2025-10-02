@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { HttpStatusCode } from "../utils/statusCodes";
 import { IAdminService } from "../interface/Admin/IAdminService";
 import { inject, injectable } from "inversify";
+import { CookieMaxAge } from "../utils/cookieMaxage";
 
 @injectable()
 export class AdminController {
@@ -20,20 +21,16 @@ export class AdminController {
       } else {
         res.cookie("AccessToken", data.accessToken, {
           httpOnly: true,
-          //secure: process.env.NODE_ENV === "production",
-          // secure:false,
-          // sameSite: "lax",
           sameSite: "none",
           secure: true,
-          maxAge: 60 * 60 * 1000,
+          maxAge:CookieMaxAge.AccessToken
         });
 
         res.cookie("RefreshToken", data.refreshToken, {
           httpOnly: true,
-          //secure: process.env.NODE_ENV === "production",
           secure: false,
           sameSite: "lax",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: CookieMaxAge.RefreshToken
         });
 
         res
@@ -154,7 +151,7 @@ export class AdminController {
 
   getAllOrders = async (req: Request, res: Response) => {
     try {
-      const orders = this._adminService.gerOrders();
+      const orders = this._adminService.getOrders();
 
       if (!orders) {
         res
